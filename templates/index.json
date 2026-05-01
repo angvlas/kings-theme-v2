@@ -12,29 +12,58 @@
     "slideshow": {
       "type": "slideshow",
       "blocks": {
-        "slide_1": { "type": "slide", "settings": {} },
-        "slide_2": { "type": "slide", "settings": {} }
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DC_X_Sonic_The_Metal_Legion__1.png",
+            "mobile_image": "shopify://shop_images/m_DC_X_Sonic_The_Metal_Legion__1.png",
+            "link": "",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        }
       },
-      "block_order": ["slide_1", "slide_2"],
+      "block_order": [
+        "slide_1"
+      ],
       "settings": {}
     },
     "collection_row_1": {
       "type": "collection-row",
-      "settings": {}
+      "settings": {
+        "collection": "new-release-this-week",
+        "products_to_show": 10
+      }
     },
     "collection_row_2": {
       "type": "collection-row",
-      "settings": {}
+      "settings": {
+        "collection": "coming-this-week",
+        "products_to_show": 10
+      }
+    },
+    "collection_row_E3zT3g": {
+      "type": "collection-row",
+      "name": "t:sections.collection_row.name",
+      "settings": {
+        "collection": "newest-products",
+        "products_to_show": 10
+      }
     },
     "recommended": {
       "type": "recommended-products",
-      "settings": {}
+      "settings": {
+        "heading": "Recommended for you",
+        "products_to_show": 10
+      }
     }
   },
   "order": [
     "slideshow",
     "collection_row_1",
     "collection_row_2",
+    "collection_row_E3zT3g",
     "recommended"
   ]
 }
