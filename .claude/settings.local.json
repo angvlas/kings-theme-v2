@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(wc:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Read(//Users/angelovlastaras/.claude/plugins/cache/shopify-ai-toolkit/shopify-plugin/1.1.0/skills/shopify-liquid/**)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id cart-drawer-qty-limit-01 --revision 1)",
+      "Bash(npm install:*)"
     ]
   }
 }
