@@ -13,10 +13,19 @@
   "sections": {
     "header": {
       "type": "header",
-      "settings": {}
+      "settings": {
+        "logo": "shopify://shop_images/KINGS_LOGO_COL_RGB.png",
+        "top_menu": "",
+        "bottom_menu": "products-2-0",
+        "extra_menu": "main-menu",
+        "right_menu": "",
+        "contact_email": "",
+        "contact_phone": "",
+        "search_type": "product"
+      }
     }
   },
   "order": [
     "header"
-  ],
+  ]
 }

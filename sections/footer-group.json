@@ -14,7 +14,11 @@
     "footer": {
       "type": "footer",
       "settings": {
-        "menu": "",
+        "menu_1": "kings-comics",
+        "menu_2": "information",
+        "menu_3": "customer-service",
+        "menu_4": "",
+        "emblems_title": "Certified by",
         "show_payment_icons": true
       }
     }

@@ -8,5 +8,9 @@
  * ------------------------------------------------------------
  */
 {
-  "current": {}
+  "current": {
+    "social_facebook": "https://facebook.com/kingscomics",
+    "social_instagram": "https://instagram.com/kingscomics",
+    "content_for_index": []
+  }
 }
