@@ -15,12 +15,12 @@
       "type": "header",
       "settings": {
         "logo": "shopify://shop_images/KINGS_LOGO_COL_RGB.png",
-        "top_menu": "",
+        "top_menu": "kings-comics",
         "bottom_menu": "products-2-0",
         "extra_menu": "main-menu",
         "right_menu": "",
-        "contact_email": "",
-        "contact_phone": "",
+        "contact_email": "info@kingscomics.com",
+        "contact_phone": "(02) 9267 5615",
         "search_type": "product"
       }
     }
