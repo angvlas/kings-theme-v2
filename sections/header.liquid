@@ -170,7 +170,7 @@
 
     <div class="cart-drawer__items" data-cart-drawer-items>
       {% for item in cart.items %}
-        <div class="cart-drawer__item" data-cart-drawer-item data-line-key="{{ item.key }}">
+        <div class="cart-drawer__item" data-cart-drawer-item data-line-key="{{ item.key }}" data-inventory-quantity="{{ item.variant.inventory_quantity }}" data-inventory-policy="{{ item.variant.inventory_policy }}">
           <a href="{{ item.url }}" class="cart-drawer__item-image">
             {% if item.image %}
               {{ item.image | image_url: width: 120 | image_tag: alt: item.product.title, loading: 'lazy' }}
@@ -1138,8 +1138,13 @@
     transition: border-color 0.15s ease;
   }
 
-  .cart-drawer__qty-btn:hover {
+  .cart-drawer__qty-btn:hover:not(:disabled) {
     border-color: var(--color-foreground, #333);
+  }
+
+  .cart-drawer__qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 
   .cart-drawer__qty-value {
@@ -1660,9 +1665,30 @@
         var minusBtn = item.querySelector('[data-drawer-qty-minus]');
         var plusBtn = item.querySelector('[data-drawer-qty-plus]');
         var removeBtn = item.querySelector('[data-drawer-remove]');
+        var maxQty = parseInt(item.getAttribute('data-inventory-quantity'), 10);
+        var policy = item.getAttribute('data-inventory-policy');
+        var hasLimit = policy === 'deny' && !isNaN(maxQty);
+
+        function checkPlusBtn(currentQty) {
+          if (!plusBtn) return;
+          if (hasLimit && currentQty >= maxQty) {
+            plusBtn.disabled = true;
+          } else {
+            plusBtn.disabled = false;
+          }
+        }
+
+        checkPlusBtn(parseInt(qtyValue.textContent, 10) || 1);
 
         function updateQty(newQty) {
           if (newQty < 0) newQty = 0;
+
+          if (hasLimit && newQty > maxQty) {
+            showDrawerWarning(item, 'Only ' + maxQty + ' available');
+            checkPlusBtn(maxQty);
+            return;
+          }
+
           if (qtyValue) qtyValue.textContent = newQty;
           if (newQty === 0) item.style.opacity = '0.5';
 
@@ -1672,10 +1698,13 @@
               return;
             }
 
-            /* Check if Shopify capped the quantity */
             var lineItem = cart.items.find(function(i) { return i.key === key; });
             if (lineItem && lineItem.quantity < newQty) {
+              qtyValue.textContent = lineItem.quantity;
               showDrawerWarning(item, 'Only ' + lineItem.quantity + ' available');
+              checkPlusBtn(lineItem.quantity);
+            } else {
+              checkPlusBtn(newQty);
             }
           });
         }
