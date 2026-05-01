@@ -5,7 +5,12 @@
       "Bash(ls:*)",
       "Read(//Users/angelovlastaras/.claude/plugins/cache/shopify-ai-toolkit/shopify-plugin/1.1.0/skills/shopify-liquid/**)",
       "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id cart-drawer-qty-limit-01 --revision 1)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(node scripts/search_docs.mjs \"routes checkout cart_url\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
+      "Bash(node scripts/search_docs.mjs \"Shopify.formatMoney money_format javascript\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
+      "Bash(node scripts/search_docs.mjs \"shop money_format\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,locales/en.default.json,sections/cart.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id header-refactor-01 --revision)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,locales/en.default.json,sections/cart.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id header-refactor-01 --revision 2)"
     ]
   }
 }

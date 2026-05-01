@@ -545,16 +545,16 @@
             updateCartCount();
           })
           .catch(function(err) {
-            var msg = 'Error';
-            if (err && err.description && err.description.indexOf('stock') > -1) {
-              msg = 'All items in cart';
-            } else if (err && err.message && err.message.indexOf('stock') > -1) {
-              msg = 'All items in cart';
-            }
-            button.innerHTML = msg;
-            button.style.backgroundColor = '#e53e3e';
+            var errMsg = (err && (err.description || err.message)) || '';
+            var isStock = errMsg.toLowerCase().indexOf('stock') > -1 ||
+                          errMsg.toLowerCase().indexOf('cart') > -1 ||
+                          errMsg.toLowerCase().indexOf('quantity') > -1 ||
+                          errMsg.toLowerCase().indexOf('available') > -1;
+            var msg = isStock ? 'All items in cart' : errMsg || 'All items in cart';
+            button.textContent = msg;
+            button.style.backgroundColor = isStock ? '#d69e2e' : '#e53e3e';
             setTimeout(function() {
-              button.innerHTML = originalText;
+              button.textContent = originalText;
               button.style.backgroundColor = '';
               button.disabled = false;
             }, 2500);

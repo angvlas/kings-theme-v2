@@ -1243,11 +1243,13 @@
           return res.json();
         })
         .then(function() {
-          button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Added';
+          button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 8.5L6.5 12L13 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Added';
           button.style.backgroundColor = '#38a169';
+          button.style.color = '#fff';
           setTimeout(function() {
             button.innerHTML = originalText;
             button.style.backgroundColor = '';
+            button.style.color = '';
             button.disabled = false;
           }, 2000);
 
@@ -1269,17 +1271,19 @@
             });
         })
         .catch(function(err) {
-          var msg = 'Error';
-          if (err && err.description && err.description.indexOf('stock') > -1) {
-            msg = 'All items are in your cart';
-          } else if (err && err.message && err.message.indexOf('stock') > -1) {
-            msg = 'All items are in your cart';
-          }
-          button.innerHTML = msg;
-          button.style.backgroundColor = '#e53e3e';
+          var errMsg = (err && (err.description || err.message)) || '';
+          var isStock = errMsg.toLowerCase().indexOf('stock') > -1 ||
+                        errMsg.toLowerCase().indexOf('cart') > -1 ||
+                        errMsg.toLowerCase().indexOf('quantity') > -1 ||
+                        errMsg.toLowerCase().indexOf('available') > -1;
+          var msg = isStock ? 'All items are in your cart' : errMsg || 'All items are in your cart';
+          button.textContent = msg;
+          button.style.backgroundColor = isStock ? '#d69e2e' : '#e53e3e';
+          button.style.color = '#fff';
           setTimeout(function() {
-            button.innerHTML = originalText;
+            button.textContent = originalText;
             button.style.backgroundColor = '';
+            button.style.color = '';
             button.disabled = false;
           }, 2500);
         });

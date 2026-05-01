@@ -27,7 +27,9 @@
     "taxes_note": "Taxes and shipping calculated at checkout",
     "empty": "Your cart is empty",
     "continue_shopping": "Continue shopping",
-    "view_cart": "View cart"
+    "view_cart": "View cart",
+    "each": "each",
+    "only_x_available": "Only {{ count }} available"
   },
   "footer": {
     "navigation": "Footer navigation",
@@ -131,7 +133,11 @@
     "view_all": "View all",
     "menu": "Menu",
     "close": "Close",
-    "view_all_results": "View all results"
+    "view_all_results": "View all results",
+    "searching": "Searching...",
+    "search_error": "Something went wrong",
+    "type_article": "Article",
+    "type_page": "Page"
   },
   "sections": {
     "collection_row": {
@@ -156,6 +162,7 @@
     "title": "Search",
     "placeholder": "Search articles, pages, or products",
     "submit": "Search",
+    "no_results": "No results found",
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}",
     "other_results": "Other results"
