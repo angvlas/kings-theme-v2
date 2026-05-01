@@ -8,5 +8,12 @@
  * ------------------------------------------------------------
  */
 {
-  "current": {}
+  "current": {
+    "favicon": "shopify://shop_images/favicon.png",
+    "cart_notice_1": "Due to the increase in orders over FCBD, please allow 3-5 days processing time for your orders.",
+    "cart_notice_2": "We are no longer combining orders, please ensure you are certain before placing an order.",
+    "social_facebook": "https://facebook.com/kingscomics",
+    "social_instagram": "https://instagram.com/kingscomics",
+    "content_for_index": []
+  }
 }
