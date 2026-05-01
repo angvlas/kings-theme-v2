@@ -1,0 +1,163 @@
+{
+  "404": {
+    "title": "404",
+    "not_found": "Page not found.",
+    "back_to_shopping": "Back to shopping"
+  },
+  "blog": {
+    "article_comments": "Comments",
+    "article_metadata_html": "{{ date }} by {{ author }}",
+    "by": "by",
+    "pagination": "Blog pagination",
+    "comment_form_body": "Comment",
+    "comment_form_email": "Email",
+    "comment_form_name": "Name",
+    "comment_form_submit": "Post",
+    "comment_form_title": "Add a comment"
+  },
+  "cart": {
+    "checkout": "Checkout",
+    "title": "Cart",
+    "update": "Update",
+    "remove": "Remove",
+    "image": "Image",
+    "product": "Product",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "taxes_note": "Taxes and shipping calculated at checkout",
+    "empty": "Your cart is empty",
+    "continue_shopping": "Continue shopping",
+    "view_cart": "View cart"
+  },
+  "footer": {
+    "navigation": "Footer navigation",
+    "follow_us": "Follow us",
+    "rights": "All rights reserved.",
+    "emblems": "Certified by"
+  },
+  "product": {
+    "variant": "Variant",
+    "quantity": "Quantity",
+    "image": "Image",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "previous_image": "Previous image",
+    "next_image": "Next image",
+    "tab_description": "Description",
+    "tab_details": "Product details",
+    "no_description": "No description available.",
+    "details": {
+      "sku": "SKU",
+      "barcode": "Barcode",
+      "issue_number": "Issue number",
+      "release_date": "Release date",
+      "format": "Format",
+      "brand": "Brand",
+      "type": "Type"
+    }
+  },
+  "customers": {
+    "login": {
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "title": "Login"
+    }
+  },
+  "collection": {
+    "empty": "No products found in this collection.",
+    "sold_out": "Sold Out",
+    "on_sale": "Sale",
+    "add_to_cart": "Add to cart",
+    "pre_order": "Pre-order",
+    "back_order": "Back order",
+    "out_of_stock": "Out of stock",
+    "in_stock": "In stock",
+    "breadcrumbs": "Breadcrumbs",
+    "home": "Home",
+    "key_issue": "Key",
+    "variant": "Variant",
+    "series_start": "Series start",
+    "series_end": "Series end",
+    "total_issues": "Total issues",
+    "filters": {
+      "title": "Filters",
+      "clear_all": "Clear all",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply",
+      "search": "Search...",
+      "key_issues_only": "Key issues only"
+    },
+    "sort": {
+      "label": "Sort by"
+    },
+    "per_page": {
+      "label": "Show"
+    },
+    "view": {
+      "label": "View as",
+      "grid": "Grid view",
+      "list": "List view"
+    },
+    "load_more": "Load more",
+    "showing_count": "{{ current }} of {{ total }} products"
+  },
+  "collections": {
+    "title": "Collections"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Add to Apple Wallet",
+    "card": "Gift card",
+    "expired": "This gift card has expired",
+    "expires_on": "Expires on {{ expires_on }}",
+    "use_at_checkout": "Use this gift card at checkout"
+  },
+  "password": {
+    "title": "This shop is private",
+    "password": "Password",
+    "enter": "Enter"
+  },
+  "general": {
+    "back_to_top": "Back to top",
+    "skip_to_content": "Skip to content"
+  },
+  "header": {
+    "search_placeholder": "Search products...",
+    "account": "Account",
+    "cart": "Cart",
+    "top_navigation": "Top navigation",
+    "main_navigation": "Main navigation",
+    "view_all": "View all",
+    "menu": "Menu",
+    "close": "Close",
+    "view_all_results": "View all results"
+  },
+  "sections": {
+    "collection_row": {
+      "name": "Collection row",
+      "previous": "Previous products",
+      "next": "More products",
+      "view_all": "View all"
+    },
+    "recommended": {
+      "name": "Recommended for you",
+      "title": "Recommended for you"
+    },
+    "slideshow": {
+      "label": "Slideshow",
+      "name": "Slideshow",
+      "slide": "Slide",
+      "previous": "Previous slide",
+      "next": "Next slide"
+    }
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search articles, pages, or products",
+    "submit": "Search",
+    "no_results_html": "No results found for {{ terms }}",
+    "results_for_html": "{{ count }} results found for {{ terms }}",
+    "other_results": "Other results"
+  }
+}

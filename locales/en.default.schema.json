@@ -1,0 +1,149 @@
+{
+  "general": {
+    "404": "Not found",
+    "article": "Article",
+    "block": "Block",
+    "blog": "Blog",
+    "cart": "Cart",
+    "collection": "Collection",
+    "collections": "Collections",
+    "collection_card": "Collection card",
+    "collections_grid": "Collections grid",
+    "colors": "Colors",
+    "column": "Column",
+    "content": "Content",
+    "custom_section": "Custom section",
+    "fonts": "Fonts",
+    "footer": "Footer",
+    "group": "Group",
+    "branding": "Branding",
+    "header": "Header",
+    "images": "Images",
+    "layout": "Layout",
+    "main": "Main",
+    "page": "Page",
+    "password": "Password",
+    "primary": "Primary",
+    "product": "Product",
+    "row": "Row",
+    "search": "Search",
+    "slideshow": "Slideshow",
+    "social_media": "Social media",
+    "slideshows": "Slideshows",
+    "secondary": "Secondary",
+    "section": "Section",
+    "settings": "Settings",
+    "sidebar": "Sidebar",
+    "text": "Text",
+    "theme": "Theme",
+    "typography": "Typography"
+  },
+  "labels": {
+    "alignment": "Alignment",
+    "background": "Background",
+    "foreground": "Foreground",
+    "grid_gap": "Grid spacing",
+    "grid_item_width": "Grid item width",
+    "input_corner_radius": "Input corner radius",
+    "layout_direction": "Layout direction",
+    "menu": "Menu",
+    "customer_account_menu": "Customer account menu",
+    "padding": "Padding",
+    "page_margin": "Page margin",
+    "page_width": "Page width",
+    "show_payment_icons": "Show payment icons",
+    "text_style": "Text style",
+    "text": "Text",
+    "products_per_page": "Products per page",
+    "columns_desktop": "Columns on desktop",
+    "columns_mobile": "Columns on mobile",
+    "filtering": "Filtering",
+    "enable_filters": "Enable filters",
+    "favicon": "Favicon",
+    "slide_image": "Desktop image (1800x610)",
+    "slide_mobile_image": "Mobile image (610x610)",
+    "collection_row_collection": "Collection",
+    "collection_row_products": "Products to show",
+    "heading": "Heading",
+    "cart_notice_1": "Notice 1",
+    "cart_notice_2": "Notice 2",
+    "cart_notice_3": "Notice 3",
+    "slide_speed": "Slide duration",
+    "slide_speed_info": "How long each slide stays visible",
+    "slide_link": "Link",
+    "slide_heading": "Heading",
+    "slide_subheading": "Subheading",
+    "slide_button_text": "Button text",
+    "footer_menu_1": "Menu column 1",
+    "footer_menu_2": "Menu column 2",
+    "footer_menu_3": "Menu column 3",
+    "footer_menu_4": "Menu column 4",
+    "emblems": "Emblems & icons",
+    "emblems_title": "Emblems heading",
+    "emblem": "Emblem",
+    "emblem_image": "Image",
+    "emblem_label": "Label",
+    "emblem_link": "Link",
+    "social_media": "Social media",
+    "payment": "Payment",
+    "images": "Images",
+    "placeholder_image": "Product placeholder image",
+    "logo": "Logo",
+    "navigation": "Navigation",
+    "top_menu": "Top bar menu",
+    "bottom_menu": "Mega menu",
+    "extra_menu": "Extra nav links",
+    "right_menu": "Right nav links",
+    "contact_info": "Contact info",
+    "contact_email": "Email address",
+    "contact_phone": "Phone number",
+    "header_social": "Social media (top bar)",
+    "search_type": "Search results type"
+  },
+  "options": {
+    "alignment": {
+      "left": "Left",
+      "center": "Center",
+      "right": "Right"
+    },
+    "direction": {
+      "horizontal": "Horizontal",
+      "vertical": "Vertical"
+    },
+    "page_width": {
+      "narrow": "Narrow",
+      "wide": "Wide"
+    },
+    "size": {
+      "large": "Large",
+      "small": "Small"
+    },
+    "text_style": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "normal": "Normal text"
+    },
+    "search_type": {
+      "products": "Products only",
+      "articles": "Articles only",
+      "pages": "Pages only",
+      "products_articles": "Products & articles",
+      "products_pages": "Products & pages",
+      "everything": "Everything"
+    }
+  },
+  "sections": {
+    "collection_row": {
+      "name": "Collection row"
+    },
+    "recommended": {
+      "name": "Recommended for you"
+    },
+    "slideshow": {
+      "name": "Slideshow",
+      "slide": "Slide",
+      "previous": "Previous slide",
+      "next": "Next slide"
+    }
+  }
+}

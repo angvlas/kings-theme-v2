@@ -1,0 +1,40 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_1": { "type": "slide", "settings": {} },
+        "slide_2": { "type": "slide", "settings": {} }
+      },
+      "block_order": ["slide_1", "slide_2"],
+      "settings": {}
+    },
+    "collection_row_1": {
+      "type": "collection-row",
+      "settings": {}
+    },
+    "collection_row_2": {
+      "type": "collection-row",
+      "settings": {}
+    },
+    "recommended": {
+      "type": "recommended-products",
+      "settings": {}
+    }
+  },
+  "order": [
+    "slideshow",
+    "collection_row_1",
+    "collection_row_2",
+    "recommended"
+  ]
+}

@@ -1,0 +1,604 @@
+{% doc %}
+  Renders a product card with image, title, price, availability status,
+  release date, and contextual action button (add to cart, pre-order,
+  back order, or sold out).
+
+  @param {product} product - The product object to render
+  @param {image} [placeholder_image] - Fallback image when product has no image
+
+  @example
+  {% render 'product-card', product: product %}
+  {% render 'product-card', product: product, placeholder_image: section.settings.placeholder_image %}
+{% enddoc %}
+
+{% liquid
+  assign variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+
+  assign is_preorder = false
+  assign is_backorder = false
+  assign sold_out = false
+  assign release_date = product.metafields.kings.product_release_date
+
+  if release_date != blank
+    assign now = 'now' | date: '%s' | plus: 0
+    assign release_timestamp = release_date | date: '%s' | plus: 0
+    if release_timestamp > now
+      assign is_preorder = true
+    endif
+  endif
+
+  unless is_preorder
+    if product.available
+      if variant.inventory_management == 'shopify'
+        if variant.inventory_policy == 'continue'
+          if variant.inventory_quantity <= 0
+            assign is_backorder = true
+          endif
+        endif
+      endif
+    else
+      assign sold_out = true
+    endif
+  endunless
+
+%}
+
+<div class="product-card" {% if product.metafields.kings.key_issue %}data-key-issue{% endif %}>
+  <a href="{{ product.url }}" class="product-card__link">
+    <div class="product-card__image-wrapper">
+      {% if product.featured_image %}
+        {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.title }}
+      {% elsif placeholder_image %}
+        {{ placeholder_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.title }}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+      {% endif %}
+
+    </div>
+
+    <div class="product-card__info">
+      {% if product.variants.size > 1 %}
+        <div class="product-card__variants">
+          <select class="product-card__variant-select" aria-label="{{ 'collection.variant' | t }}" data-card-variant-select data-product-url="{{ product.url }}">
+            {% for v in product.variants %}
+              <option
+                value="{{ v.id }}"
+                data-price="{{ v.price | money }}"
+                data-compare-price="{{ v.compare_at_price | money }}"
+                data-available="{{ v.available }}"
+                {% if v == variant %}selected{% endif %}
+              >
+                {{ v.title }} – {{ v.price | money }}
+              </option>
+            {% endfor %}
+          </select>
+          <svg class="product-card__variant-chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      {% endif %}
+
+      <p class="product-card__title">
+        {{ product.title | escape }}
+        {% if product.metafields.kings.key_issue %}
+          <span class="product-card__key-badge" title="{{ 'collection.key_issue' | t }}">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M10.5 1.5a3.5 3.5 0 0 0-3.23 4.84L2 11.6V14h2.4l.6-.6v-1.4h1.4l.6-.6v-1.4h1.4l1.16-1.16A3.5 3.5 0 1 0 10.5 1.5Zm1 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" fill="currentColor"/>
+            </svg>
+            {{ 'collection.key_issue' | t }}
+          </span>
+        {% endif %}
+      </p>
+
+      <div class="product-card__price-row">
+        <p class="product-card__price">{{ product.price | money }}</p>
+        {% if on_sale %}
+          {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+          <span class="product-card__discount-badge">-{{ discount }}%</span>
+        {% endif %}
+      </div>
+
+      {% if on_sale %}
+        <p class="product-card__compare-price">
+          {{ product.compare_at_price | money }}
+        </p>
+      {% endif %}
+
+      {% if is_preorder %}
+        <p class="product-card__availability product-card__availability--preorder">
+          <span class="product-card__availability-dot"></span>
+          {{ 'collection.pre_order' | t }} {{ release_date | date: "%b %d, %Y" }}
+        </p>
+      {% elsif is_backorder %}
+        <p class="product-card__availability product-card__availability--backorder">
+          <span class="product-card__availability-dot"></span>
+          {{ 'collection.back_order' | t }}
+        </p>
+      {% elsif sold_out %}
+        <p class="product-card__availability product-card__availability--out">
+          <span class="product-card__availability-dot"></span>
+          {{ 'collection.out_of_stock' | t }}
+        </p>
+      {% else %}
+        <p class="product-card__availability product-card__availability--in">
+          <span class="product-card__availability-dot"></span>
+          {{ 'collection.in_stock' | t }}
+        </p>
+      {% endif %}
+    </div>
+  </a>
+
+  {% if is_preorder %}
+    <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="product-card__button product-card__button--preorder" data-card-button>
+      {{ 'collection.pre_order' | t }}
+    </a>
+  {% elsif is_backorder %}
+    <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="product-card__button product-card__button--backorder" data-card-button>
+      {{ 'collection.back_order' | t }}
+    </a>
+  {% elsif sold_out %}
+    <button class="product-card__button product-card__button--disabled" disabled data-card-button>
+      {{ 'collection.sold_out' | t }}
+    </button>
+  {% else %}
+    <button
+      type="button"
+      class="product-card__button"
+      data-card-button
+      data-add-to-cart
+      data-variant-id="{{ variant.id }}"
+    >
+      {{ 'collection.add_to_cart' | t }}
+    </button>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #f7f7f8;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  @media (min-width: 750px) {
+    .product-card {
+      border-radius: 12px;
+    }
+  }
+
+  .product-card__link {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .product-card__image-wrapper {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__image-wrapper {
+      padding: 16px;
+    }
+  }
+
+  .product-card__image-wrapper img,
+  .product-card__image-wrapper svg {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .product-card__link:hover .product-card__image-wrapper img {
+    transform: scale(1.05);
+  }
+
+
+  .product-card__info {
+    padding: 10px 12px 0;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__info {
+      padding: 16px 20px 0;
+    }
+  }
+
+  .product-card__variants {
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .product-card__variant-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 6px 28px 6px 10px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: inherit;
+    background-color: #fff;
+    border: 1px solid #e2e2e4;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .product-card__variant-select:hover {
+    border-color: var(--color-foreground, #333);
+  }
+
+  .product-card__variant-select:focus {
+    outline: none;
+    border-color: var(--color-foreground, #333);
+  }
+
+  @media (min-width: 750px) {
+    .product-card__variant-select {
+      padding: 7px 30px 7px 12px;
+      font-size: 0.75rem;
+    }
+  }
+
+  .product-card__variant-chevron {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #9b9ba0;
+  }
+
+  .product-card__title {
+    font-size: 0.7rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__title {
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .product-card__title {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+  }
+
+  .product-card__price-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+
+  .product-card__price {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__price {
+      font-size: 1.3rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .product-card__price {
+      font-size: 1.5rem;
+    }
+  }
+
+  .product-card__discount-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background-color: #e53e3e;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 4px;
+    line-height: 1;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__discount-badge {
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      border-radius: 5px;
+    }
+  }
+
+  .product-card__key-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    background-color: #fef3c7;
+    color: #b45309;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 4px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__key-badge {
+      gap: 4px;
+      padding: 3px 8px;
+      font-size: 0.7rem;
+      border-radius: 5px;
+    }
+  }
+
+  .product-card__compare-price {
+    font-size: 0.7rem;
+    text-decoration: line-through;
+    color: #a0aec0;
+    margin-bottom: 4px;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__compare-price {
+      font-size: 0.8rem;
+    }
+  }
+
+  .product-card__availability {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__availability {
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+  }
+
+  .product-card__availability-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 750px) {
+    .product-card__availability-dot {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  .product-card__availability--out {
+    color: #e53e3e;
+  }
+
+  .product-card__availability--out .product-card__availability-dot {
+    background-color: #e53e3e;
+  }
+
+  .product-card__availability--in {
+    color: #38a169;
+  }
+
+  .product-card__availability--in .product-card__availability-dot {
+    background-color: #38a169;
+  }
+
+
+  .product-card__availability--preorder {
+    color: #5b21b6;
+  }
+
+  .product-card__availability--preorder .product-card__availability-dot {
+    background-color: #5b21b6;
+  }
+
+  .product-card__availability--backorder {
+    color: #d97706;
+  }
+
+  .product-card__availability--backorder .product-card__availability-dot {
+    background-color: #d97706;
+  }
+
+  .product-card__button {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 10px 12px 12px;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+  }
+
+  @media (min-width: 750px) {
+    .product-card__button {
+      width: calc(100% - 40px);
+      margin: 16px 20px 20px;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+  }
+
+  .product-card__button:hover {
+    opacity: 0.9;
+  }
+
+  .product-card__button--preorder {
+    background-color: #5b21b6;
+    color: #fff;
+  }
+
+  .product-card__button--backorder {
+    background-color: #d97706;
+    color: #fff;
+  }
+
+  .product-card__button--disabled {
+    background-color: #e2e2e2;
+    color: #a0a0a0;
+    cursor: not-allowed;
+  }
+
+  .product-card__button--disabled:hover {
+    opacity: 1;
+  }
+
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    /* Variant select sync */
+    document.querySelectorAll('[data-card-variant-select]').forEach(function(select) {
+      select.addEventListener('change', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var card = this.closest('.product-card');
+        if (!card) return;
+
+        var variantId = this.value;
+        var productUrl = this.getAttribute('data-product-url');
+
+        /* Update add-to-cart button variant */
+        var atcBtn = card.querySelector('[data-add-to-cart]');
+        if (atcBtn) {
+          atcBtn.setAttribute('data-variant-id', variantId);
+        }
+
+        /* Update preorder/backorder links */
+        var button = card.querySelector('[data-card-button]');
+        if (button && button.tagName === 'A' && productUrl) {
+          button.href = productUrl + '?variant=' + variantId;
+        }
+      });
+
+      select.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    });
+
+    /* AJAX add to cart */
+    document.querySelectorAll('.product-card [data-add-to-cart]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var variantId = this.getAttribute('data-variant-id');
+        if (!variantId) return;
+
+        var button = this;
+        var originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = '...';
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: [{ id: parseInt(variantId, 10), quantity: 1 }] })
+        })
+        .then(function(res) {
+          if (!res.ok) return res.json().then(function(err) { throw err; });
+          return res.json();
+        })
+        .then(function() {
+          button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Added';
+          button.style.backgroundColor = '#38a169';
+          setTimeout(function() {
+            button.innerHTML = originalText;
+            button.style.backgroundColor = '';
+            button.disabled = false;
+          }, 2000);
+
+          fetch('/cart.js')
+            .then(function(r) { return r.json(); })
+            .then(function(cart) {
+              var countEl = document.querySelector('.header__cart-count');
+              if (countEl) {
+                countEl.textContent = cart.item_count;
+              } else {
+                var cartLink = document.querySelector('.header__cart');
+                if (cartLink) {
+                  var span = document.createElement('span');
+                  span.className = 'header__cart-count';
+                  span.textContent = cart.item_count;
+                  cartLink.appendChild(span);
+                }
+              }
+            });
+        })
+        .catch(function(err) {
+          var msg = 'Error';
+          if (err && err.description && err.description.indexOf('stock') > -1) {
+            msg = 'All items in cart';
+          } else if (err && err.message && err.message.indexOf('stock') > -1) {
+            msg = 'All items in cart';
+          }
+          button.innerHTML = msg;
+          button.style.backgroundColor = '#e53e3e';
+          setTimeout(function() {
+            button.innerHTML = originalText;
+            button.style.backgroundColor = '';
+            button.disabled = false;
+          }, 2500);
+        });
+      });
+    });
+  })();
+{% endjavascript %}

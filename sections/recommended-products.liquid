@@ -1,0 +1,296 @@
+{% comment %}
+  Displays a slider of recommended products based on what the customer
+  has viewed. On product pages, uses Shopify's product recommendations
+  API. On other pages, shows recently viewed products from localStorage.
+{% endcomment %}
+
+{% liquid
+  assign limit = section.settings.products_to_show
+%}
+
+<div class="collection-row-wrapper">
+  <div class="collection-row" data-collection-row data-recommended-products data-product-id="{{ product.id }}" data-limit="{{ limit }}" data-section-id="{{ section.id }}">
+    <div class="collection-row__header">
+      <h2 class="collection-row__title">
+        <span class="collection-row__title-link">{{ section.settings.heading | default: 'Recommended for you' }}</span>
+      </h2>
+      <div class="collection-row__arrows">
+        <button class="collection-row__arrow" type="button" data-row-prev aria-label="{{ 'sections.collection_row.previous' | t }}" disabled>
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="collection-row__arrow" type="button" data-row-next aria-label="{{ 'sections.collection_row.next' | t }}">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="collection-row__slider" data-row-slider>
+      <div class="collection-row__track" data-row-track>
+        {% if product %}
+          {% for rec in recommendations.products limit: limit %}
+            <div class="collection-row__item">
+              {% render 'product-card', product: rec, placeholder_image: settings.placeholder_image %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% javascript %}
+  (function() {
+    var STORAGE_KEY = 'kings_recently_viewed';
+    var MAX_STORED = 20;
+
+    function getRecentlyViewed() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveRecentlyViewed(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch(e) {}
+    }
+
+    /* Track current product page */
+    var productMeta = document.querySelector('[data-recommended-products]');
+    var currentProductId = productMeta ? productMeta.getAttribute('data-product-id') : null;
+
+    if (currentProductId && currentProductId !== '' && currentProductId !== 'null') {
+      var viewed = getRecentlyViewed();
+      viewed = viewed.filter(function(id) { return id !== currentProductId; });
+      viewed.unshift(currentProductId);
+      if (viewed.length > MAX_STORED) viewed = viewed.slice(0, MAX_STORED);
+      saveRecentlyViewed(viewed);
+    }
+
+    /* Load recommendations */
+    document.querySelectorAll('[data-recommended-products]').forEach(function(section) {
+      var productId = section.getAttribute('data-product-id');
+      var limit = parseInt(section.getAttribute('data-limit'), 10) || 10;
+      var sectionId = section.getAttribute('data-section-id');
+      var track = section.querySelector('[data-row-track]');
+
+      if (!track) return;
+
+      /* If already rendered by Liquid (product page with recommendations), skip */
+      if (track.children.length > 0) return;
+
+      /* On non-product pages, load recently viewed products */
+      var viewed = getRecentlyViewed();
+      if (viewed.length === 0) {
+        section.closest('.collection-row-wrapper').style.display = 'none';
+        return;
+      }
+
+      var handles = viewed.slice(0, limit);
+      var fetches = handles.map(function(id) {
+        return fetch('/products/' + id + '.js')
+          .then(function(r) {
+            if (!r.ok) throw new Error(r.status);
+            return r.json();
+          })
+          .catch(function() { return null; });
+      });
+
+      /* Try product recommendation API first if we have a product id */
+      if (productId && productId !== '' && productId !== 'null') {
+        fetch('/recommendations/products.json?product_id=' + productId + '&limit=' + limit)
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data.products && data.products.length > 0) {
+              renderProducts(track, data.products);
+            }
+          })
+          .catch(function() {});
+      } else {
+        /* Load recently viewed as cards via section rendering */
+        var productUrls = handles.map(function(id) { return id; });
+        loadRecentlyViewedCards(track, productUrls, section);
+      }
+    });
+
+    function loadRecentlyViewedCards(track, productIds, section) {
+      var loaded = 0;
+      var total = productIds.length;
+
+      productIds.forEach(function(productId) {
+        fetch('/products/' + productId + '.js')
+          .then(function(r) {
+            if (!r.ok) throw new Error();
+            return r.json();
+          })
+          .then(function(product) {
+            var item = document.createElement('div');
+            item.className = 'collection-row__item';
+
+            var imgSrc = '';
+            if (product.featured_image) {
+              imgSrc = product.featured_image;
+            }
+
+            var priceFormatted = '$' + (product.price / 100).toFixed(2);
+            var available = product.available;
+
+            item.innerHTML =
+              '<div class="product-card" style="height:100%">' +
+                '<a href="' + product.url + '" style="display:flex;flex-direction:column;flex:1;text-decoration:none;color:inherit">' +
+                  '<div style="aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:10px;background:#f7f7f8;border-radius:10px 10px 0 0;overflow:hidden">' +
+                    (imgSrc ? '<img src="' + imgSrc + '" alt="' + product.title.replace(/"/g, '') + '" style="max-width:100%;max-height:100%;object-fit:contain" loading="lazy">' : '') +
+                  '</div>' +
+                  '<div style="padding:10px 12px 0;overflow:hidden;min-width:0">' +
+                    '<p style="font-size:0.7rem;font-weight:500;line-height:1.3;margin-bottom:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical">' + product.title + '</p>' +
+                    '<p style="font-size:1rem;font-weight:700;margin-bottom:4px">' + priceFormatted + '</p>' +
+                  '</div>' +
+                '</a>' +
+              '</div>';
+
+            track.appendChild(item);
+          })
+          .catch(function() {})
+          .finally(function() {
+            loaded++;
+            if (loaded >= total) {
+              if (track.children.length === 0) {
+                section.closest('.collection-row-wrapper').style.display = 'none';
+              }
+              initSlider(section);
+            }
+          });
+      });
+    }
+
+    function renderProducts(track, products) {
+      /* Products from recommendations API come as full objects */
+      products.forEach(function(product) {
+        var item = document.createElement('div');
+        item.className = 'collection-row__item';
+
+        var imgSrc = product.featured_image || '';
+        var priceFormatted = '$' + (product.price / 100).toFixed(2);
+
+        item.innerHTML =
+          '<div class="product-card" style="height:100%">' +
+            '<a href="' + product.url + '" style="display:flex;flex-direction:column;flex:1;text-decoration:none;color:inherit">' +
+              '<div style="aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:10px;background:#f7f7f8;border-radius:10px 10px 0 0;overflow:hidden">' +
+                (imgSrc ? '<img src="' + imgSrc + '" alt="' + product.title.replace(/"/g, '') + '" style="max-width:100%;max-height:100%;object-fit:contain" loading="lazy">' : '') +
+              '</div>' +
+              '<div style="padding:10px 12px 0;overflow:hidden;min-width:0">' +
+                '<p style="font-size:0.7rem;font-weight:500;line-height:1.3;margin-bottom:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical">' + product.title + '</p>' +
+                '<p style="font-size:1rem;font-weight:700;margin-bottom:4px">' + priceFormatted + '</p>' +
+              '</div>' +
+            '</a>' +
+          '</div>';
+
+        track.appendChild(item);
+      });
+    }
+
+    function initSlider(row) {
+      var slider = row.querySelector('[data-row-slider]');
+      var track = row.querySelector('[data-row-track]');
+      var prevBtn = row.querySelector('[data-row-prev]');
+      var nextBtn = row.querySelector('[data-row-next]');
+
+      if (!slider || !track || !prevBtn || !nextBtn) return;
+
+      var position = 0;
+
+      function getItemsPerView() {
+        var w = window.innerWidth;
+        if (w >= 1200) return 6;
+        if (w >= 990) return 5;
+        if (w >= 850) return 4;
+        if (w >= 550) return 3;
+        return 2;
+      }
+
+      function getItemWidth() {
+        var item = track.querySelector('.collection-row__item');
+        if (!item) return 0;
+        var style = getComputedStyle(track);
+        var gap = parseFloat(style.gap) || 16;
+        return item.offsetWidth + gap;
+      }
+
+      function totalItems() {
+        return track.querySelectorAll('.collection-row__item').length;
+      }
+
+      function maxPosition() {
+        return Math.max(0, totalItems() - getItemsPerView());
+      }
+
+      function updateButtons() {
+        prevBtn.disabled = position <= 0;
+        nextBtn.disabled = position >= maxPosition();
+      }
+
+      function slide() {
+        var itemWidth = getItemWidth();
+        track.style.transform = 'translateX(-' + (position * itemWidth) + 'px)';
+        updateButtons();
+      }
+
+      prevBtn.addEventListener('click', function() {
+        position = Math.max(0, position - getItemsPerView());
+        slide();
+      });
+
+      nextBtn.addEventListener('click', function() {
+        position = Math.min(maxPosition(), position + getItemsPerView());
+        slide();
+      });
+
+      updateButtons();
+    }
+
+    /* Also track recently viewed via product handle for non-product pages */
+    if (window.ShopifyAnalytics && window.ShopifyAnalytics.meta && window.ShopifyAnalytics.meta.product) {
+      var handle = window.ShopifyAnalytics.meta.product.id.toString();
+      var viewed = getRecentlyViewed();
+      if (viewed.indexOf(handle) === -1) {
+        viewed.unshift(handle);
+        if (viewed.length > MAX_STORED) viewed = viewed.slice(0, MAX_STORED);
+        saveRecentlyViewed(viewed);
+      }
+    }
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.recommended.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Recommended for you"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:labels.collection_row_products",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.recommended.name"
+    }
+  ]
+}
+{% endschema %}

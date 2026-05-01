@@ -1,0 +1,337 @@
+{% comment %}
+  Displays a horizontal row of products from a selected collection.
+  Shows 5 products at a time with left/right scrolling.
+  Can be added multiple times on any page with different collections.
+{% endcomment %}
+
+{% liquid
+  assign collection = section.settings.collection
+  assign limit = section.settings.products_to_show
+%}
+
+{% if collection != blank %}
+  <div class="collection-row-wrapper">
+    <div class="collection-row" data-collection-row>
+      <div class="collection-row__header">
+        <h2 class="collection-row__title">
+          <a href="{{ collection.url }}" class="collection-row__title-link">
+            {{ collection.title | escape }}
+          </a>
+        </h2>
+        <div class="collection-row__arrows">
+          <button class="collection-row__arrow" type="button" data-row-prev aria-label="{{ 'sections.collection_row.previous' | t }}" disabled>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="collection-row__arrow" type="button" data-row-next aria-label="{{ 'sections.collection_row.next' | t }}">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <a href="{{ collection.url }}" class="collection-row__view-all">
+            {{ 'sections.collection_row.view_all' | t }}
+          </a>
+        </div>
+      </div>
+
+      <div class="collection-row__slider" data-row-slider>
+        <div class="collection-row__track" data-row-track>
+          {% for product in collection.products limit: limit %}
+            <div class="collection-row__item">
+              {% render 'product-card', product: product, placeholder_image: settings.placeholder_image %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .collection-row-wrapper {
+    grid-column: 1 / -1;
+    padding: 0 var(--page-margin);
+  }
+
+  .collection-row {
+    padding: 32px 0;
+  }
+
+  @media (min-width: 750px) {
+    .collection-row {
+      padding: 40px 0;
+    }
+  }
+
+  .collection-row__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  @media (min-width: 750px) {
+    .collection-row__header {
+      margin-bottom: 20px;
+    }
+  }
+
+  .collection-row__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  @media (min-width: 750px) {
+    .collection-row__title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .collection-row__title-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .collection-row__title-link:hover {
+    text-decoration: underline;
+  }
+
+  .collection-row__arrows {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .collection-row__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid #e2e2e4;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-foreground, #333);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .collection-row__arrow:hover:not(:disabled) {
+    background-color: #f7f7f8;
+    border-color: var(--color-foreground, #333);
+  }
+
+  .collection-row__arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .collection-row__view-all {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-foreground, #333);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #e2e2e4;
+    border-radius: 8px;
+    transition: border-color 0.15s ease;
+    white-space: nowrap;
+    display: none;
+  }
+
+  .collection-row__view-all:hover {
+    border-color: var(--color-foreground, #333);
+  }
+
+  @media (min-width: 750px) {
+    .collection-row__view-all {
+      display: inline-flex;
+    }
+  }
+
+  /* Slider */
+  .collection-row__slider {
+    overflow: hidden;
+  }
+
+  .collection-row__track {
+    display: flex;
+    gap: 10px;
+    transition: transform 0.4s ease;
+  }
+
+  @media (min-width: 750px) {
+    .collection-row__track {
+      gap: 16px;
+    }
+  }
+
+  /* gap: 10px mobile, 16px at 750px+ */
+  /* items = (100% - (gap * (cols - 1))) / cols */
+
+  .collection-row__item {
+    flex: 0 0 calc((100% - 10px) / 2);
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  @media (min-width: 550px) {
+    .collection-row__item {
+      flex: 0 0 calc((100% - 20px) / 3);
+    }
+  }
+
+  @media (min-width: 750px) {
+    /* gap becomes 16px from here */
+    .collection-row__item {
+      flex: 0 0 calc((100% - 32px) / 3);
+    }
+  }
+
+  @media (min-width: 850px) {
+    .collection-row__item {
+      flex: 0 0 calc((100% - 48px) / 4);
+    }
+  }
+
+  @media (min-width: 990px) {
+    .collection-row__item {
+      flex: 0 0 calc((100% - 64px) / 5);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .collection-row__item {
+      flex: 0 0 calc((100% - 80px) / 6);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    document.querySelectorAll('[data-collection-row]').forEach(function(row) {
+      var slider = row.querySelector('[data-row-slider]');
+      var track = row.querySelector('[data-row-track]');
+      var prevBtn = row.querySelector('[data-row-prev]');
+      var nextBtn = row.querySelector('[data-row-next]');
+
+      if (!slider || !track || !prevBtn || !nextBtn) return;
+
+      var position = 0;
+
+      function getItemsPerView() {
+        var w = window.innerWidth;
+        if (w >= 1200) return 6;
+        if (w >= 990) return 5;
+        if (w >= 850) return 4;
+        if (w >= 550) return 3;
+        return 2;
+      }
+
+      function getItemWidth() {
+        var item = track.querySelector('.collection-row__item');
+        if (!item) return 0;
+        var style = getComputedStyle(track);
+        var gap = parseFloat(style.gap) || 16;
+        return item.offsetWidth + gap;
+      }
+
+      function totalItems() {
+        return track.querySelectorAll('.collection-row__item').length;
+      }
+
+      function maxPosition() {
+        var perView = getItemsPerView();
+        var total = totalItems();
+        return Math.max(0, total - perView);
+      }
+
+      function updateButtons() {
+        prevBtn.disabled = position <= 0;
+        nextBtn.disabled = position >= maxPosition();
+      }
+
+      function slide() {
+        var itemWidth = getItemWidth();
+        track.style.transform = 'translateX(-' + (position * itemWidth) + 'px)';
+        updateButtons();
+      }
+
+      prevBtn.addEventListener('click', function() {
+        position = Math.max(0, position - getItemsPerView());
+        slide();
+      });
+
+      nextBtn.addEventListener('click', function() {
+        position = Math.min(maxPosition(), position + getItemsPerView());
+        slide();
+      });
+
+      /* Touch swipe */
+      var startX = 0;
+      var isDragging = false;
+
+      slider.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+      }, { passive: true });
+
+      slider.addEventListener('touchend', function(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        var diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) {
+            position = Math.min(maxPosition(), position + 1);
+          } else {
+            position = Math.max(0, position - 1);
+          }
+          slide();
+        }
+      });
+
+      /* Reset on resize */
+      var resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          position = Math.min(position, maxPosition());
+          slide();
+        }, 150);
+      });
+
+      updateButtons();
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.collection_row.name",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:labels.collection_row_collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:labels.collection_row_products",
+      "min": 5,
+      "max": 25,
+      "step": 1,
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collection_row.name"
+    }
+  ]
+}
+{% endschema %}

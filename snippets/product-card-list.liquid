@@ -1,0 +1,566 @@
+{% doc %}
+  Renders a product card in horizontal list layout with image on the left
+  and product info on the right. Supports preorder, backorder, and
+  release date display.
+
+  @param {product} product - The product object to render
+  @param {image} [placeholder_image] - Fallback image when product has no image
+
+  @example
+  {% render 'product-card-list', product: product %}
+  {% render 'product-card-list', product: product, placeholder_image: section.settings.placeholder_image %}
+{% enddoc %}
+
+{% liquid
+  assign variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+
+  assign is_preorder = false
+  assign is_backorder = false
+  assign sold_out = false
+  assign release_date = product.metafields.kings.product_release_date
+
+  if release_date != blank
+    assign now = 'now' | date: '%s' | plus: 0
+    assign release_timestamp = release_date | date: '%s' | plus: 0
+    if release_timestamp > now
+      assign is_preorder = true
+    endif
+  endif
+
+  unless is_preorder
+    if product.available
+      if variant.inventory_management == 'shopify'
+        if variant.inventory_policy == 'continue'
+          if variant.inventory_quantity <= 0
+            assign is_backorder = true
+          endif
+        endif
+      endif
+    else
+      assign sold_out = true
+    endif
+  endunless
+%}
+
+<div class="pcl" {% if product.metafields.kings.key_issue %}data-key-issue{% endif %}>
+  <a href="{{ product.url }}" class="pcl__image">
+    {% if product.featured_image %}
+      {{ product.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: product.title }}
+    {% elsif placeholder_image %}
+      {{ placeholder_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: product.title }}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag }}
+    {% endif %}
+  </a>
+
+  <div class="pcl__body">
+    <a href="{{ product.url }}" class="pcl__title">
+      {{ product.title | escape }}
+      {% if product.metafields.kings.key_issue %}
+        <span class="pcl__key-badge" title="{{ 'collection.key_issue' | t }}">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10.5 1.5a3.5 3.5 0 0 0-3.23 4.84L2 11.6V14h2.4l.6-.6v-1.4h1.4l.6-.6v-1.4h1.4l1.16-1.16A3.5 3.5 0 1 0 10.5 1.5Zm1 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" fill="currentColor"/>
+          </svg>
+          {{ 'collection.key_issue' | t }}
+        </span>
+      {% endif %}
+    </a>
+
+    {% if product.vendor != blank %}
+      <p class="pcl__vendor">{{ product.vendor | escape }}</p>
+    {% endif %}
+
+    {% if product.description != blank %}
+      <p class="pcl__description">{{ product.description | strip_html | truncatewords: 25 }}</p>
+    {% endif %}
+
+    {% if is_preorder %}
+      <p class="pcl__status pcl__status--preorder">
+        <span class="pcl__status-dot"></span>
+        {{ 'collection.pre_order' | t }} {{ release_date | date: "%b %d, %Y" }}
+      </p>
+    {% elsif is_backorder %}
+      <p class="pcl__status pcl__status--backorder">
+        <span class="pcl__status-dot"></span>
+        {{ 'collection.back_order' | t }}
+      </p>
+    {% elsif sold_out %}
+      <p class="pcl__status pcl__status--out">
+        <span class="pcl__status-dot"></span>
+        {{ 'collection.out_of_stock' | t }}
+      </p>
+    {% else %}
+      <p class="pcl__status pcl__status--in">
+        <span class="pcl__status-dot"></span>
+        {{ 'collection.in_stock' | t }}
+      </p>
+    {% endif %}
+
+    {% if product.variants.size > 1 %}
+      <div class="pcl__variants" data-pcl-variants>
+        {% for v in product.variants %}
+          <button
+            type="button"
+            class="pcl__variant{% if v == variant %} pcl__variant--selected{% endif %}{% unless v.available %} pcl__variant--unavailable{% endunless %}"
+            data-pcl-variant
+            data-variant-id="{{ v.id }}"
+            data-variant-price="{{ v.price | money }}"
+            data-variant-compare="{{ v.compare_at_price | money }}"
+            data-variant-available="{{ v.available }}"
+            {% unless v.available %}disabled{% endunless %}
+            title="{{ v.title }}"
+          >
+            <span class="pcl__variant-name">{{ v.title }}</span>
+            <span class="pcl__variant-price">{{ v.price | money }}</span>
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="pcl__aside">
+    <div class="pcl__pricing">
+      <div class="pcl__price-row">
+        <span class="pcl__price" data-pcl-price>{{ product.price | money }}</span>
+        {% if on_sale %}
+          {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+          <span class="pcl__discount" data-pcl-discount>-{{ discount }}%</span>
+        {% endif %}
+      </div>
+      {% if on_sale %}
+        <span class="pcl__compare" data-pcl-compare>{{ product.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+
+    {% if is_preorder %}
+      <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--preorder" data-pcl-btn>{{ 'collection.pre_order' | t }}</a>
+    {% elsif is_backorder %}
+      <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--backorder" data-pcl-btn>{{ 'collection.back_order' | t }}</a>
+    {% elsif sold_out %}
+      <button class="pcl__btn pcl__btn--disabled" disabled data-pcl-btn>{{ 'collection.sold_out' | t }}</button>
+    {% else %}
+      <button
+        type="button"
+        class="pcl__btn"
+        data-pcl-btn
+        data-pcl-add-to-cart
+        data-variant-id="{{ variant.id }}"
+      >
+        {{ 'collection.add_to_cart' | t }}
+      </button>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .pcl {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-template-rows: auto;
+    background-color: #f7f7f8;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 750px) {
+    .pcl {
+      grid-template-columns: 160px 1fr 180px;
+      border-radius: 12px;
+    }
+  }
+
+  @media (min-width: 990px) {
+    .pcl {
+      grid-template-columns: 200px 1fr 200px;
+    }
+  }
+
+  /* Image */
+  .pcl__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__image {
+      grid-row: 1 / 2;
+      padding: 12px;
+    }
+  }
+
+  @media (min-width: 990px) {
+    .pcl__image {
+      padding: 16px;
+    }
+  }
+
+  .pcl__image img,
+  .pcl__image svg {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .pcl__image:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Body */
+  .pcl__body {
+    padding: 12px 12px 12px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__body {
+      padding: 20px 24px;
+      grid-row: 1 / 2;
+    }
+  }
+
+  .pcl__title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__title {
+      font-size: 1rem;
+    }
+  }
+
+  .pcl__title:hover {
+    text-decoration: underline;
+  }
+
+  .pcl__key-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    background-color: #fef3c7;
+    color: #b45309;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 4px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    vertical-align: middle;
+  }
+
+  .pcl__vendor {
+    font-size: 0.75rem;
+    color: #9b9ba0;
+    margin-bottom: 4px;
+  }
+
+  .pcl__description {
+    font-size: 0.8rem;
+    color: #718096;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    display: none;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__description {
+      display: block;
+    }
+  }
+
+  .pcl__status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .pcl__status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .pcl__status--in { color: #38a169; }
+  .pcl__status--in .pcl__status-dot { background-color: #38a169; }
+  .pcl__status--out { color: #e53e3e; }
+  .pcl__status--out .pcl__status-dot { background-color: #e53e3e; }
+  .pcl__status--preorder { color: #5b21b6; }
+  .pcl__status--preorder .pcl__status-dot { background-color: #5b21b6; }
+  .pcl__status--backorder { color: #d97706; }
+  .pcl__status--backorder .pcl__status-dot { background-color: #d97706; }
+
+  /* Variants */
+  .pcl__variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .pcl__variant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    padding: 6px 12px;
+    background-color: #fff;
+    border: 1px solid #e2e2e4;
+    border-radius: 6px;
+    text-decoration: none;
+    color: inherit;
+    gap: 2px;
+    transition: border-color 0.15s ease;
+  }
+
+  .pcl__variant:hover {
+    border-color: var(--color-foreground, #333);
+  }
+
+  .pcl__variant--selected {
+    border-color: var(--color-foreground, #333);
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+  }
+
+  .pcl__variant--selected .pcl__variant-price {
+    color: var(--color-background, #fff);
+    opacity: 0.7;
+  }
+
+  .pcl__variant--unavailable {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .pcl__variant-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .pcl__variant-price {
+    font-size: 0.7rem;
+    color: #718096;
+  }
+
+  /* Aside — price + button */
+  .pcl__aside {
+    grid-column: 1 / -1;
+    padding: 0 12px 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__aside {
+      grid-column: 3 / 4;
+      grid-row: 1 / 2;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      padding: 20px 24px;
+      border-left: 1px solid #e2e2e4;
+      gap: 10px;
+    }
+  }
+
+  .pcl__pricing {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__pricing {
+      align-items: flex-end;
+    }
+  }
+
+  .pcl__price-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pcl__price {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__price {
+      font-size: 1.4rem;
+    }
+  }
+
+  .pcl__discount {
+    display: inline-flex;
+    padding: 2px 6px;
+    background-color: #e53e3e;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 4px;
+    line-height: 1;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__discount {
+      padding: 3px 8px;
+      font-size: 0.75rem;
+    }
+  }
+
+  .pcl__compare {
+    font-size: 0.8rem;
+    text-decoration: line-through;
+    color: #a0aec0;
+  }
+
+  .pcl__btn {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+    white-space: nowrap;
+  }
+
+  .pcl__btn:hover { opacity: 0.9; }
+  .pcl__btn--preorder { background-color: #5b21b6; color: #fff; }
+  .pcl__btn--backorder { background-color: #d97706; color: #fff; }
+  .pcl__btn--disabled { background-color: #e2e2e2; color: #a0a0a0; cursor: not-allowed; }
+  .pcl__btn--disabled:hover { opacity: 1; }
+
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    function updateCartCount() {
+      fetch('/cart.js')
+        .then(function(r) { return r.json(); })
+        .then(function(cart) {
+          var countEl = document.querySelector('.header__cart-count');
+          if (countEl) {
+            countEl.textContent = cart.item_count;
+          } else {
+            var cartLink = document.querySelector('.header__cart');
+            if (cartLink) {
+              var span = document.createElement('span');
+              span.className = 'header__cart-count';
+              span.textContent = cart.item_count;
+              cartLink.appendChild(span);
+            }
+          }
+        });
+    }
+
+    document.querySelectorAll('.pcl').forEach(function(card) {
+      var variants = card.querySelectorAll('[data-pcl-variant]');
+      var priceEl = card.querySelector('[data-pcl-price]');
+      var btnEl = card.querySelector('[data-pcl-btn]');
+      var atcBtn = card.querySelector('[data-pcl-add-to-cart]');
+
+      /* Variant selection */
+      variants.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var id = this.getAttribute('data-variant-id');
+          var price = this.getAttribute('data-variant-price');
+
+          variants.forEach(function(v) { v.classList.remove('pcl__variant--selected'); });
+          this.classList.add('pcl__variant--selected');
+
+          if (priceEl) priceEl.textContent = price;
+
+          if (atcBtn) atcBtn.setAttribute('data-variant-id', id);
+
+          if (btnEl && btnEl.tagName === 'A') {
+            var href = btnEl.href.split('?')[0];
+            btnEl.href = href + '?variant=' + id;
+          }
+        });
+      });
+
+      /* AJAX add to cart */
+      if (atcBtn) {
+        atcBtn.addEventListener('click', function() {
+          var variantId = this.getAttribute('data-variant-id');
+          if (!variantId) return;
+
+          var button = this;
+          var originalText = button.textContent;
+          button.disabled = true;
+          button.textContent = '...';
+
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [{ id: parseInt(variantId, 10), quantity: 1 }] })
+          })
+          .then(function(res) {
+            if (!res.ok) return res.json().then(function(err) { throw err; });
+            return res.json();
+          })
+          .then(function() {
+            button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Added';
+            button.style.backgroundColor = '#38a169';
+            setTimeout(function() {
+              button.innerHTML = originalText;
+              button.style.backgroundColor = '';
+              button.disabled = false;
+            }, 2000);
+            updateCartCount();
+          })
+          .catch(function(err) {
+            var msg = 'Error';
+            if (err && err.description && err.description.indexOf('stock') > -1) {
+              msg = 'All items in cart';
+            } else if (err && err.message && err.message.indexOf('stock') > -1) {
+              msg = 'All items in cart';
+            }
+            button.innerHTML = msg;
+            button.style.backgroundColor = '#e53e3e';
+            setTimeout(function() {
+              button.innerHTML = originalText;
+              button.style.backgroundColor = '';
+              button.disabled = false;
+            }, 2500);
+          });
+        });
+      }
+    });
+  })();
+{% endjavascript %}

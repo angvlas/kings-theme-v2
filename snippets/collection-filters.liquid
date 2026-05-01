@@ -1,0 +1,573 @@
+{% doc %}
+  Renders a filter sidebar for collection pages using Shopify's
+  storefront filtering API. Supports list filters (checkboxes),
+  price range, and displays active filters with clear options.
+
+  @param {collection} collection - The current collection object
+
+  @example
+  {% render 'collection-filters', collection: collection %}
+{% enddoc %}
+
+{% liquid
+  assign has_active_filters = false
+  for filter in collection.filters
+    if filter.active_values.size > 0
+      assign has_active_filters = true
+      break
+    endif
+    if filter.type == 'price_range'
+      if filter.min_value.value or filter.max_value.value
+        assign has_active_filters = true
+        break
+      endif
+    endif
+  endfor
+%}
+
+<form class="collection-filters" data-collection-filters>
+  <div class="collection-filters__header">
+    <h2 class="collection-filters__title">{{ 'collection.filters.title' | t }}</h2>
+    {% if has_active_filters %}
+      <a href="{{ collection.url }}" class="collection-filters__clear-all">
+        {{ 'collection.filters.clear_all' | t }}
+      </a>
+    {% endif %}
+  </div>
+
+  {% if has_active_filters %}
+    <div class="collection-filters__active">
+      {% for filter in collection.filters %}
+        {% for value in filter.active_values %}
+          <a href="{{ value.url_to_remove }}" class="collection-filters__tag">
+            <span>{{ value.label | escape }}</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+              <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </a>
+        {% endfor %}
+        {% if filter.type == 'price_range' %}
+          {% if filter.min_value.value or filter.max_value.value %}
+            <a href="{{ filter.url_to_remove }}" class="collection-filters__tag">
+              <span>
+                {% if filter.min_value.value %}{{ filter.min_value.value | money }}{% else %}{{ 0 | money }}{% endif %}
+                –
+                {% if filter.max_value.value %}{{ filter.max_value.value | money }}{% else %}{{ filter.range_max | money }}{% endif %}
+              </span>
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </a>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="collection-filters__key-issue-toggle">
+    <label class="collection-filters__toggle-label">
+      <span class="collection-filters__toggle-text">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10.5 1.5a3.5 3.5 0 0 0-3.23 4.84L2 11.6V14h2.4l.6-.6v-1.4h1.4l.6-.6v-1.4h1.4l1.16-1.16A3.5 3.5 0 1 0 10.5 1.5Zm1 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" fill="currentColor"/>
+        </svg>
+        {{ 'collection.filters.key_issues_only' | t }}
+      </span>
+      <input
+        type="checkbox"
+        class="collection-filters__toggle-input"
+        data-key-issue-filter
+      >
+      <span class="collection-filters__toggle-switch"></span>
+    </label>
+  </div>
+
+  {% for filter in collection.filters %}
+    <details class="collection-filters__group" open>
+      <summary class="collection-filters__group-header">
+        <span class="collection-filters__group-title">{{ filter.label | escape }}</span>
+        <svg class="collection-filters__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </summary>
+
+      <div class="collection-filters__group-body">
+        {% case filter.type %}
+          {% when 'list' or 'boolean' %}
+            {% if filter.values.size > 10 %}
+              <input
+                type="text"
+                class="collection-filters__search"
+                placeholder="{{ 'collection.filters.search' | t }}"
+                data-filter-search
+              >
+            {% endif %}
+            <ul class="collection-filters__list{% if filter.values.size > 10 %} collection-filters__list--scrollable{% endif %}">
+              {% for value in filter.values %}
+                <li class="collection-filters__list-item" data-filter-value="{{ value.label | escape | downcase }}">
+                  <label class="collection-filters__checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="{{ value.param_name }}"
+                      value="{{ value.value }}"
+                      class="collection-filters__checkbox"
+                      {% if value.active %}checked{% endif %}
+                      {% if value.count == 0 %}disabled{% endif %}
+                      onchange="this.closest('form').submit()"
+                    >
+                    <span class="collection-filters__checkbox-custom"></span>
+                    <span class="collection-filters__checkbox-text">
+                      {{ value.label | escape }}
+                    </span>
+                    <span class="collection-filters__count">{{ value.count }}</span>
+                  </label>
+                </li>
+              {% endfor %}
+            </ul>
+
+          {% when 'price_range' %}
+            <div class="collection-filters__price-range">
+              <div class="collection-filters__price-inputs">
+                <div class="collection-filters__price-field">
+                  <label for="filter-price-min-{{ filter.label | handleize }}">
+                    {{ 'collection.filters.from' | t }}
+                  </label>
+                  <span class="collection-filters__price-input-wrap">
+                    <span class="collection-filters__currency">{{ cart.currency.symbol }}</span>
+                    <input
+                      type="number"
+                      id="filter-price-min-{{ filter.label | handleize }}"
+                      name="{{ filter.min_value.param_name }}"
+                      value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      placeholder="0"
+                      class="collection-filters__price-input"
+                    >
+                  </span>
+                </div>
+
+                <span class="collection-filters__price-separator">–</span>
+
+                <div class="collection-filters__price-field">
+                  <label for="filter-price-max-{{ filter.label | handleize }}">
+                    {{ 'collection.filters.to' | t }}
+                  </label>
+                  <span class="collection-filters__price-input-wrap">
+                    <span class="collection-filters__currency">{{ cart.currency.symbol }}</span>
+                    <input
+                      type="number"
+                      id="filter-price-max-{{ filter.label | handleize }}"
+                      name="{{ filter.max_value.param_name }}"
+                      value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      class="collection-filters__price-input"
+                    >
+                  </span>
+                </div>
+              </div>
+
+              <button type="submit" class="collection-filters__price-apply">
+                {{ 'collection.filters.apply' | t }}
+              </button>
+            </div>
+        {% endcase %}
+      </div>
+    </details>
+  {% endfor %}
+</form>
+
+{% stylesheet %}
+  .collection-filters {
+    background-color: #f7f7f8;
+    border-radius: 12px;
+    padding: 24px;
+    position: sticky;
+    top: 24px;
+  }
+
+  .collection-filters__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .collection-filters__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .collection-filters__clear-all {
+    font-size: 0.8rem;
+    color: #e53e3e;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .collection-filters__clear-all:hover {
+    text-decoration: underline;
+  }
+
+  .collection-filters__active {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e2e4;
+  }
+
+  .collection-filters__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .collection-filters__tag:hover {
+    opacity: 0.8;
+  }
+
+  .collection-filters__key-issue-toggle {
+    padding-bottom: 16px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e2e4;
+  }
+
+  .collection-filters__toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .collection-filters__toggle-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #b45309;
+  }
+
+  .collection-filters__toggle-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .collection-filters__toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background-color: #d1d5db;
+    border-radius: 11px;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .collection-filters__toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+  }
+
+  .collection-filters__toggle-input:checked + .collection-filters__toggle-switch {
+    background-color: #b45309;
+  }
+
+  .collection-filters__toggle-input:checked + .collection-filters__toggle-switch::after {
+    transform: translateX(18px);
+  }
+
+  .collection-filters__group {
+    border-top: 1px solid #e2e2e4;
+  }
+
+  .collection-filters__group:first-of-type {
+    border-top: none;
+  }
+
+  .collection-filters__group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .collection-filters__group-header::-webkit-details-marker {
+    display: none;
+  }
+
+  .collection-filters__group-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .collection-filters__chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .collection-filters__group[open] .collection-filters__chevron {
+    transform: rotate(180deg);
+  }
+
+  .collection-filters__group-body {
+    padding-bottom: 16px;
+  }
+
+  .collection-filters__search {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border: 1px solid #e2e2e4;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-family: inherit;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .collection-filters__search:focus {
+    border-color: var(--color-foreground, #333);
+  }
+
+  .collection-filters__search::placeholder {
+    color: #9b9ba0;
+  }
+
+  .collection-filters__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .collection-filters__list--scrollable {
+    max-height: 340px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+
+  .collection-filters__list--scrollable::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .collection-filters__list--scrollable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .collection-filters__list--scrollable::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 2px;
+  }
+
+  .collection-filters__checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.15s ease;
+  }
+
+  .collection-filters__checkbox-label:hover {
+    background-color: #ededef;
+  }
+
+  .collection-filters__checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .collection-filters__checkbox-custom {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #c4c4c8;
+    border-radius: 4px;
+    position: relative;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .collection-filters__checkbox:checked + .collection-filters__checkbox-custom {
+    background-color: var(--color-foreground, #333);
+    border-color: var(--color-foreground, #333);
+  }
+
+  .collection-filters__checkbox:checked + .collection-filters__checkbox-custom::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 4px;
+    height: 8px;
+    border: solid var(--color-background, #fff);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .collection-filters__checkbox:disabled + .collection-filters__checkbox-custom {
+    opacity: 0.4;
+  }
+
+  .collection-filters__checkbox:disabled ~ .collection-filters__checkbox-text {
+    opacity: 0.4;
+  }
+
+  .collection-filters__checkbox-text {
+    flex: 1;
+  }
+
+  .collection-filters__count {
+    font-size: 0.75rem;
+    color: #9b9ba0;
+    font-weight: 500;
+  }
+
+  .collection-filters__price-range {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .collection-filters__price-inputs {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .collection-filters__price-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .collection-filters__price-field label {
+    font-size: 0.75rem;
+    color: #9b9ba0;
+    font-weight: 500;
+  }
+
+  .collection-filters__price-input-wrap {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #e2e2e4;
+    border-radius: 8px;
+    padding: 0 10px;
+    transition: border-color 0.15s ease;
+  }
+
+  .collection-filters__price-input-wrap:focus-within {
+    border-color: var(--color-foreground, #333);
+  }
+
+  .collection-filters__currency {
+    font-size: 0.85rem;
+    color: #9b9ba0;
+    margin-right: 4px;
+  }
+
+  .collection-filters__price-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    background: transparent;
+    -moz-appearance: textfield;
+  }
+
+  .collection-filters__price-input::-webkit-inner-spin-button,
+  .collection-filters__price-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .collection-filters__price-separator {
+    color: #9b9ba0;
+    padding-bottom: 8px;
+  }
+
+  .collection-filters__price-apply {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .collection-filters__price-apply:hover {
+    opacity: 0.9;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    var form = document.querySelector('[data-collection-filters]');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var params = new URLSearchParams();
+      var inputs = form.querySelectorAll('input[type="checkbox"]:checked, input[type="number"]');
+
+      inputs.forEach(function(input) {
+        if (input.type === 'number' && !input.value) return;
+        params.append(input.name, input.value);
+      });
+
+      var url = window.location.pathname;
+      var query = params.toString();
+      window.location.href = query ? url + '?' + query : url;
+    });
+
+    form.querySelectorAll('[data-filter-search]').forEach(function(search) {
+      search.addEventListener('input', function() {
+        var query = this.value.toLowerCase();
+        var list = this.nextElementSibling;
+        if (!list) return;
+
+        list.querySelectorAll('[data-filter-value]').forEach(function(item) {
+          var label = item.getAttribute('data-filter-value');
+          item.style.display = label.indexOf(query) === -1 ? 'none' : '';
+        });
+      });
+    });
+  })();
+{% endjavascript %}

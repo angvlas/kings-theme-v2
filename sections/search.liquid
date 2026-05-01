@@ -1,0 +1,524 @@
+{% comment %}
+  Search results page with grid/list toggle, filters, sort, and load more.
+  Mirrors the collection page layout for product results.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/search
+{% endcomment %}
+
+{% liquid
+  assign columns = section.settings.columns
+  assign columns_mobile = section.settings.columns_mobile
+  assign products_per_page = section.settings.products_per_page
+  assign enable_filters = section.settings.enable_filters
+  assign current_sort = search.sort_by | default: search.default_sort_by
+%}
+
+<div class="search-page" data-collection-section>
+  <h1 class="collection__title">{{ 'search.title' | t }}</h1>
+
+  <form action="{{ routes.search_url }}" method="get" role="search" class="search-page__form">
+    <label for="search-page-input" class="visually-hidden">{{ 'search.placeholder' | t }}</label>
+    <div class="search-page__input-wrapper">
+      <svg class="search-page__icon" width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M11 11L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="search"
+        id="search-page-input"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'search.placeholder' | t }}"
+        aria-label="{{ 'search.placeholder' | t }}"
+        class="search-page__input"
+        autocomplete="off"
+      >
+      <button type="submit" class="search-page__submit">{{ 'search.submit' | t }}</button>
+    </div>
+  </form>
+
+  {% if search.performed %}
+    {% if search.results_count == 0 %}
+      <p class="search-page__no-results">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
+    {% else %}
+      <p class="search-page__count">{{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}</p>
+
+      {% comment %} Separate product results from non-product results {% endcomment %}
+      {% assign has_products = false %}
+      {% for result in search.results %}
+        {% if result.object_type == 'product' %}
+          {% assign has_products = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      {% if has_products %}
+        <div class="collection__toolbar">
+          <div class="collection__toolbar-left">
+            {% if enable_filters %}
+              <button
+                class="collection__filter-toggle collection__toolbar-control"
+                type="button"
+                aria-controls="search-filters-sidebar"
+                aria-expanded="false"
+                onclick="
+                  var sidebar = document.getElementById('search-filters-sidebar');
+                  var expanded = this.getAttribute('aria-expanded') === 'true';
+                  this.setAttribute('aria-expanded', !expanded);
+                  sidebar.classList.toggle('collection__sidebar--open');
+                "
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span class="collection__filter-text">{{ 'collection.filters.title' | t }}</span>
+              </button>
+            {% endif %}
+          </div>
+
+          <div class="collection__toolbar-right">
+            <div class="collection__sort">
+              <span class="collection__toolbar-label">{{ 'collection.sort.label' | t }}</span>
+              <div class="collection__select-wrapper">
+                <select
+                  id="search-sort-select"
+                  class="collection__select"
+                  data-sort-select
+                >
+                  {% for option in search.sort_options %}
+                    <option
+                      value="{{ option.value }}"
+                      {% if current_sort == option.value %}selected{% endif %}
+                    >
+                      {{ option.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+                <svg class="collection__select-chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="collection__view-toggle" role="radiogroup" aria-label="{{ 'collection.view.label' | t }}">
+              <button
+                class="collection__view-button collection__view-button--active"
+                type="button"
+                data-view="grid"
+                aria-label="{{ 'collection.view.grid' | t }}"
+                aria-pressed="true"
+              >
+                <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <rect x="1" y="1" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="10.5" y="1" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="1" y="10.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="10.5" y="10.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </button>
+              <button
+                class="collection__view-button"
+                type="button"
+                data-view="list"
+                aria-label="{{ 'collection.view.list' | t }}"
+                aria-pressed="false"
+              >
+                <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <rect x="1" y="1" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="1" y="7" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="1" y="13" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="collection__layout{% unless enable_filters %} collection__layout--full{% endunless %}">
+          {% if enable_filters %}
+            <aside id="search-filters-sidebar" class="collection__sidebar">
+              {% render 'collection-filters', collection: search %}
+            </aside>
+          {% endif %}
+
+          <div class="collection__content">
+            {% paginate search.results by products_per_page %}
+              <div
+                class="collection__grid"
+                data-view-target="grid"
+                data-product-grid
+                style="--columns: {{ columns }}; --columns-mobile: {{ columns_mobile }};"
+              >
+                {% for result in search.results %}
+                  {% if result.object_type == 'product' %}
+                    <div class="collection__item">
+                      {% render 'product-card', product: result, placeholder_image: settings.placeholder_image %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <div class="collection__list" data-view-target="list" data-product-list hidden>
+                {% for result in search.results %}
+                  {% if result.object_type == 'product' %}
+                    <div class="collection__list-item">
+                      {% render 'product-card-list', product: result, placeholder_image: settings.placeholder_image %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              {% if paginate.pages > 1 %}
+                <div
+                  class="collection__load-more-wrapper"
+                  data-load-more-wrapper
+                  data-total-products="{{ search.results_count }}"
+                  data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}"
+                >
+                  <button
+                    class="collection__load-more"
+                    type="button"
+                    data-load-more
+                    {% unless paginate.next %}hidden{% endunless %}
+                  >
+                    <span data-load-more-text>{{ 'collection.load_more' | t }}</span>
+                    <span data-load-more-spinner class="collection__spinner" hidden>
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 20" />
+                      </svg>
+                    </span>
+                  </button>
+                  <p class="collection__load-more-count" data-load-more-count>
+                    {{ 'collection.showing_count' | t: current: search.results.size, total: search.results_count }}
+                  </p>
+                </div>
+              {% endif %}
+            {% endpaginate %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% comment %} Non-product results (articles, pages) {% endcomment %}
+      {% assign has_other = false %}
+      {% for result in search.results %}
+        {% if result.object_type != 'product' %}
+          {% assign has_other = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      {% if has_other %}
+        <div class="search-page__other">
+          <h2 class="search-page__other-title">{{ 'search.other_results' | t }}</h2>
+          <ul class="search-page__other-list">
+            {% for result in search.results %}
+              {% if result.object_type != 'product' %}
+                <li class="search-page__other-item">
+                  <a href="{{ result.url }}" class="search-page__other-link">
+                    <span class="search-page__other-type">{{ result.object_type | capitalize }}</span>
+                    <span class="search-page__other-name">{{ result.title }}</span>
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .search-page {
+    padding: 20px 0;
+  }
+
+  @media (min-width: 750px) {
+    .search-page {
+      padding: 40px 0;
+    }
+  }
+
+  .search-page__form {
+    margin-bottom: 24px;
+  }
+
+  .search-page__input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f7f7f8;
+    border: 1px solid #e2e2e4;
+    border-radius: 10px;
+    padding: 0 6px 0 16px;
+    max-width: 600px;
+    transition: border-color 0.15s ease;
+  }
+
+  .search-page__input-wrapper:focus-within {
+    border-color: var(--color-foreground, #333);
+    background-color: #fff;
+  }
+
+  .search-page__icon {
+    flex-shrink: 0;
+    color: #9b9ba0;
+  }
+
+  .search-page__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 12px 0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: inherit;
+  }
+
+  .search-page__input::placeholder {
+    color: #9b9ba0;
+  }
+
+  .search-page__input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  .search-page__submit {
+    padding: 8px 20px;
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+    font-family: inherit;
+  }
+
+  .search-page__submit:hover {
+    opacity: 0.9;
+  }
+
+  .search-page__count {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 20px;
+  }
+
+  .search-page__no-results {
+    font-size: 0.95rem;
+    color: #718096;
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  /* Non-product results */
+  .search-page__other {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e2e4;
+  }
+
+  .search-page__other-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .search-page__other-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .search-page__other-item {
+    border-radius: 8px;
+    transition: background-color 0.15s ease;
+  }
+
+  .search-page__other-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 8px;
+  }
+
+  .search-page__other-link:hover {
+    background-color: #f7f7f8;
+  }
+
+  .search-page__other-type {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #9b9ba0;
+    background-color: #f7f7f8;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .search-page__other-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    var section = document.querySelector('.search-page[data-collection-section]');
+    if (!section) return;
+
+    /* Sort by */
+    var sortSelect = section.querySelector('[data-sort-select]');
+    if (sortSelect) {
+      sortSelect.addEventListener('change', function() {
+        var url = new URL(window.location.href);
+        url.searchParams.set('sort_by', this.value);
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+      });
+    }
+
+    /* View toggle */
+    var gridView = section.querySelector('[data-view-target="grid"]');
+    var listView = section.querySelector('[data-view-target="list"]');
+
+    if (gridView && listView) {
+      section.querySelectorAll('[data-view]').forEach(function(button) {
+        button.addEventListener('click', function() {
+          var view = this.getAttribute('data-view');
+
+          section.querySelectorAll('[data-view]').forEach(function(b) {
+            b.classList.remove('collection__view-button--active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          this.classList.add('collection__view-button--active');
+          this.setAttribute('aria-pressed', 'true');
+
+          gridView.hidden = view === 'list';
+          listView.hidden = view === 'grid';
+        });
+      });
+    }
+
+    /* Load more */
+    var productGrid = section.querySelector('[data-product-grid]');
+    var productList = section.querySelector('[data-product-list]');
+    var wrapper = section.querySelector('[data-load-more-wrapper]');
+    var btn = section.querySelector('[data-load-more]');
+    var countEl = section.querySelector('[data-load-more-count]');
+    var total = wrapper ? parseInt(wrapper.getAttribute('data-total-products'), 10) : 0;
+    var nextUrl = wrapper ? wrapper.getAttribute('data-next-url') : '';
+
+    if (!btn || !productGrid) return;
+
+    function loaded() {
+      return productGrid.querySelectorAll('.collection__item').length;
+    }
+
+    function refreshUI() {
+      if (countEl) {
+        countEl.textContent = loaded() + ' of ' + total + ' results';
+      }
+      if (btn) {
+        btn.hidden = !nextUrl;
+        btn.disabled = false;
+        var text = btn.querySelector('[data-load-more-text]');
+        var spinner = btn.querySelector('[data-load-more-spinner]');
+        if (text) text.hidden = false;
+        if (spinner) spinner.hidden = true;
+      }
+    }
+
+    btn.addEventListener('click', function() {
+      if (!nextUrl) return;
+      btn.disabled = true;
+      var text = btn.querySelector('[data-load-more-text]');
+      var spinner = btn.querySelector('[data-load-more-spinner]');
+      if (text) text.hidden = true;
+      if (spinner) spinner.hidden = false;
+
+      fetch(nextUrl)
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+
+          doc.querySelectorAll('[data-product-grid] .collection__item').forEach(function(el) {
+            productGrid.appendChild(el);
+          });
+
+          if (productList) {
+            doc.querySelectorAll('[data-product-list] .collection__list-item').forEach(function(el) {
+              productList.appendChild(el);
+            });
+          }
+
+          var fetchedWrapper = doc.querySelector('[data-load-more-wrapper]');
+          nextUrl = fetchedWrapper ? fetchedWrapper.getAttribute('data-next-url') : '';
+          refreshUI();
+        })
+        .catch(function() {
+          refreshUI();
+        });
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:general.search",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "t:labels.products_per_page",
+      "min": 4,
+      "max": 50,
+      "step": 2,
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "t:general.layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:labels.columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:labels.columns_mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.filtering"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filters",
+      "label": "t:labels.enable_filters",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
