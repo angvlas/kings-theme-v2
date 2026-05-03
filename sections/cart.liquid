@@ -7,10 +7,26 @@
 <div class="cart-page" data-cart-page>
   <h1 class="cart-page__title">{{ 'cart.title' | t }}</h1>
 
+  {% for i in (1..3) %}
+    {% assign notice_key = 'cart_notice_' | append: i %}
+    {% assign notice_text = settings[notice_key] %}
+    {% if notice_text != blank %}
+      <div class="cart-page__notice">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M8 5v3.5M8 10.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>{{ notice_text }}</span>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="cart-page__alerts" data-cart-alerts hidden></div>
+
   {% if cart.item_count > 0 %}
     <div class="cart-page__items" data-cart-items>
       {% for item in cart.items %}
-        <div class="cart-page__item" data-cart-item data-line-key="{{ item.key }}">
+        <div class="cart-page__item" data-cart-item data-line-key="{{ item.key }}" data-inventory-quantity="{{ item.variant.inventory_quantity }}" data-inventory-policy="{{ item.variant.inventory_policy }}">
           <a href="{{ item.url }}" class="cart-page__item-image">
             {% if item.image %}
               {{ item.image | image_url: width: 200 | image_tag: alt: item.product.title, loading: 'lazy' }}
@@ -22,7 +38,14 @@
             {% if item.variant.title != 'Default Title' %}
               <p class="cart-page__item-variant">{{ item.variant.title }}</p>
             {% endif %}
-            <p class="cart-page__item-price">{{ item.price | money }}</p>
+            <div class="cart-page__item-price-row">
+              <p class="cart-page__item-price">{{ item.price | money }}</p>
+              {% if item.variant.compare_at_price > item.price %}
+                <p class="cart-page__item-compare-price">{{ item.variant.compare_at_price | money }}</p>
+                {% assign discount_pct = item.variant.compare_at_price | minus: item.price | times: 100 | divided_by: item.variant.compare_at_price %}
+                <span class="cart-page__item-discount">-{{ discount_pct }}%</span>
+              {% endif %}
+            </div>
           </div>
 
           <div class="cart-page__item-qty">
@@ -55,20 +78,6 @@
         <p class="cart-page__taxes">{{ 'cart.taxes_note' | t }}</p>
       </div>
 
-      {% for i in (1..3) %}
-        {% assign notice_key = 'cart_notice_' | append: i %}
-        {% assign notice_text = settings[notice_key] %}
-        {% if notice_text != blank %}
-          <div class="cart-page__notice">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/>
-              <path d="M8 5v3.5M8 10.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span>{{ notice_text }}</span>
-          </div>
-        {% endif %}
-      {% endfor %}
-
       <a href="/checkout" class="cart-page__checkout-btn">
         {{ 'cart.checkout' | t }}
       </a>
@@ -96,6 +105,26 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 24px;
+  }
+
+  .cart-page__alerts[hidden] { display: none; }
+  .cart-page__alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    animation: cart-alert-fade 4s ease forwards;
+  }
+  @keyframes cart-alert-fade {
+    0%, 75% { opacity: 1; }
+    100% { opacity: 0; }
   }
 
   @media (min-width: 750px) {
@@ -173,6 +202,30 @@
     margin-bottom: 4px;
   }
 
+  .cart-page__item-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .cart-page__item-compare-price {
+    font-size: 0.75rem;
+    color: #9b9ba0;
+    text-decoration: line-through;
+  }
+
+  .cart-page__item-discount {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background-color: #e53e3e;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 4px;
+    line-height: 1;
+  }
+
   .cart-page__item-price {
     font-size: 0.8rem;
     color: #718096;
@@ -199,8 +252,13 @@
     font-family: inherit;
   }
 
-  .cart-page__qty-btn:hover {
+  .cart-page__qty-btn:hover:not(:disabled) {
     background-color: #f7f7f8;
+  }
+
+  .cart-page__qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 
   .cart-page__qty-input {
@@ -297,10 +355,6 @@
     margin-bottom: 8px;
   }
 
-  .cart-page__notice:last-of-type {
-    margin-bottom: 16px;
-  }
-
   .cart-page__notice svg {
     flex-shrink: 0;
     margin-top: 1px;
@@ -389,7 +443,20 @@
       });
     }
 
-    /* Quantity +/- */
+    var alertsContainer = page.querySelector('[data-cart-alerts]');
+
+    function showAlert(name, msg) {
+      alertsContainer.hidden = false;
+      var el = document.createElement('div');
+      el.className = 'cart-page__alert';
+      el.textContent = name + ' \u2014 ' + msg;
+      alertsContainer.appendChild(el);
+      setTimeout(function() {
+        el.remove();
+        if (!alertsContainer.children.length) alertsContainer.hidden = true;
+      }, 4000);
+    }
+
     page.querySelectorAll('[data-cart-item]').forEach(function(item) {
       var key = item.getAttribute('data-line-key');
       var qtyInput = item.querySelector('[data-cart-qty]');
@@ -397,32 +464,31 @@
       var plusBtn = item.querySelector('[data-cart-plus]');
       var removeBtn = item.querySelector('[data-cart-remove]');
       var totalEl = item.querySelector('[data-cart-line-total]');
+      var maxQty = parseInt(item.getAttribute('data-inventory-quantity'), 10);
+      var policy = item.getAttribute('data-inventory-policy');
+      var hasLimit = policy === 'deny' && !isNaN(maxQty);
+      var productName = (item.querySelector('.cart-page__item-title') || {}).textContent || '';
 
-      function showWarning(msg) {
-        var existing = item.querySelector('.cart-page__item-warning');
-        if (existing) existing.remove();
-
-        var warning = document.createElement('p');
-        warning.className = 'cart-page__item-warning';
-        warning.textContent = msg;
-        item.querySelector('.cart-page__item-info').appendChild(warning);
-
-        setTimeout(function() { warning.remove(); }, 3000);
+      function checkPlusBtn(qty) {
+        if (plusBtn) plusBtn.disabled = hasLimit && qty >= maxQty;
       }
+      checkPlusBtn(parseInt(qtyInput.value, 10) || 1);
 
       function updateLine(newQty) {
         if (newQty < 0) newQty = 0;
-        qtyInput.value = newQty;
 
-        if (newQty === 0) {
-          item.style.opacity = '0.5';
+        if (hasLimit && newQty > maxQty) {
+          showAlert(productName, 'Only ' + maxQty + ' available');
+          qtyInput.value = maxQty;
+          checkPlusBtn(maxQty);
+          return;
         }
 
+        qtyInput.value = newQty;
+        if (newQty === 0) item.style.opacity = '0.5';
+
         updateCart(key, newQty).then(function(cart) {
-          if (newQty === 0) {
-            item.remove();
-            return;
-          }
+          if (newQty === 0) { item.remove(); return; }
 
           var lineItem = cart.items.find(function(i) { return i.key === key; });
           if (lineItem) {
@@ -430,39 +496,30 @@
             qtyInput.value = lineItem.quantity;
 
             if (lineItem.quantity < newQty) {
-              showWarning('Only ' + lineItem.quantity + ' available');
+              hasLimit = true;
+              maxQty = lineItem.quantity;
+              showAlert(productName, 'Only ' + lineItem.quantity + ' available');
+              checkPlusBtn(lineItem.quantity);
+            } else {
+              checkPlusBtn(newQty);
             }
           }
         });
       }
 
-      if (minusBtn) {
-        minusBtn.addEventListener('click', function() {
-          var val = parseInt(qtyInput.value, 10) || 1;
-          updateLine(val - 1);
-        });
-      }
+      if (minusBtn) minusBtn.addEventListener('click', function() {
+        updateLine((parseInt(qtyInput.value, 10) || 1) - 1);
+      });
+      if (plusBtn) plusBtn.addEventListener('click', function() {
+        updateLine((parseInt(qtyInput.value, 10) || 1) + 1);
+      });
+      if (removeBtn) removeBtn.addEventListener('click', function() { updateLine(0); });
 
-      if (plusBtn) {
-        plusBtn.addEventListener('click', function() {
-          var val = parseInt(qtyInput.value, 10) || 1;
-          updateLine(val + 1);
-        });
-      }
-
-      if (removeBtn) {
-        removeBtn.addEventListener('click', function() {
-          updateLine(0);
-        });
-      }
-
-      if (qtyInput) {
-        qtyInput.addEventListener('change', function() {
-          var val = parseInt(this.value, 10);
-          if (isNaN(val) || val < 0) val = 0;
-          updateLine(val);
-        });
-      }
+      if (qtyInput) qtyInput.addEventListener('change', function() {
+        var val = parseInt(this.value, 10);
+        if (isNaN(val) || val < 0) val = 0;
+        updateLine(val);
+      });
     });
   })();
 {% endjavascript %}

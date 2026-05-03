@@ -10,7 +10,25 @@
       "Bash(node scripts/search_docs.mjs \"Shopify.formatMoney money_format javascript\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
       "Bash(node scripts/search_docs.mjs \"shop money_format\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
       "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,locales/en.default.json,sections/cart.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id header-refactor-01 --revision)",
-      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,locales/en.default.json,sections/cart.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id header-refactor-01 --revision 2)"
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,locales/en.default.json,sections/cart.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id header-refactor-01 --revision 2)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/cart.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id cart-page-qty-limit-01 --revision 1)",
+      "Read(//\\\\{% javascript %\\\\}/,/**)",
+      "Bash(node --check /tmp/header_js.js)",
+      "Bash(sed \"1d;$d\")",
+      "Bash(node --check /tmp/slideshow_js.js)",
+      "Bash(for f:*)",
+      "Bash(do if:*)",
+      "Bash(then echo:*)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(node --check /tmp/cart_js.js)",
+      "Bash(git stash:*)",
+      "Bash(String.)",
+      "Bash('{')",
+      "Bash('}')",
+      "Bash(node --check /tmp/cart_js_check.js)",
+      "Bash(node scripts/search_docs.mjs \"line_item compare_at_price original_price discount\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
+      "Bash(node scripts/search_docs.mjs \"variant compare_at_price\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)"
     ]
   }
 }

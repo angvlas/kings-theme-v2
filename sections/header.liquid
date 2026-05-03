@@ -156,7 +156,7 @@
 </header>
 
 {% comment %} Cart drawer {% endcomment %}
-<div class="cart-drawer" id="cart-drawer" hidden>
+<div class="cart-drawer" id="cart-drawer">
   <div class="cart-drawer__overlay" data-cart-drawer-close></div>
   <div class="cart-drawer__body">
     <div class="cart-drawer__header">
@@ -183,8 +183,12 @@
             {% endif %}
             <div class="cart-drawer__item-price-row">
               <span class="cart-drawer__item-price" data-drawer-line-total>{{ item.line_price | money }}</span>
-              {% if item.quantity > 1 %}
-                <span class="cart-drawer__item-unit-price">{{ item.price | money }} each</span>
+              {% if item.variant.compare_at_price > item.price %}
+                <span class="cart-drawer__item-compare-price">{{ item.variant.compare_at_price | money }}</span>
+                {% assign discount_pct = item.variant.compare_at_price | minus: item.price | times: 100 | divided_by: item.variant.compare_at_price %}
+                <span class="cart-drawer__item-discount">-{{ discount_pct }}%</span>
+              {% elsif item.quantity > 1 %}
+                <span class="cart-drawer__item-unit-price">{{ item.price | money }} {{ 'cart.each' | t }}</span>
               {% endif %}
             </div>
             <div class="cart-drawer__item-qty">
@@ -417,22 +421,18 @@
   </div>
 {% endif %}
 
-<script data-header-config type="application/json">
-  {
-    "sectionId": {{ section.id | json }},
-    "moneyFormat": {{ shop.money_format | json }},
-    "strings": {
-      "noResults": {{ 'search.no_results' | t | json }},
-      "searching": {{ 'header.searching' | t | json }},
-      "searchError": {{ 'header.search_error' | t | json }},
-      "typeArticle": {{ 'header.type_article' | t | json }},
-      "typePage": {{ 'header.type_page' | t | json }},
-      "each": {{ 'cart.each' | t | json }},
-      "onlyXAvailable": {{ 'cart.only_x_available' | t | json }},
-      "removeLabel": {{ 'cart.remove' | t | json }}
-    }
-  }
-</script>
+<div data-header-config hidden
+  data-section-id="{{ section.id }}"
+  data-money-format="{{ shop.money_format | escape }}"
+  data-no-results="{{ 'search.no_results' | t | escape }}"
+  data-searching="{{ 'header.searching' | t | escape }}"
+  data-search-error="{{ 'header.search_error' | t | escape }}"
+  data-type-article="{{ 'header.type_article' | t | escape }}"
+  data-type-page="{{ 'header.type_page' | t | escape }}"
+  data-each="{{ 'cart.each' | t | escape }}"
+  data-only-available="{{ 'cart.only_x_available' | t | escape }}"
+  data-remove-label="{{ 'cart.remove' | t | escape }}"
+></div>
 
 {% stylesheet %}
   /* Make entire header section sticky */
@@ -982,15 +982,15 @@
 
   /* Cart drawer */
   .cart-drawer {
-    display: none;
-  }
-
-  .cart-drawer[hidden] {
-    display: none;
+    visibility: hidden;
+    pointer-events: none;
+    transition: visibility 0s linear 0.25s;
   }
 
   .cart-drawer--open {
-    display: block;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
   }
 
   .cart-drawer__overlay {
@@ -998,6 +998,12 @@
     inset: 0;
     z-index: 200;
     background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .cart-drawer--open .cart-drawer__overlay {
+    opacity: 1;
   }
 
   .cart-drawer__body {
@@ -1123,6 +1129,24 @@
   .cart-drawer__item-unit-price {
     font-size: 0.65rem;
     color: #9b9ba0;
+  }
+
+  .cart-drawer__item-compare-price {
+    font-size: 0.7rem;
+    color: #9b9ba0;
+    text-decoration: line-through;
+  }
+
+  .cart-drawer__item-discount {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    background-color: #e53e3e;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 4px;
+    line-height: 1;
   }
 
   .cart-drawer__item-qty {
@@ -1478,24 +1502,34 @@
 {% javascript %}
   (function() {
     var configEl = document.querySelector('[data-header-config]');
-    var config = configEl ? JSON.parse(configEl.textContent) : { moneyFormat: '$' + '\x7B\x7Bamount\x7D\x7D', strings: {} };
-    var strings = config.strings;
+    function attr(name) { return configEl ? configEl.getAttribute('data-' + name) || '' : ''; }
+    var moneyFormat = attr('money-format');
+    var strings = {
+      noResults: attr('no-results'),
+      searching: attr('searching'),
+      searchError: attr('search-error'),
+      typeArticle: attr('type-article'),
+      typePage: attr('type-page'),
+      each: attr('each'),
+      onlyXAvailable: attr('only-available'),
+      removeLabel: attr('remove-label')
+    };
 
     function formatMoney(cents) {
+      if (!moneyFormat) return (cents / 100).toFixed(2);
       var amount = (cents / 100).toFixed(2);
       var amountNoDecimals = Math.round(cents / 100).toString();
       var amountWithComma = amount.replace('.', ',');
-      return config.moneyFormat
-        .replace('\x7B\x7Bamount_with_comma_separator\x7D\x7D', amountWithComma)
-        .replace('\x7B\x7Bamount_no_decimals\x7D\x7D', amountNoDecimals)
-        .replace('\x7B\x7Bamount_no_decimals_with_comma_separator\x7D\x7D', amountNoDecimals)
-        .replace('\x7B\x7Bamount\x7D\x7D', amount);
+      return moneyFormat
+        .replace(new RegExp('[{][{]amount_with_comma_separator[}][}]'), amountWithComma)
+        .replace(new RegExp('[{][{]amount_no_decimals[}][}]'), amountNoDecimals)
+        .replace(new RegExp('[{][{]amount_no_decimals_with_comma_separator[}][}]'), amountNoDecimals)
+        .replace(new RegExp('[{][{]amount[}][}]'), amount);
     }
 
     function initDrawer(el, openClass, closeSel, onOpen, onClose) {
       function open() {
-        el.hidden = false;
-        requestAnimationFrame(function() { el.classList.add(openClass); });
+        el.classList.add(openClass);
         document.body.style.overflow = 'hidden';
         if (onOpen) onOpen();
       }
@@ -1503,10 +1537,6 @@
         el.classList.remove(openClass);
         document.body.style.overflow = '';
         if (onClose) onClose();
-        el.addEventListener('transitionend', function handler() {
-          if (!el.classList.contains(openClass)) el.hidden = true;
-          el.removeEventListener('transitionend', handler);
-        });
       }
       el.querySelectorAll(closeSel).forEach(function(btn) {
         btn.addEventListener('click', close);
@@ -1563,10 +1593,11 @@
     var cartToggle = document.querySelector('[data-cart-toggle]');
 
     if (cartDrawer && cartToggle) {
-      var sectionId = config.sectionId;
+      var sectionId = attr('section-id');
 
       function availableMsg(qty) {
-        return (strings.onlyXAvailable || 'Only \x7B\x7B count \x7D\x7D available').replace('\x7B\x7B count \x7D\x7D', qty);
+        if (strings.onlyXAvailable) return strings.onlyXAvailable.replace(new RegExp('[{][{]\\s*count\\s*[}][}]'), qty);
+        return 'Only ' + qty + ' available';
       }
 
       function showDrawerWarning(itemEl, msg) {
