@@ -98,7 +98,9 @@
     "contact_email": "Email address",
     "contact_phone": "Phone number",
     "header_social": "Social media (top bar)",
-    "search_type": "Search results type"
+    "search_type": "Search results type",
+    "shipment_status": "Shipment status",
+    "shipment_text": "Status text"
   },
   "options": {
     "alignment": {
@@ -130,6 +132,11 @@
       "products_articles": "Products & articles",
       "products_pages": "Products & pages",
       "everything": "Everything"
+    },
+    "shipment_status": {
+      "on_time": "On time",
+      "delayed": "Delayed",
+      "hidden": "Hidden"
     }
   },
   "sections": {

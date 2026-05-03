@@ -137,7 +137,9 @@
     "searching": "Searching...",
     "search_error": "Something went wrong",
     "type_article": "Article",
-    "type_page": "Page"
+    "type_page": "Page",
+    "shipment_on_time": "Shipping on time",
+    "shipment_delayed": "Shipping delayed"
   },
   "sections": {
     "collection_row": {

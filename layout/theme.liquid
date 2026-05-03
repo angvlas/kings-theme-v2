@@ -29,6 +29,12 @@
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
+
+    <style>
+      .header__inner { justify-content: space-between !important; }
+      .header__search { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 480px !important; }
+      .header__logo, .header__actions { position: relative !important; z-index: 1 !important; }
+    </style>
   </head>
 
   <body>

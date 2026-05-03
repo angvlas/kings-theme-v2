@@ -132,6 +132,12 @@
     </div>
 
     <div class="header__actions">
+      {% if section.settings.shipment_status != 'hidden' %}
+        <div class="header__shipment-status header__shipment-status--{{ section.settings.shipment_status }}">
+          <span class="header__shipment-dot"></span>
+          <span class="header__shipment-label">{{ section.settings.shipment_text }}</span>
+        </div>
+      {% endif %}
       {% if shop.customer_accounts_enabled %}
         <a href="{{ routes.account_url }}" class="header__action" aria-label="{{ 'header.account' | t }}">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -737,10 +743,12 @@
   .header__inner {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
     height: 56px;
     margin: 0 auto;
     padding: 0 var(--page-margin);
+    position: relative;
   }
 
   .header__logo {
@@ -749,6 +757,8 @@
     text-decoration: none;
     color: inherit;
     flex-shrink: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .header__logo-image {
@@ -764,10 +774,11 @@
   }
 
   .header__search {
-    flex: 1;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
     max-width: 480px;
-    margin: 0 auto;
-    position: relative;
   }
 
   .header__search-form {
@@ -809,11 +820,29 @@
     -webkit-appearance: none;
   }
 
+  .header__shipment-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .header__shipment-status--on_time { background: rgba(56,161,105,0.15); color: #68d391; }
+  .header__shipment-status--delayed { background: rgba(214,158,46,0.15); color: #ecc94b; }
+  .header__shipment-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .header__shipment-status--on_time .header__shipment-dot { background: #38a169; }
+  .header__shipment-status--delayed .header__shipment-dot { background: #d69e2e; }
+
   .header__actions {
     display: flex;
     align-items: center;
     gap: 4px;
     flex-shrink: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .header__action {
@@ -1131,23 +1160,8 @@
     color: #9b9ba0;
   }
 
-  .cart-drawer__item-compare-price {
-    font-size: 0.7rem;
-    color: #9b9ba0;
-    text-decoration: line-through;
-  }
-
-  .cart-drawer__item-discount {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 6px;
-    background-color: #e53e3e;
-    color: #fff;
-    font-size: 0.6rem;
-    font-weight: 700;
-    border-radius: 4px;
-    line-height: 1;
-  }
+  .cart-drawer__item-compare-price { font-size: 0.7rem; color: #9b9ba0; text-decoration: line-through; }
+  .cart-drawer__item-discount { display: inline-flex; align-items: center; padding: 2px 6px; background: #e53e3e; color: #fff; font-size: 0.6rem; font-weight: 700; border-radius: 4px; line-height: 1; }
 
   .cart-drawer__item-qty {
     display: flex;
@@ -1177,10 +1191,7 @@
     border-color: var(--color-foreground, #333);
   }
 
-  .cart-drawer__qty-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
+  .cart-drawer__qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .cart-drawer__qty-value {
     font-size: 0.8rem;
@@ -1482,6 +1493,10 @@
     }
 
     .header__search {
+      display: none;
+    }
+
+    .header__shipment-status {
       display: none;
     }
 
@@ -1973,6 +1988,28 @@
       "type": "text",
       "id": "contact_phone",
       "label": "t:labels.contact_phone"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.shipment_status"
+    },
+    {
+      "type": "select",
+      "id": "shipment_status",
+      "label": "t:labels.shipment_status",
+      "default": "on_time",
+      "options": [
+        { "value": "on_time", "label": "t:options.shipment_status.on_time" },
+        { "value": "delayed", "label": "t:options.shipment_status.delayed" },
+        { "value": "hidden", "label": "t:options.shipment_status.hidden" }
+      ]
+    },
+    {
+      "visible_if": "{{ section.settings.shipment_status != 'hidden' }}",
+      "type": "text",
+      "id": "shipment_text",
+      "label": "t:labels.shipment_text",
+      "default": "Shipping on time"
     },
     {
       "type": "header",
