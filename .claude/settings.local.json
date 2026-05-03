@@ -29,7 +29,8 @@
       "Bash(node --check /tmp/cart_js_check.js)",
       "Bash(node scripts/search_docs.mjs \"line_item compare_at_price original_price discount\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
       "Bash(node scripts/search_docs.mjs \"variant compare_at_price\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
-      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,locales/en.default.json,locales/en.default.schema.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id shipment-status-01 --revision 1)"
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,locales/en.default.json,locales/en.default.schema.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id shipment-status-01 --revision 1)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/header.liquid,sections/cart.liquid,locales/en.default.json,locales/en.default.schema.json,layout/theme.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id full-theme-validate-01 --revision 1)"
     ]
   }
 }

@@ -1436,7 +1436,9 @@
     font-weight: 600;
   }
   .mobile-drawer__shipment--on_time { background: rgba(56,161,105,0.1); color: #38a169; }
+  .mobile-drawer__shipment--on_time .header__shipment-dot { background: #38a169; }
   .mobile-drawer__shipment--delayed { background: rgba(214,158,46,0.1); color: #d69e2e; }
+  .mobile-drawer__shipment--delayed .header__shipment-dot { background: #d69e2e; }
 
   /* Mobile nav accordion */
   .mobile-nav {
@@ -1450,6 +1452,7 @@
     margin-top: 8px;
     padding-top: 8px;
   }
+  .mobile-nav--extra .mobile-nav__link { padding: 18px 20px; }
 
   .mobile-nav__row {
     display: flex;
@@ -1563,7 +1566,8 @@
 
     function initDrawer(el, openClass, closeSel, onOpen, onClose) {
       function open() {
-        el.classList.add(openClass);
+        el.hidden = false;
+        requestAnimationFrame(function() { el.classList.add(openClass); });
         document.body.style.overflow = 'hidden';
         if (onOpen) onOpen();
       }
@@ -1571,6 +1575,12 @@
         el.classList.remove(openClass);
         document.body.style.overflow = '';
         if (onClose) onClose();
+        var bodyEl = el.querySelector('[class$="__body"]');
+        (bodyEl || el).addEventListener('transitionend', function handler(e) {
+          if (e.target !== (bodyEl || el)) return;
+          if (!el.classList.contains(openClass)) el.hidden = true;
+          (bodyEl || el).removeEventListener('transitionend', handler);
+        });
       }
       el.querySelectorAll(closeSel).forEach(function(btn) {
         btn.addEventListener('click', close);
@@ -1796,7 +1806,8 @@
       }
 
       function refreshAndOpenDrawer() {
-        refreshDrawer().then(function() { cartDrawerCtrl.open(); });
+        cartDrawerCtrl.open();
+        refreshDrawer();
       }
 
       var cartDrawerCtrl = initDrawer(cartDrawer, 'cart-drawer--open', '[data-cart-drawer-close]');
