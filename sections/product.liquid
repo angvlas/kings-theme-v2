@@ -89,6 +89,9 @@
       {% endif %}
 
       <div class="product-page__hero" data-product-hero>
+        {% if product.tags contains 'ONE_PER' %}
+          <span class="product-page__limit-badge">{{ 'product.limit_one' | t }}</span>
+        {% endif %}
         {% if current_variant.featured_image %}
           {{ current_variant.featured_image | image_url: width: 900 | image_tag: alt: product.title, class: 'product-page__hero-image', id: 'product-hero-img' }}
         {% elsif product.featured_image %}
@@ -273,42 +276,21 @@
         {% render 'series-gallery-inline', series_collection: sc, current_product: product %}
       {% endif %}
 
-      <div class="product-tabs" data-product-tabs>
-        <div class="product-tabs__nav" role="tablist">
-          <button
-            class="product-tabs__tab product-tabs__tab--active"
-            type="button"
-            role="tab"
-            aria-selected="true"
-            aria-controls="tab-description"
-            data-tab="description"
-          >
-            {{ 'product.tab_description' | t }}
-          </button>
-          <button
-            class="product-tabs__tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="tab-details"
-            data-tab="details"
-          >
-            {{ 'product.tab_details' | t }}
-          </button>
-        </div>
-
-        <div class="product-tabs__panel product-tabs__panel--active" id="tab-description" role="tabpanel" data-tab-panel="description">
+      <div class="product-info-split">
+        <div class="product-info-split__description">
+          <h3 class="product-info-split__heading">{{ 'product.tab_description' | t }}</h3>
           {% if product.description != blank %}
-            <div class="product-tabs__description">
+            <div class="product-info-split__text">
               {{ product.description }}
             </div>
           {% else %}
-            <p class="product-tabs__empty">{{ 'product.no_description' | t }}</p>
+            <p class="product-info-split__empty">{{ 'product.no_description' | t }}</p>
           {% endif %}
         </div>
 
-        <div class="product-tabs__panel" id="tab-details" role="tabpanel" data-tab-panel="details" hidden>
-          <table class="product-tabs__details-table">
+        <div class="product-info-split__details">
+          <h3 class="product-info-split__heading">{{ 'product.tab_details' | t }}</h3>
+          <table class="product-info-split__table">
             <tbody>
               {% if current_variant.sku != blank %}
                 <tr>
@@ -459,6 +441,22 @@
     justify-content: center;
     flex: 1;
     min-width: 0;
+  }
+  .product-page__limit-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    padding: 4px 10px;
+    background: #fef3c7;
+    color: #b45309;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    line-height: 1.2;
+    pointer-events: none;
   }
 
   .product-page__hero-arrow {
@@ -835,86 +833,60 @@
     color: rgba(255, 255, 255, 0.6);
   }
 
-  /* Tabs */
-  .product-tabs {
-    margin-top: 24px;
-  }
+  /* Description & Details */
 
-  .product-tabs__nav {
-    display: flex;
-    gap: 0;
-    border-bottom: 2px solid #e2e2e4;
-    margin-bottom: 16px;
+  .product-info-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    border-top: 1px solid #e2e2e4;
+    padding-top: 20px;
   }
-
-  .product-tabs__tab {
-    padding: 10px 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    font-family: inherit;
+  @media (min-width: 750px) {
+    .product-info-split { grid-template-columns: 2fr 1fr; gap: 32px; }
+  }
+  .product-info-split__heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     color: #9b9ba0;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease;
-    white-space: nowrap;
+    margin-bottom: 12px;
   }
-
-  .product-tabs__tab:hover {
-    color: var(--color-foreground, #333);
-  }
-
-  .product-tabs__tab--active {
-    color: var(--color-foreground, #333);
-    border-bottom-color: var(--color-foreground, #333);
-  }
-
-  .product-tabs__panel {
-    display: none;
-  }
-
-  .product-tabs__panel--active {
-    display: block;
-  }
-
-  .product-tabs__panel[hidden] {
-    display: none;
-  }
-
-  .product-tabs__description {
+  .product-info-split__text {
     font-size: 0.9rem;
     line-height: 1.6;
     color: #555;
   }
-
-  .product-tabs__empty {
+  .product-info-split__empty {
     font-size: 0.85rem;
     color: #9b9ba0;
   }
-
-  .product-tabs__details-table {
+  .product-info-split__details {
+    border-left: none;
+    padding-left: 0;
+  }
+  @media (min-width: 750px) {
+    .product-info-split__details { border-left: 1px solid #e2e2e4; padding-left: 24px; }
+  }
+  .product-info-split__table {
     width: 100%;
     border-collapse: collapse;
   }
-
-  .product-tabs__details-table th,
-  .product-tabs__details-table td {
-    padding: 10px 0;
-    font-size: 0.85rem;
+  .product-info-split__table th,
+  .product-info-split__table td {
+    padding: 6px 0;
+    font-size: 0.8rem;
     text-align: left;
     border-bottom: 1px solid #f0f0f2;
   }
-
-  .product-tabs__details-table th {
+  .product-info-split__table th {
     font-weight: 600;
     color: #9b9ba0;
-    width: 140px;
+    width: 100px;
     vertical-align: top;
   }
-
-  .product-tabs__details-table td {
+  .product-info-split__table td {
     color: var(--color-foreground, #333);
   }
 
@@ -1086,11 +1058,18 @@
     var lightboxIndex = 0;
 
     function openLightbox(index) {
-      if (!lightbox || !lightboxImg || thumbs.length === 0) return;
-      lightboxIndex = index;
-      var src = thumbs[lightboxIndex].getAttribute('data-thumb-src');
+      if (!lightbox || !lightboxImg) return;
+      var src;
+      if (thumbs.length > 0) {
+        lightboxIndex = index;
+        src = thumbs[lightboxIndex].getAttribute('data-thumb-src');
+        lightboxCounter.textContent = (lightboxIndex + 1) + ' / ' + thumbs.length;
+      } else if (heroImg) {
+        src = heroImg.src;
+        if (lightboxCounter) lightboxCounter.textContent = '1 / 1';
+      }
+      if (!src) return;
       lightboxImg.src = src;
-      lightboxCounter.textContent = (lightboxIndex + 1) + ' / ' + thumbs.length;
       lightbox.hidden = false;
       document.body.style.overflow = 'hidden';
     }
@@ -1131,34 +1110,6 @@
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') lightboxGo(-1);
         if (e.key === 'ArrowRight') lightboxGo(1);
-      });
-    }
-
-    /* Tabs */
-    var tabsContainer = page.querySelector('[data-product-tabs]');
-    if (tabsContainer) {
-      tabsContainer.querySelectorAll('[data-tab]').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-          var target = this.getAttribute('data-tab');
-
-          tabsContainer.querySelectorAll('[data-tab]').forEach(function(t) {
-            t.classList.remove('product-tabs__tab--active');
-            t.setAttribute('aria-selected', 'false');
-          });
-          this.classList.add('product-tabs__tab--active');
-          this.setAttribute('aria-selected', 'true');
-
-          tabsContainer.querySelectorAll('[data-tab-panel]').forEach(function(p) {
-            p.classList.remove('product-tabs__panel--active');
-            p.hidden = true;
-          });
-
-          var panel = tabsContainer.querySelector('[data-tab-panel="' + target + '"]');
-          if (panel) {
-            panel.classList.add('product-tabs__panel--active');
-            panel.hidden = false;
-          }
-        });
       });
     }
 

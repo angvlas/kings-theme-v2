@@ -57,7 +57,9 @@
       {% else %}
         {{ 'product-1' | placeholder_svg_tag }}
       {% endif %}
-
+      {% if product.tags contains 'ONE_PER' %}
+        <span class="product-card__limit-badge">{{ 'product.limit_one' | t }}</span>
+      {% endif %}
     </div>
 
     <div class="product-card__info">
@@ -195,6 +197,22 @@
     .product-card__image-wrapper {
       padding: 16px;
     }
+  }
+
+  .product-card__limit-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+    padding: 3px 7px;
+    background: #fef3c7;
+    color: #b45309;
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    line-height: 1.2;
   }
 
   .product-card__image-wrapper img,
