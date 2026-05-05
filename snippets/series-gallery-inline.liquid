@@ -1,0 +1,171 @@
+{% doc %}
+  Renders a horizontal scrollable series gallery inline within a section.
+
+  @param {collection} series_collection - The series collection
+  @param {product} current_product - The currently viewed product
+
+  @example
+  {% render 'series-gallery-inline', series_collection: sc, current_product: product %}
+{% enddoc %}
+
+{%- liquid
+  assign series_window = 30
+  assign series_context = 10
+  assign current_index = 0
+  assign series_total = series_collection.products_count
+
+  for p in series_collection.products limit: 50
+    if p.id == current_product.id
+      assign current_index = forloop.index0
+      break
+    endif
+  endfor
+
+  assign window_start = current_index | minus: series_context
+  if window_start < 0
+    assign window_start = 0
+  endif
+
+  assign window_end = window_start | plus: series_window | minus: 1
+  assign max_end = series_total | minus: 1
+  if max_end > 49
+    assign max_end = 49
+  endif
+  if window_end > max_end
+    assign window_end = max_end
+    assign window_start = window_end | minus: series_window | plus: 1
+    if window_start < 0
+      assign window_start = 0
+    endif
+  endif
+-%}
+
+<div class="series-gallery-inline" data-series-gallery>
+  <p class="series-gallery-inline__heading">{{ 'product.other_issues' | t }}</p>
+  <div class="series-gallery-inline__row">
+  <button class="series-gallery-inline__arrow" type="button" data-series-prev>
+    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <div class="series-gallery-inline__slider" data-series-slider>
+    <div class="series-gallery-inline__track" data-series-track>
+      {% paginate series_collection.products by 50 %}
+        {% for p in series_collection.products %}
+          {%- liquid
+            assign idx = forloop.index0
+            if idx < window_start
+              continue
+            endif
+            if idx > window_end
+              break
+            endif
+          -%}
+          {% render 'series-thumbnail', series_product: p, current_product: current_product %}
+        {% endfor %}
+      {% endpaginate %}
+    </div>
+  </div>
+  <button class="series-gallery-inline__arrow" type="button" data-series-next>
+    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  </div>
+</div>
+
+{% stylesheet %}
+  .series-gallery-inline {
+    padding: 16px 0 8px;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .series-gallery-inline__heading {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #9b9ba0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .series-gallery-inline__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .series-gallery-inline__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #e2e2e4;
+    border-radius: 50%;
+    background: var(--color-background, #fff);
+    color: var(--color-foreground, #333);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+  .series-gallery-inline__arrow:hover { background: #f7f7f8; border-color: var(--color-foreground, #333); }
+  .series-gallery-inline__arrow:disabled { opacity: 0.25; cursor: default; }
+  .series-gallery-inline__arrow:disabled:hover { background: var(--color-background, #fff); border-color: #e2e2e4; }
+  .series-gallery-inline__slider {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+  }
+  .series-gallery-inline__slider::-webkit-scrollbar { display: none; }
+  .series-gallery-inline__track {
+    display: flex;
+    gap: 6px;
+    padding: 4px 0;
+    width: max-content;
+    margin: 0 auto;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    document.querySelectorAll('.series-gallery-inline').forEach(function(gallery) {
+      var slider = gallery.querySelector('[data-series-slider]');
+      var prevBtn = gallery.querySelector('[data-series-prev]');
+      var nextBtn = gallery.querySelector('[data-series-next]');
+      if (!slider) return;
+
+      function updateArrows() {
+        var atStart = slider.scrollLeft <= 1;
+        var atEnd = slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 1;
+        if (prevBtn) prevBtn.disabled = atStart;
+        if (nextBtn) nextBtn.disabled = atEnd;
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', function() {
+        slider.scrollTo({ left: slider.scrollLeft - slider.offsetWidth * 0.6, behavior: 'smooth' });
+      });
+      if (nextBtn) nextBtn.addEventListener('click', function() {
+        slider.scrollTo({ left: slider.scrollLeft + slider.offsetWidth * 0.6, behavior: 'smooth' });
+      });
+
+      slider.addEventListener('scroll', updateArrows);
+
+      function centerActive() {
+        var active = gallery.querySelector('.series-thumb--active');
+        if (!active) { updateArrows(); return; }
+        var sliderRect = slider.getBoundingClientRect();
+        var activeRect = active.getBoundingClientRect();
+        var activeCenter = activeRect.left + activeRect.width / 2;
+        var sliderCenter = sliderRect.left + sliderRect.width / 2;
+        slider.scrollLeft += activeCenter - sliderCenter;
+        updateArrows();
+      }
+
+      centerActive();
+      requestAnimationFrame(centerActive);
+      window.addEventListener('load', centerActive);
+    });
+  })();
+{% endjavascript %}

@@ -260,6 +260,19 @@
         {{ product | payment_button }}
       </div>
 
+      {%- liquid
+        assign sc = nil
+        for c in product.collections
+          if c.metafields.kings.is_this_a_series.value == true
+            assign sc = c
+            break
+          endif
+        endfor
+      -%}
+      {% if sc %}
+        {% render 'series-gallery-inline', series_collection: sc, current_product: product %}
+      {% endif %}
+
       <div class="product-tabs" data-product-tabs>
         <div class="product-tabs__nav" role="tablist">
           <button
@@ -413,6 +426,11 @@
     }
   }
 
+  .product-page__info {
+    min-width: 0;
+    overflow: hidden;
+  }
+
   /* Media */
   .product-page__media {
     display: flex;
@@ -434,7 +452,8 @@
     background-color: #f7f7f8;
     border-radius: 12px;
     overflow: hidden;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 3 / 4;
+    max-height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;

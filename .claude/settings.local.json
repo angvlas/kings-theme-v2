@@ -34,7 +34,9 @@
       "Bash(node scripts/search_docs.mjs \"collection products paginate\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0)",
       "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/series-gallery.liquid,snippets/series-thumbnail.liquid,templates/product.json,locales/en.default.json,locales/en.default.schema.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id series-gallery-01 --revision 1)",
       "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/series-gallery.liquid,snippets/series-thumbnail.liquid,templates/product.json,locales/en.default.json,locales/en.default.schema.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id series-gallery-01 --revision 2)",
-      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/product.liquid,locales/en.default.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id next-issue-btn-01 --revision 1)"
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/product.liquid,locales/en.default.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id next-issue-btn-01 --revision 1)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/product.liquid,snippets/series-gallery-inline.liquid,templates/product.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id series-inline-01 --revision 1)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/series-gallery-inline.liquid,locales/en.default.json --model claude-opus-4-6 --client-name claude-code --client-version 1.0.0 --artifact-id series-heading-01 --revision 1)"
     ]
   }
 }
