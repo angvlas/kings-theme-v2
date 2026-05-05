@@ -146,6 +146,9 @@
     "recommended": {
       "name": "Recommended for you"
     },
+    "series_gallery": {
+      "name": "Series gallery"
+    },
     "slideshow": {
       "name": "Slideshow",
       "slide": "Slide",

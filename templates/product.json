@@ -13,6 +13,10 @@
       "type": "product",
       "settings": {}
     },
+    "series-gallery": {
+      "type": "series-gallery",
+      "settings": {}
+    },
     "recommended": {
       "type": "recommended-products",
       "settings": {
@@ -21,6 +25,7 @@
     }
   },
   "order": [
+    "series-gallery",
     "main",
     "recommended"
   ]

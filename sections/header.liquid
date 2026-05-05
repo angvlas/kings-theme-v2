@@ -441,6 +441,9 @@
   data-search-error="{{ 'header.search_error' | t | escape }}"
   data-type-article="{{ 'header.type_article' | t | escape }}"
   data-type-page="{{ 'header.type_page' | t | escape }}"
+  data-type-collection="{{ 'header.type_collection' | t | escape }}"
+  data-type-collections="{{ 'header.type_collections' | t | escape }}"
+  data-type-products="{{ 'header.type_products' | t | escape }}"
   data-each="{{ 'cart.each' | t | escape }}"
   data-only-available="{{ 'cart.only_x_available' | t | escape }}"
   data-remove-label="{{ 'cart.remove' | t | escape }}"
@@ -979,6 +982,15 @@
     font-size: 0.85rem;
     font-weight: 700;
     flex-shrink: 0;
+  }
+
+  .instant-search__group-title {
+    padding: 8px 12px 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9b9ba0;
   }
 
   .instant-search__empty {
@@ -1547,6 +1559,9 @@
       searchError: attr('search-error'),
       typeArticle: attr('type-article'),
       typePage: attr('type-page'),
+      typeCollection: attr('type-collection'),
+      typeCollections: attr('type-collections'),
+      typeProducts: attr('type-products'),
       each: attr('each'),
       onlyXAvailable: attr('only-available'),
       removeLabel: attr('remove-label')
@@ -1880,8 +1895,41 @@
         return link;
       }
 
+      function createCollectionItem(c) {
+        var link = document.createElement('a');
+        link.href = c.url;
+        link.className = 'instant-search__item instant-search__item--collection';
+
+        var imgWrap = document.createElement('div');
+        imgWrap.className = 'instant-search__item-image';
+        var imgSrc = (c.featured_image && c.featured_image.url) || c.image || '';
+        if (imgSrc) {
+          var img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = '';
+          img.loading = 'lazy';
+          imgWrap.appendChild(img);
+        }
+        link.appendChild(imgWrap);
+
+        var info = document.createElement('div');
+        info.className = 'instant-search__item-info';
+        var title = document.createElement('div');
+        title.className = 'instant-search__item-title';
+        title.textContent = c.title;
+        info.appendChild(title);
+        var meta = document.createElement('div');
+        meta.className = 'instant-search__item-meta';
+        meta.textContent = strings.typeCollection || 'Collection';
+        info.appendChild(meta);
+        link.appendChild(info);
+
+        return link;
+      }
+
       function renderResults(data) {
         var res = data.resources && data.resources.results ? data.resources.results : {};
+        var collections = (res.collections || []).slice(0, 3);
         var all = [].concat(
           (res.products || []).map(function(p) { return { type: 'product', item: p }; }),
           (res.articles || []).map(function(a) { return { type: 'article', item: a }; }),
@@ -1890,7 +1938,7 @@
 
         body.textContent = '';
 
-        if (all.length === 0) {
+        if (collections.length === 0 && all.length === 0) {
           var empty = document.createElement('div');
           empty.className = 'instant-search__empty';
           empty.textContent = strings.noResults || 'No results found';
@@ -1900,7 +1948,24 @@
           return;
         }
 
-        all.forEach(function(entry) { body.appendChild(createSearchItem(entry)); });
+        if (collections.length > 0) {
+          var heading = document.createElement('div');
+          heading.className = 'instant-search__group-title';
+          heading.textContent = strings.typeCollections || 'Collections';
+          body.appendChild(heading);
+          collections.forEach(function(c) { body.appendChild(createCollectionItem(c)); });
+        }
+
+        if (all.length > 0) {
+          if (collections.length > 0) {
+            var divider = document.createElement('div');
+            divider.className = 'instant-search__group-title';
+            divider.textContent = strings.typeProducts || 'Products';
+            body.appendChild(divider);
+          }
+          all.forEach(function(entry) { body.appendChild(createSearchItem(entry)); });
+        }
+
         viewAll.hidden = false;
         viewAll.href = '/search?q=' + encodeURIComponent(input.value) + '&type=' + typeParam;
         showResults();
@@ -1918,7 +1983,8 @@
         viewAll.hidden = true;
         showResults();
 
-        fetch('/search/suggest.json?q=' + encodeURIComponent(query) + '&resources[type]=' + typeParam + '&resources[limit]=6')
+        var searchTypes = typeParam.indexOf('collection') > -1 ? typeParam : typeParam + ',collection';
+        fetch('/search/suggest.json?q=' + encodeURIComponent(query) + '&resources[type]=' + searchTypes + '&resources[limit]=6')
           .then(function(r) {
             if (!r.ok) throw new Error(r.status);
             return r.json();

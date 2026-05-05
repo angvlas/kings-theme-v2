@@ -45,6 +45,7 @@
     "increase": "Increase quantity",
     "previous_image": "Previous image",
     "next_image": "Next image",
+    "next_issue": "Next issue",
     "tab_description": "Description",
     "tab_details": "Product details",
     "no_description": "No description available.",
@@ -138,6 +139,9 @@
     "search_error": "Something went wrong",
     "type_article": "Article",
     "type_page": "Page",
+    "type_collection": "Collection",
+    "type_collections": "Collections",
+    "type_products": "Products",
     "shipment_on_time": "Shipping on time",
     "shipment_delayed": "Shipping delayed"
   },
@@ -151,6 +155,13 @@
     "recommended": {
       "name": "Recommended for you",
       "title": "Recommended for you"
+    },
+    "series_gallery": {
+      "name": "Series gallery",
+      "previous": "Previous issues",
+      "next": "More issues",
+      "view_all": "View full series",
+      "total_issues": "{{ count }} issues"
     },
     "slideshow": {
       "label": "Slideshow",

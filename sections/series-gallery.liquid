@@ -1,0 +1,178 @@
+{%- liquid
+  assign series_collection = nil
+  for c in product.collections
+    if c.metafields.kings.is_this_a_series.value == true
+      assign series_collection = c
+      break
+    endif
+  endfor
+
+  assign series_window = 30
+  assign series_context = 10
+-%}
+
+{% if series_collection %}
+  {%- liquid
+    assign current_index = 0
+    assign series_total = series_collection.products_count
+    for p in series_collection.products limit: 50
+      if p.id == product.id
+        assign current_index = forloop.index0
+        break
+      endif
+    endfor
+
+    assign window_start = current_index | minus: series_context
+    if window_start < 0
+      assign window_start = 0
+    endif
+
+    assign window_end = window_start | plus: series_window | minus: 1
+    assign max_end = series_total | minus: 1
+    if max_end > 49
+      assign max_end = 49
+    endif
+    if window_end > max_end
+      assign window_end = max_end
+      assign window_start = window_end | minus: series_window | plus: 1
+      if window_start < 0
+        assign window_start = 0
+      endif
+    endif
+  -%}
+
+  <div class="series-gallery" data-series-gallery>
+    <button class="series-gallery__arrow series-gallery__arrow--prev" type="button" data-series-prev aria-label="{{ 'sections.series_gallery.previous' | t }}">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="series-gallery__slider" data-series-slider>
+      <div class="series-gallery__track" data-series-track>
+        {% paginate series_collection.products by 50 %}
+          {% for p in series_collection.products %}
+            {%- liquid
+              assign idx = forloop.index0
+              if idx < window_start
+                continue
+              endif
+              if idx > window_end
+                break
+              endif
+            -%}
+            {% render 'series-thumbnail', series_product: p, current_product: product %}
+          {% endfor %}
+        {% endpaginate %}
+      </div>
+    </div>
+    <button class="series-gallery__arrow series-gallery__arrow--next" type="button" data-series-next aria-label="{{ 'sections.series_gallery.next' | t }}">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .series-gallery {
+    padding: 12px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .series-gallery__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #e2e2e4;
+    border-radius: 50%;
+    background: var(--color-background, #fff);
+    color: var(--color-foreground, #333);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+  .series-gallery__arrow:hover { background: #f7f7f8; border-color: var(--color-foreground, #333); }
+  .series-gallery__arrow:disabled { opacity: 0.25; cursor: default; }
+  .series-gallery__arrow:disabled:hover { background: var(--color-background, #fff); border-color: #e2e2e4; }
+  .series-gallery__slider {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+  }
+  .series-gallery__slider::-webkit-scrollbar { display: none; }
+  .series-gallery__track {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+    width: max-content;
+    margin: 0 auto;
+  }
+  @media (min-width: 750px) {
+    .series-gallery__track { gap: 10px; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    document.querySelectorAll('[data-series-gallery]').forEach(function(gallery) {
+      var slider = gallery.querySelector('[data-series-slider]');
+      var prevBtn = gallery.querySelector('[data-series-prev]');
+      var nextBtn = gallery.querySelector('[data-series-next]');
+      if (!slider) return;
+
+      function updateArrows() {
+        var atStart = slider.scrollLeft <= 1;
+        var atEnd = slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 1;
+        if (prevBtn) prevBtn.disabled = atStart;
+        if (nextBtn) nextBtn.disabled = atEnd;
+      }
+
+      function smoothScroll(amount) {
+        slider.scrollTo({ left: slider.scrollLeft + amount, behavior: 'smooth' });
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', function() {
+        smoothScroll(-slider.offsetWidth * 0.6);
+      });
+      if (nextBtn) nextBtn.addEventListener('click', function() {
+        smoothScroll(slider.offsetWidth * 0.6);
+      });
+
+      slider.addEventListener('scroll', updateArrows);
+
+      var active = gallery.querySelector('.series-thumb--active');
+      if (active) {
+        var offset = active.offsetLeft - (slider.offsetWidth / 2) + (active.offsetWidth / 2);
+        slider.scrollLeft = Math.max(0, offset);
+      }
+
+      updateArrows();
+    });
+  })();
+{% endjavascript %}
+
+
+{% schema %}
+{
+  "name": "t:sections.series_gallery.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.series_gallery.name"
+    }
+  ]
+}
+{% endschema %}
