@@ -24,7 +24,7 @@
 >
   <div class="series-thumb__image">
     {% if series_product.featured_image %}
-      {{ series_product.featured_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: series_product.title }}
+      {{ series_product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: series_product.title, width: 80, height: 120 }}
     {% else %}
       {{ 'product-1' | placeholder_svg_tag }}
     {% endif %}
@@ -43,8 +43,8 @@
 
 {% stylesheet %}
   .series-thumb {
-    flex: 1 0 50px;
-    max-width: 80px;
+    flex: 0 0 80px;
+    width: 80px;
     display: block;
     position: relative;
     border-radius: 6px;
@@ -53,7 +53,7 @@
     transition: border-color 0.15s ease, transform 0.15s ease;
     text-decoration: none;
   }
-  .series-thumb__image { aspect-ratio: 2 / 3; background: #f7f7f8; opacity: 0.85; transition: filter 0.2s ease, opacity 0.2s ease; }
+  .series-thumb__image { aspect-ratio: 2 / 3; background: #f7f7f8; opacity: 0.85; transition: filter 0.2s ease, opacity 0.2s ease; overflow: hidden; }
   .series-thumb:hover { border-color: #e2e2e4; transform: translateY(-2px); }
   .series-thumb:hover .series-thumb__image { opacity: 1; }
   .series-thumb--active { border-color: #e53e3e; box-shadow: 0 0 0 1px #e53e3e; }
