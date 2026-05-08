@@ -200,6 +200,86 @@
         </div>
       {% endif %}
 
+      {% if product.type == 'Comics' and section.settings.enable_condition_guide %}
+      {%- liquid
+        assign product_condition = 'NM'
+        assign condition_grades = 'NM+,NM,NM-,VF+,VF,VF-,FN+,FN,FN-,VG+,VG,VG-,GD+,GD,GD-,FR,PR' | split: ','
+        for grade in condition_grades
+          assign grade_check = '(' | append: grade | append: ')'
+          if product.title contains grade_check
+            assign product_condition = grade
+            break
+          endif
+        endfor
+      -%}
+        <button type="button" class="product-page__condition-btn" data-condition-guide-toggle>
+          <span class="product-page__condition-badge">{{ product_condition }}</span>
+          <span>{{ 'product.condition.guide_button' | t }}</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M8 7v4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="8" cy="4.75" r="0.75" fill="currentColor"/>
+          </svg>
+        </button>
+
+      <div class="condition-modal" data-condition-modal hidden>
+        <div class="condition-modal__overlay" data-condition-modal-close></div>
+        <div class="condition-modal__content">
+          <button type="button" class="condition-modal__close" data-condition-modal-close aria-label="{{ 'header.close' | t }}">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <h2 class="condition-modal__title">{{ 'product.condition.modal_title' | t }}</h2>
+          <p class="condition-modal__intro">{{ 'product.condition.modal_intro' | t }}</p>
+          <div class="condition-modal__grades">
+            <div class="condition-modal__grade">
+              <div class="condition-modal__grade-header">
+                <span class="condition-modal__grade-badge condition-modal__grade-badge--nm">{{ 'product.condition.nm' | t }}</span>
+                <span class="condition-modal__grade-name">{{ 'product.condition.nm_name' | t }}</span>
+              </div>
+              <p class="condition-modal__grade-desc">{{ 'product.condition.nm_desc' | t }}</p>
+            </div>
+            <div class="condition-modal__grade">
+              <div class="condition-modal__grade-header">
+                <span class="condition-modal__grade-badge condition-modal__grade-badge--vf">{{ 'product.condition.vf' | t }}</span>
+                <span class="condition-modal__grade-name">{{ 'product.condition.vf_name' | t }}</span>
+              </div>
+              <p class="condition-modal__grade-desc">{{ 'product.condition.vf_desc' | t }}</p>
+            </div>
+            <div class="condition-modal__grade">
+              <div class="condition-modal__grade-header">
+                <span class="condition-modal__grade-badge condition-modal__grade-badge--fn">{{ 'product.condition.fn' | t }}</span>
+                <span class="condition-modal__grade-name">{{ 'product.condition.fn_name' | t }}</span>
+              </div>
+              <p class="condition-modal__grade-desc">{{ 'product.condition.fn_desc' | t }}</p>
+            </div>
+            <div class="condition-modal__grade">
+              <div class="condition-modal__grade-header">
+                <span class="condition-modal__grade-badge condition-modal__grade-badge--vg">{{ 'product.condition.vg' | t }}</span>
+                <span class="condition-modal__grade-name">{{ 'product.condition.vg_name' | t }}</span>
+              </div>
+              <p class="condition-modal__grade-desc">{{ 'product.condition.vg_desc' | t }}</p>
+            </div>
+            <div class="condition-modal__grade">
+              <div class="condition-modal__grade-header">
+                <span class="condition-modal__grade-badge condition-modal__grade-badge--gd">{{ 'product.condition.gd' | t }}</span>
+                <span class="condition-modal__grade-name">{{ 'product.condition.gd_name' | t }}</span>
+              </div>
+              <p class="condition-modal__grade-desc">{{ 'product.condition.gd_desc' | t }}</p>
+            </div>
+            <div class="condition-modal__grade">
+              <div class="condition-modal__grade-header">
+                <span class="condition-modal__grade-badge condition-modal__grade-badge--fr">{{ 'product.condition.fr' | t }}</span>
+                <span class="condition-modal__grade-name">{{ 'product.condition.fr_name' | t }}</span>
+              </div>
+              <p class="condition-modal__grade-desc">{{ 'product.condition.fr_desc' | t }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
       <div class="product-page__price-row">
         <span class="product-page__price" data-product-price>{{ current_variant.price | money }}</span>
         {% if on_sale %}
@@ -768,6 +848,158 @@
   .product-page__status--out .product-page__status-dot { background-color: #e53e3e; }
   .product-page__status--preorder { color: #5b21b6; }
   .product-page__status--preorder .product-page__status-dot { background-color: #5b21b6; }
+
+  /* Condition guide */
+  .product-page__condition-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: #f7f7f8;
+    border: 1px solid #e2e2e4;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-foreground, #333);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    margin-bottom: 12px;
+  }
+
+  .product-page__condition-btn:hover {
+    border-color: var(--color-foreground, #333);
+    background-color: #ededef;
+  }
+
+  .product-page__condition-btn svg {
+    color: #9b9ba0;
+  }
+
+  .product-page__condition-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .condition-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .condition-modal[hidden] {
+    display: none;
+  }
+
+  .condition-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+
+  .condition-modal__content {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 480px;
+    width: calc(100% - 32px);
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .condition-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9b9ba0;
+    transition: color 0.15s ease;
+  }
+
+  .condition-modal__close:hover {
+    color: var(--color-foreground, #333);
+  }
+
+  .condition-modal__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .condition-modal__intro {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .condition-modal__grades {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .condition-modal__grade {
+    padding: 12px;
+    background-color: #f7f7f8;
+    border-radius: 8px;
+  }
+
+  .condition-modal__grade-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .condition-modal__grade-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+    color: #fff;
+  }
+
+  .condition-modal__grade-badge--nm { background-color: #38a169; }
+  .condition-modal__grade-badge--vf { background-color: #3182ce; }
+  .condition-modal__grade-badge--fn { background-color: #805ad5; }
+  .condition-modal__grade-badge--vg { background-color: #d69e2e; }
+  .condition-modal__grade-badge--gd { background-color: #dd6b20; }
+  .condition-modal__grade-badge--fr { background-color: #e53e3e; }
+
+  .condition-modal__grade-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .condition-modal__grade-desc {
+    font-size: 0.78rem;
+    color: #555;
+    line-height: 1.5;
+  }
 
   /* Lightbox */
   .product-lightbox {
@@ -1549,13 +1781,42 @@
         });
       });
     }
+    /* Condition guide modal */
+    var conditionModal = document.querySelector('[data-condition-modal]');
+    if (conditionModal) {
+      document.querySelectorAll('[data-condition-guide-toggle]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          conditionModal.hidden = false;
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      conditionModal.querySelectorAll('[data-condition-modal-close]').forEach(function(el) {
+        el.addEventListener('click', function() {
+          conditionModal.hidden = true;
+          document.body.style.overflow = '';
+        });
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !conditionModal.hidden) {
+          conditionModal.hidden = true;
+          document.body.style.overflow = '';
+        }
+      });
+    }
   })();
 {% endjavascript %}
 
 {% schema %}
 {
   "name": "t:general.product",
-  "settings": [],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_condition_guide",
+      "label": "t:labels.enable_condition_guide",
+      "default": true
+    }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
   }

@@ -59,6 +59,7 @@
     "columns_mobile": "Columns on mobile",
     "filtering": "Filtering",
     "enable_filters": "Enable filters",
+    "enable_condition_guide": "Show condition guide",
     "favicon": "Favicon",
     "slide_image": "Desktop image (1800x610)",
     "slide_mobile_image": "Mobile image (610x610)",
