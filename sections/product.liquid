@@ -193,13 +193,29 @@
       {%- liquid
         assign product_condition = 'NM'
         assign condition_grades = 'NM+,NM,NM-,VF+,VF,VF-,FN+,FN,FN-,VG+,VG,VG-,GD+,GD,GD-,FR,PR' | split: ','
+
         for grade in condition_grades
-          assign grade_check = '(' | append: grade | append: ')'
-          if product.title contains grade_check
-            assign product_condition = grade
+          for grade2 in condition_grades
+            assign combo_check = '(' | append: grade | append: '/' | append: grade2 | append: ')'
+            if product.title contains combo_check
+              assign product_condition = grade | append: '/' | append: grade2
+              break
+            endif
+          endfor
+          if product_condition contains '/'
             break
           endif
         endfor
+
+        unless product_condition contains '/'
+          for grade in condition_grades
+            assign grade_check = '(' | append: grade | append: ')'
+            if product.title contains grade_check
+              assign product_condition = grade
+              break
+            endif
+          endfor
+        endunless
       -%}
         <button type="button" class="product-page__condition-btn" data-condition-guide-toggle>
           <span class="product-page__condition-badge">{{ product_condition }}</span>
