@@ -176,30 +176,6 @@
         </p>
       {% endif %}
 
-      {% if release_date != blank or product.metafields.kings.format != blank %}
-        <div class="product-page__meta-tags">
-          {% if release_date != blank %}
-            <span class="product-page__meta-tag">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/>
-                <path d="M2 7h12" stroke="currentColor" stroke-width="1.3"/>
-                <path d="M5 1.5v3M11 1.5v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-              </svg>
-              {{ release_date | date: "%b %d, %Y" }}
-            </span>
-          {% endif %}
-          {% if product.metafields.kings.format != blank %}
-            <span class="product-page__meta-tag">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 2.5h7l3 3V13a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 2 13V4a1.5 1.5 0 0 1 1-1.42Z" stroke="currentColor" stroke-width="1.3"/>
-                <path d="M10 2.5V6h3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              {{ product.metafields.kings.format }}
-            </span>
-          {% endif %}
-        </div>
-      {% endif %}
-
       {% if product.type == 'Comics' and section.settings.enable_condition_guide %}
       {%- liquid
         assign product_condition = 'NM'
