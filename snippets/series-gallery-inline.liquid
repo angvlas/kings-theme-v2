@@ -43,7 +43,7 @@
 <div class="series-gallery-inline" data-series-gallery>
   <p class="series-gallery-inline__heading">{{ 'product.other_issues' | t }}</p>
   <div class="series-gallery-inline__row">
-  <button class="series-gallery-inline__arrow" type="button" data-series-prev>
+  <button class="series-gallery-inline__arrow" type="button" data-series-prev aria-label="{{ 'sections.series_gallery.previous' | t }}">
     <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -66,7 +66,7 @@
       {% endpaginate %}
     </div>
   </div>
-  <button class="series-gallery-inline__arrow" type="button" data-series-next>
+  <button class="series-gallery-inline__arrow" type="button" data-series-next aria-label="{{ 'sections.series_gallery.next' | t }}">
     <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>

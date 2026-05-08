@@ -83,7 +83,7 @@
   </div>
 {% endif %}
 
-<header class="header" role="banner">
+<header class="header" role="banner" style="--logo-height: {{ section.settings.logo_size }}px">
   <div class="header__inner">
     <button
       class="header__menu-toggle"
@@ -100,7 +100,8 @@
 
     <a href="{{ routes.root_url }}" class="header__logo">
       {% if section.settings.logo %}
-        {{ section.settings.logo | image_url: height: 40 | image_tag: class: 'header__logo-image', alt: shop.name }}
+        {%- assign logo_size = section.settings.logo_size -%}
+        {{ section.settings.logo | image_url: height: logo_size | image_tag: class: 'header__logo-image', alt: shop.name }}
       {% else %}
         <span class="header__logo-text">{{ shop.name }}</span>
       {% endif %}
@@ -754,7 +755,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    height: 56px;
+    height: calc(var(--logo-height, 32px) + 24px);
     margin: 0 auto;
     padding: 0 var(--page-margin);
     position: relative;
@@ -771,7 +772,7 @@
   }
 
   .header__logo-image {
-    height: 32px;
+    height: var(--logo-height, 32px);
     width: auto;
   }
 
@@ -2046,6 +2047,16 @@
       "type": "image_picker",
       "id": "logo",
       "label": "t:labels.logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "t:labels.logo_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
     },
     {
       "type": "header",
