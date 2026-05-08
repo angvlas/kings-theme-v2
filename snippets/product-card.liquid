@@ -129,10 +129,13 @@
           </span>
         </div>
       {% elsif is_backorder %}
-        <p class="product-card__availability product-card__availability--backorder">
+        <div class="product-card__availability product-card__availability--backorder">
           <span class="product-card__availability-dot"></span>
-          {{ 'collection.back_order' | t }}
-        </p>
+          <span class="product-card__availability-text">
+            <span>{{ 'collection.back_order' | t }}</span>
+            <span>{{ 'collection.back_order_shipping' | t }}</span>
+          </span>
+        </div>
       {% elsif sold_out %}
         <p class="product-card__availability product-card__availability--out">
           <span class="product-card__availability-dot"></span>
