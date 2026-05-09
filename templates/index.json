@@ -12,6 +12,24 @@
     "slideshow": {
       "type": "slideshow",
       "blocks": {
+        "slide_nRXwzd": {
+          "type": "slide",
+          "settings": {
+            "link": "",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
+        "slide_enLH7L": {
+          "type": "slide",
+          "settings": {
+            "link": "",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
         "slide_1": {
           "type": "slide",
           "settings": {
@@ -25,6 +43,8 @@
         }
       },
       "block_order": [
+        "slide_nRXwzd",
+        "slide_enLH7L",
         "slide_1"
       ],
       "settings": {}
