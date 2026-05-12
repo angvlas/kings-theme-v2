@@ -38,7 +38,9 @@
     "continue_shopping": "Continue shopping",
     "view_cart": "View cart",
     "each": "each",
-    "only_x_available": "Only {{ count }} available"
+    "only_x_available": "Only {{ count }} available",
+    "show_notices": "Show notices",
+    "hide_notices": "Hide notices"
   },
   "pages": {
     "we_buy": {
