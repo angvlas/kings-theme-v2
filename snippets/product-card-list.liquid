@@ -103,6 +103,39 @@
       </p>
     {% endif %}
 
+    <div class="pcl__pricing">
+      <div class="pcl__price-row">
+        <span class="pcl__price" data-pcl-price>{{ product.price | money }}</span>
+        {% if on_sale %}
+          {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+          <span class="pcl__discount" data-pcl-discount>-{{ discount }}%</span>
+        {% endif %}
+      </div>
+      {% if on_sale %}
+        <span class="pcl__compare" data-pcl-compare>{{ product.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+
+    <div class="pcl__mobile-action">
+      {% if is_preorder %}
+        <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--preorder" data-pcl-btn>{{ 'collection.pre_order' | t }}</a>
+      {% elsif is_backorder %}
+        <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--backorder" data-pcl-btn>{{ 'collection.back_order' | t }}</a>
+      {% elsif sold_out %}
+        <button class="pcl__btn pcl__btn--disabled" disabled data-pcl-btn>{{ 'collection.sold_out' | t }}</button>
+      {% else %}
+        <button
+          type="button"
+          class="pcl__btn"
+          data-pcl-btn
+          data-pcl-add-to-cart
+          data-variant-id="{{ variant.id }}"
+        >
+          {{ 'collection.add_to_cart' | t }}
+        </button>
+      {% endif %}
+    </div>
+
     {% if product.variants.size > 1 %}
       <div class="pcl__variants" data-pcl-variants>
         {% for v in product.variants %}
@@ -162,7 +195,7 @@
 {% stylesheet %}
   .pcl {
     display: grid;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 110px 1fr;
     grid-template-rows: auto;
     background-color: var(--color-card-background, #fff);
     border-radius: 10px;
@@ -171,12 +204,18 @@
 
   @media (min-width: 750px) {
     .pcl {
-      grid-template-columns: 160px 1fr 180px;
+      grid-template-columns: 100px 1fr 140px;
       border-radius: 12px;
     }
   }
 
-  @media (min-width: 990px) {
+  @media (min-width: 1200px) {
+    .pcl {
+      grid-template-columns: 160px 1fr 180px;
+    }
+  }
+
+  @media (min-width: 1400px) {
     .pcl {
       grid-template-columns: 200px 1fr 200px;
     }
@@ -237,7 +276,7 @@
 
   /* Body */
   .pcl__body {
-    padding: 12px 12px 12px 0;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -258,6 +297,8 @@
     margin-bottom: 4px;
     text-decoration: none;
     color: inherit;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   @media (min-width: 750px) {
@@ -300,7 +341,7 @@
     display: none;
   }
 
-  @media (min-width: 750px) {
+  @media (min-width: 1200px) {
     .pcl__description {
       display: block;
     }
@@ -385,26 +426,50 @@
     color: #718096;
   }
 
-  /* Aside — price + button */
+  /* Mobile inline pricing + button (shown only on mobile) */
+  .pcl__mobile-action {
+    margin-top: 8px;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__mobile-action {
+      display: none;
+    }
+  }
+
+  .pcl__body > .pcl__pricing {
+    margin-top: 6px;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__body > .pcl__pricing {
+      display: none;
+    }
+  }
+
+  /* Aside — price + button (desktop only) */
   .pcl__aside {
-    grid-column: 1 / -1;
-    padding: 0 12px 12px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
+    display: none;
   }
 
   @media (min-width: 750px) {
     .pcl__aside {
+      display: flex;
       grid-column: 3 / 4;
       grid-row: 1 / 2;
       flex-direction: column;
       justify-content: center;
       align-items: stretch;
-      padding: 20px 24px;
+      padding: 16px;
       border-left: 1px solid #e2e2e4;
       gap: 10px;
+      overflow: hidden;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .pcl__aside {
+      padding: 20px 24px;
     }
   }
 
@@ -416,7 +481,7 @@
 
   @media (min-width: 750px) {
     .pcl__pricing {
-      align-items: flex-end;
+      align-items: center;
     }
   }
 
@@ -432,6 +497,12 @@
   }
 
   @media (min-width: 750px) {
+    .pcl__price {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
     .pcl__price {
       font-size: 1.4rem;
     }
@@ -462,11 +533,13 @@
   }
 
   .pcl__btn {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    padding: 10px 16px;
+    padding: 8px 14px;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
     border-radius: 8px;
     border: none;
@@ -476,6 +549,13 @@
     background-color: var(--color-foreground, #333);
     color: var(--color-background, #fff);
     white-space: nowrap;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
   }
 
   .pcl__btn:hover { opacity: 0.9; }
