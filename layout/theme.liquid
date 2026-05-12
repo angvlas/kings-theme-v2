@@ -25,6 +25,9 @@
     {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
 
+    {% # Font Awesome %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
 
@@ -42,7 +45,7 @@
     </style>
   </head>
 
-  <body>
+  <body style="background-color: var(--color-body-background, #f7f7f8)">
     <a class="skip-to-content" href="#main-content">{{ 'general.skip_to_content' | t }}</a>
 
     {% sections 'header-group' %}

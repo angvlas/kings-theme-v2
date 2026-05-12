@@ -31,6 +31,29 @@
     "each": "each",
     "only_x_available": "Only {{ count }} available"
   },
+  "pages": {
+    "we_buy": {
+      "buying_title": "We are currently buying",
+      "faq_title": "Frequently asked questions",
+      "form_title": "Tell us about your collection",
+      "form_intro": "Fill out the form below and we'll get back to you as soon as possible.",
+      "form_subject": "We Buy Collections enquiry",
+      "form_success": "Thank you for your enquiry. We'll be in touch soon.",
+      "form_submit": "Submit enquiry",
+      "field_name": "Name",
+      "field_email": "Email",
+      "field_phone": "Phone",
+      "field_collection_type": "Collection type",
+      "field_collection_type_placeholder": "Select a type",
+      "type_comics": "Comics",
+      "type_graphic_novels": "Graphic novels",
+      "type_manga": "Manga",
+      "type_collectibles": "Collectibles",
+      "type_mixed": "Mixed",
+      "field_description": "Description",
+      "field_description_placeholder": "Tell us about your collection — what titles, how many issues, approximate age and condition..."
+    }
+  },
   "footer": {
     "navigation": "Footer navigation",
     "follow_us": "Follow us",

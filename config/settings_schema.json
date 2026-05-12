@@ -59,6 +59,24 @@
         "label": "t:labels.foreground"
       },
       {
+        "type": "color",
+        "id": "body_background_color",
+        "default": "#f7f7f8",
+        "label": "t:labels.body_background"
+      },
+      {
+        "type": "color",
+        "id": "card_background_color",
+        "default": "#ffffff",
+        "label": "t:labels.card_background"
+      },
+      {
+        "type": "color",
+        "id": "header_color",
+        "default": "#333333",
+        "label": "t:labels.header_color"
+      },
+      {
         "type": "range",
         "id": "input_corner_radius",
         "min": 0,

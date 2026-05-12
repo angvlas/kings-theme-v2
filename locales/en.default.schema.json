@@ -67,6 +67,21 @@
     "collection_row_collection": "Collection",
     "collection_row_products": "Products to show",
     "heading": "Heading",
+    "subheading": "Subheading",
+    "intro": "Introduction",
+    "body_background": "Body background",
+    "card_background": "Card background",
+    "header_color": "Header colour",
+    "description": "Description",
+    "faq_source": "FAQ source",
+    "icon": "Icon",
+    "icon_color": "Icon background colour",
+    "icon_text_color": "Icon colour",
+    "icon_info": "Font Awesome class e.g. fa-solid fa-star. Browse icons at fontawesome.com/icons",
+    "label": "Label",
+    "title": "Title",
+    "question": "Question",
+    "answer": "Answer",
     "cart_notice_1": "Notice 1",
     "cart_notice_2": "Notice 2",
     "cart_notice_3": "Notice 3",
@@ -110,6 +125,20 @@
       "center": "Center",
       "right": "Right"
     },
+    "icon": {
+      "none": "None",
+      "cash": "Cash",
+      "bulk": "Bulk",
+      "convenience": "Convenience",
+      "shield": "Shield",
+      "truck": "Truck",
+      "star": "Star",
+      "handshake": "Handshake"
+    },
+    "faq_source": {
+      "blocks": "Theme editor blocks",
+      "metaobject": "Dynamic (metaobject)"
+    },
     "direction": {
       "horizontal": "Horizontal",
       "vertical": "Vertical"
@@ -150,6 +179,15 @@
     },
     "series_gallery": {
       "name": "Series gallery"
+    },
+    "we_buy": {
+      "name": "We buy collections",
+      "faq_item": "FAQ item",
+      "hero": "Page hero",
+      "buying_item": "Buying item",
+      "buying_section": "We are buying",
+      "advantages": "Advantages",
+      "advantage_item": "Advantage"
     },
     "slideshow": {
       "name": "Slideshow",

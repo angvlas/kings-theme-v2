@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "hero": {
+      "type": "wbc-hero",
+      "settings": {}
+    },
+    "advantages": {
+      "type": "wbc-advantages",
+      "settings": {}
+    },
+    "buying": {
+      "type": "we-are-buying",
+      "settings": {}
+    },
+    "main": {
+      "type": "we-buy-collections",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "advantages",
+    "buying",
+    "main"
+  ]
+}
