@@ -455,7 +455,7 @@
 <div class="product-lightbox" data-lightbox hidden>
   <div class="product-lightbox__overlay" data-lightbox-close></div>
   <div class="product-lightbox__content">
-    <img class="product-lightbox__image" data-lightbox-img src="" alt="{{ product.title | escape }}">
+    <img class="product-lightbox__image" data-lightbox-img src="" alt="{{ product.title | escape }}" width="800" height="1067">
 
     {% if product.images.size > 1 %}
       <button class="product-lightbox__arrow product-lightbox__arrow--prev" type="button" data-lightbox-prev aria-label="{{ 'product.previous_image' | t }}">
@@ -1292,6 +1292,7 @@
     font-weight: 600;
     font-family: inherit;
     -moz-appearance: textfield;
+    appearance: textfield;
     outline: none;
   }
 
