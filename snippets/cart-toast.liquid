@@ -1,0 +1,200 @@
+{% doc %}
+  Renders a toast notification in the bottom-right corner when
+  an item is added to the cart. Listens for the custom event
+  'cart:item-added' on the document with detail { title, image, price }.
+
+  @example
+  {% render 'cart-toast' %}
+{% enddoc %}
+
+<div class="cart-toast" data-cart-toast hidden aria-live="polite" role="status">
+  <div class="cart-toast__inner">
+    <div class="cart-toast__icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M6 10.5L8.5 13L14 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="cart-toast__content">
+      <p class="cart-toast__heading">{{ 'cart.item_added' | t }}</p>
+      <div class="cart-toast__product">
+        <img class="cart-toast__image" data-cart-toast-image src="" alt="" width="48" height="48">
+        <div class="cart-toast__details">
+          <p class="cart-toast__title" data-cart-toast-title></p>
+          <p class="cart-toast__price" data-cart-toast-price></p>
+        </div>
+      </div>
+    </div>
+    <button class="cart-toast__close" type="button" data-cart-toast-close aria-label="{{ 'header.close' | t }}">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+{% stylesheet %}
+  .cart-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 400;
+    max-width: 340px;
+    width: calc(100% - 32px);
+    pointer-events: none;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .cart-toast--visible {
+    pointer-events: auto;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  @media (max-width: 749px) {
+    .cart-toast {
+      bottom: 16px;
+      right: 16px;
+      max-width: calc(100% - 32px);
+    }
+  }
+
+  .cart-toast__inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    background-color: var(--color-card-background, #fff);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  }
+
+  .cart-toast__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: #38a169;
+    margin-top: 1px;
+  }
+
+  .cart-toast__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cart-toast__heading {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #38a169;
+    margin-bottom: 8px;
+  }
+
+  .cart-toast__product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cart-toast__image {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 6px;
+    background-color: #f7f7f8;
+    flex-shrink: 0;
+  }
+
+  .cart-toast__details {
+    min-width: 0;
+  }
+
+  .cart-toast__title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-foreground, #333);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .cart-toast__price {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-foreground, #333);
+    margin-top: 2px;
+  }
+
+  .cart-toast__close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    color: #9b9ba0;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+    padding: 0;
+  }
+
+  .cart-toast__close:hover {
+    color: var(--color-foreground, #333);
+    background-color: #f0f0f2;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    var toast = document.querySelector('[data-cart-toast]');
+    if (!toast) return;
+
+    var imageEl = toast.querySelector('[data-cart-toast-image]');
+    var titleEl = toast.querySelector('[data-cart-toast-title]');
+    var priceEl = toast.querySelector('[data-cart-toast-price]');
+    var closeBtn = toast.querySelector('[data-cart-toast-close]');
+    var timer = null;
+
+    function show(detail) {
+      if (titleEl) titleEl.textContent = detail.title || '';
+      if (priceEl) priceEl.textContent = detail.price || '';
+      if (imageEl) {
+        if (detail.image) {
+          imageEl.src = detail.image;
+          imageEl.alt = detail.title || '';
+          imageEl.style.display = '';
+        } else {
+          imageEl.style.display = 'none';
+        }
+      }
+
+      toast.hidden = false;
+      requestAnimationFrame(function() {
+        toast.classList.add('cart-toast--visible');
+      });
+
+      clearTimeout(timer);
+      timer = setTimeout(hide, 4000);
+    }
+
+    function hide() {
+      toast.classList.remove('cart-toast--visible');
+      clearTimeout(timer);
+      setTimeout(function() {
+        toast.hidden = true;
+      }, 300);
+    }
+
+    closeBtn.addEventListener('click', hide);
+
+    document.addEventListener('cart:item-added', function(e) {
+      show(e.detail || {});
+    });
+  })();
+{% endjavascript %}

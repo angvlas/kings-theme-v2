@@ -1693,7 +1693,7 @@
           if (!res.ok) return res.json().then(function(err) { throw err; });
           return res.json();
         })
-        .then(function() {
+        .then(function(data) {
           button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 8.5L6.5 12L13 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Added';
           button.style.backgroundColor = '#38a169';
           button.style.color = '#fff';
@@ -1703,6 +1703,15 @@
             button.style.color = '';
             button.disabled = false;
           }, 2000);
+
+          var titleEl = page.querySelector('.product-page__title');
+          var imgEl = page.querySelector('.product-page__hero-image');
+          var pEl = page.querySelector('[data-product-price]');
+          document.dispatchEvent(new CustomEvent('cart:item-added', { detail: {
+            title: titleEl ? titleEl.textContent.trim() : '',
+            image: imgEl ? imgEl.src : '',
+            price: pEl ? pEl.textContent.trim() : ''
+          }}));
 
           fetch('/cart.js')
             .then(function(r) { return r.json(); })
@@ -1779,7 +1788,7 @@
           if (!res.ok) return res.json().then(function(err) { throw err; });
           return res.json();
         })
-        .then(function() {
+        .then(function(data) {
           button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 8.5L6.5 12L13 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Added';
           button.style.backgroundColor = '#38a169';
           setTimeout(function() {
@@ -1787,6 +1796,15 @@
             button.style.backgroundColor = '';
             button.disabled = false;
           }, 2000);
+
+          var titleEl = page.querySelector('.product-page__title');
+          var imgEl = page.querySelector('.product-page__hero-image');
+          var pEl = page.querySelector('[data-product-price]');
+          document.dispatchEvent(new CustomEvent('cart:item-added', { detail: {
+            title: titleEl ? titleEl.textContent.trim() : '',
+            image: imgEl ? imgEl.src : '',
+            price: pEl ? pEl.textContent.trim() : ''
+          }}));
 
           fetch('/cart.js')
             .then(function(r) { return r.json(); })

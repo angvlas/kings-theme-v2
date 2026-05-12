@@ -49,7 +49,10 @@
       "Bash(node scripts/search_docs.mjs \"section schema blocks metaobject_reference\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
       "Bash(node scripts/search_docs.mjs \"metaobjects global object liquid access\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
       "Bash(node scripts/search_docs.mjs \"cart add to cart AJAX form product\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
-      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/product-card-list.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0 --artifact-id pcl-review-001 --revision 1)"
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/product-card-list.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0 --artifact-id pcl-review-001 --revision 1)",
+      "Bash(node scripts/search_docs.mjs \"toast notification popup animation CSS\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
+      "Bash(node scripts/search_docs.mjs \"cart add.js response item\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/cart-toast.liquid,snippets/product-card.liquid,snippets/product-card-list.liquid,sections/product.liquid,layout/theme.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0 --artifact-id cart-toast-001 --revision 1)"
     ]
   }
 }

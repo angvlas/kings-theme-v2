@@ -40,7 +40,8 @@
     "each": "each",
     "only_x_available": "Only {{ count }} available",
     "show_notices": "Show notices",
-    "hide_notices": "Hide notices"
+    "hide_notices": "Hide notices",
+    "item_added": "Added to cart"
   },
   "pages": {
     "we_buy": {
