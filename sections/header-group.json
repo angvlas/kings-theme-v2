@@ -18,9 +18,11 @@
         "top_menu": "kings-comics",
         "bottom_menu": "products-2-0",
         "extra_menu": "main-menu",
-        "right_menu": "",
+        "right_menu": "secondary-menu",
         "contact_email": "info@kingscomics.com",
         "contact_phone": "(02) 9267 5615",
+        "shipment_status": "delayed",
+        "shipment_text": "Shipment Delayed",
         "search_type": "product"
       }
     }
