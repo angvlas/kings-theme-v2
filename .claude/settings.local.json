@@ -47,7 +47,9 @@
       "Bash(node scripts/search_docs.mjs \"metaobject definition values liquid\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
       "Bash(node scripts/search_docs.mjs \"dynamic source metaobject section schema settings\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
       "Bash(node scripts/search_docs.mjs \"section schema blocks metaobject_reference\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
-      "Bash(node scripts/search_docs.mjs \"metaobjects global object liquid access\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)"
+      "Bash(node scripts/search_docs.mjs \"metaobjects global object liquid access\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
+      "Bash(node scripts/search_docs.mjs \"cart add to cart AJAX form product\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/product-card-list.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0 --artifact-id pcl-review-001 --revision 1)"
     ]
   }
 }

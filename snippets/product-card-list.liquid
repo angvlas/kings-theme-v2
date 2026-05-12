@@ -589,9 +589,9 @@
 
     document.querySelectorAll('.pcl').forEach(function(card) {
       var variants = card.querySelectorAll('[data-pcl-variant]');
-      var priceEl = card.querySelector('[data-pcl-price]');
-      var btnEl = card.querySelector('[data-pcl-btn]');
-      var atcBtn = card.querySelector('[data-pcl-add-to-cart]');
+      var priceEls = card.querySelectorAll('[data-pcl-price]');
+      var btnEls = card.querySelectorAll('[data-pcl-btn]');
+      var atcBtns = card.querySelectorAll('[data-pcl-add-to-cart]');
 
       /* Variant selection */
       variants.forEach(function(btn) {
@@ -602,19 +602,20 @@
           variants.forEach(function(v) { v.classList.remove('pcl__variant--selected'); });
           this.classList.add('pcl__variant--selected');
 
-          if (priceEl) priceEl.textContent = price;
+          priceEls.forEach(function(el) { el.textContent = price; });
+          atcBtns.forEach(function(el) { el.setAttribute('data-variant-id', id); });
 
-          if (atcBtn) atcBtn.setAttribute('data-variant-id', id);
-
-          if (btnEl && btnEl.tagName === 'A') {
-            var href = btnEl.href.split('?')[0];
-            btnEl.href = href + '?variant=' + id;
-          }
+          btnEls.forEach(function(el) {
+            if (el.tagName === 'A') {
+              var href = el.href.split('?')[0];
+              el.href = href + '?variant=' + id;
+            }
+          });
         });
       });
 
       /* AJAX add to cart */
-      if (atcBtn) {
+      atcBtns.forEach(function(atcBtn) {
         atcBtn.addEventListener('click', function() {
           var variantId = this.getAttribute('data-variant-id');
           if (!variantId) return;
@@ -659,7 +660,7 @@
             }, 2500);
           });
         });
-      }
+      });
     });
   })();
 {% endjavascript %}
