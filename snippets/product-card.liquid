@@ -115,9 +115,7 @@
       </div>
 
       {% if on_sale %}
-        <p class="product-card__compare-price">
-          {{ product.compare_at_price | money }}
-        </p>
+        <p class="product-card__compare-price">{{ product.compare_at_price | money }}</p>
       {% endif %}
 
       {% if is_preorder %}
@@ -331,47 +329,48 @@
 
   .product-card__price-row {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 4px;
     margin-bottom: 4px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     overflow: hidden;
   }
 
   .product-card__price {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 700;
     white-space: nowrap;
   }
 
   @media (min-width: 750px) {
     .product-card__price {
-      font-size: 1.3rem;
+      font-size: 1rem;
     }
   }
 
   @media (min-width: 1200px) {
     .product-card__price {
-      font-size: 1.5rem;
+      font-size: 1.15rem;
     }
   }
 
   .product-card__discount-badge {
     display: inline-flex;
     align-items: center;
-    padding: 2px 6px;
+    padding: 2px 5px;
     background-color: #e53e3e;
     color: #fff;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     border-radius: 4px;
     line-height: 1;
+    flex-shrink: 0;
   }
 
   @media (min-width: 750px) {
     .product-card__discount-badge {
-      padding: 3px 8px;
-      font-size: 0.75rem;
+      padding: 3px 7px;
+      font-size: 0.7rem;
       border-radius: 5px;
     }
   }
@@ -401,16 +400,16 @@
   }
 
   .product-card__compare-price {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     text-decoration: line-through;
     color: #a0aec0;
-    margin-bottom: 4px;
     white-space: nowrap;
+    margin-bottom: 4px;
   }
 
   @media (min-width: 750px) {
     .product-card__compare-price {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
   }
 
