@@ -101,8 +101,7 @@
         </div>
       {% endif %}
 
-      {%- assign hero_aspect = current_variant.featured_image.aspect_ratio | default: product.featured_image.aspect_ratio | default: 0.75 -%}
-      <div class="product-page__hero" data-product-hero style="--hero-aspect: {{ hero_aspect }};">
+      <div class="product-page__hero" data-product-hero>
         {% if product.tags contains 'ONE_PER' %}
           <span class="product-page__limit-badge">{{ 'product.limit_one' | t }}</span>
         {% endif %}
@@ -718,17 +717,21 @@
     }
 
     .product-page__hero {
-      aspect-ratio: var(--hero-aspect, 3 / 4);
+      aspect-ratio: auto;
+      height: auto;
+      min-height: 0;
       max-height: 55vh;
-      min-height: 280px;
       border-radius: 8px;
     }
 
     .product-page__hero-image {
+      display: block;
       width: 100%;
-      height: 100%;
+      height: auto;
+      max-height: 55vh;
       object-fit: contain;
       object-position: center;
+      margin: 0 auto;
     }
   }
   .product-page__limit-badge {
