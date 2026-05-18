@@ -32,17 +32,6 @@
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
-
-    <style>
-      .header__inner { justify-content: space-between !important; }
-      .header__search { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important; width: calc(100% - 500px) !important; max-width: 480px !important; min-width: 200px !important; z-index: 100 !important; }
-      .header__logo, .header__actions { position: relative !important; z-index: 101 !important; }
-      @media (max-width: 749px) {
-        .header__search { display: none !important; }
-      }
-      .mobile-nav--extra { padding-top: 10px !important; margin-top: 10px !important; }
-      .mobile-nav--extra .mobile-nav__link { padding: 12px 20px !important; display: block !important; }
-    </style>
   </head>
 
   <body style="background-color: var(--color-body-background, #f7f7f8)">

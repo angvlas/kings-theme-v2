@@ -256,23 +256,30 @@
     border: 1px solid #e2e2e4;
     border-radius: 6px;
     overflow: hidden;
-    height: 36px;
+    height: 44px;
   }
 
   .cart-page__qty-btn {
-    width: 32px;
+    width: 44px;
     height: 100%;
     border: none;
     background: transparent;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
     color: var(--color-foreground, #333);
     font-family: inherit;
+    padding: 0;
   }
 
-  .cart-page__qty-btn:hover:not(:disabled) {
+  .cart-page__qty-btn:hover:not(:disabled),
+  .cart-page__qty-btn:focus-visible:not(:disabled) {
     background-color: #f7f7f8;
+    outline: none;
+  }
+
+  .cart-page__qty-btn:active:not(:disabled) {
+    background-color: #ebebee;
   }
 
   .cart-page__qty-btn:disabled {
@@ -281,17 +288,23 @@
   }
 
   .cart-page__qty-input {
-    width: 36px;
+    width: 44px;
     height: 100%;
     border: none;
     border-left: 1px solid #e2e2e4;
     border-right: 1px solid #e2e2e4;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 16px;
     font-weight: 600;
     font-family: inherit;
     -moz-appearance: textfield;
     outline: none;
+  }
+
+  @media (min-width: 750px) {
+    .cart-page__qty-input {
+      font-size: 0.9rem;
+    }
   }
 
   .cart-page__qty-input::-webkit-inner-spin-button,

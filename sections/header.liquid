@@ -139,6 +139,17 @@
           <span class="header__shipment-label">{{ section.settings.shipment_text }}</span>
         </div>
       {% endif %}
+      <button
+        type="button"
+        class="header__action header__search-toggle"
+        aria-label="{{ 'header.search_placeholder' | t }}"
+        data-mobile-search-toggle
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M14 14L17.5 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
       {% if shop.customer_accounts_enabled %}
         <a href="{{ routes.account_url }}" class="header__action" aria-label="{{ 'header.account' | t }}">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -282,6 +293,23 @@
         </svg>
       </button>
     </div>
+
+    <form action="{{ routes.search_url }}" method="get" class="mobile-drawer__search" role="search">
+      <svg class="mobile-drawer__search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M12 12L15.5 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="search"
+        name="q"
+        class="mobile-drawer__search-input"
+        placeholder="{{ 'header.search_placeholder' | t }}"
+        aria-label="{{ 'header.search_placeholder' | t }}"
+        autocomplete="off"
+        data-mobile-search-input
+      >
+      <input type="hidden" name="type" value="{{ section.settings.search_type }}">
+    </form>
 
     <nav class="mobile-drawer__nav" aria-label="{{ 'header.main_navigation' | t }}">
       {% if section.settings.shipment_status != 'hidden' %}
@@ -803,7 +831,7 @@
     color: inherit;
     flex-shrink: 0;
     position: relative;
-    z-index: 1;
+    z-index: 101;
   }
 
   .header__logo-image {
@@ -822,8 +850,10 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    width: calc(100% - 500px);
     max-width: 480px;
+    min-width: 200px;
+    z-index: 100;
   }
 
   .header__search-form {
@@ -852,9 +882,15 @@
     outline: none;
     background: transparent;
     padding: 10px 0;
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-family: inherit;
     color: #fff;
+  }
+
+  @media (min-width: 750px) {
+    .header__search-input {
+      font-size: 0.85rem;
+    }
   }
 
   .header__search-input::placeholder {
@@ -887,15 +923,15 @@
     gap: 4px;
     flex-shrink: 0;
     position: relative;
-    z-index: 1;
+    z-index: 101;
   }
 
   .header__action {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border: none;
     border-radius: 8px;
     background: transparent;
@@ -907,12 +943,22 @@
     transition: background-color 0.15s ease;
   }
 
-  .header__action:hover {
+  .header__action:hover,
+  .header__action:focus-visible {
     background-color: rgba(255, 255, 255, 0.1);
+    outline: none;
+  }
+
+  .header__action:focus-visible {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
   }
 
   .header__cart {
     position: relative;
+  }
+
+  .header__search-toggle {
+    display: none;
   }
 
   @keyframes header-cart-bump {
@@ -1201,17 +1247,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border: none;
     background: transparent;
     color: var(--color-foreground, #333);
     cursor: pointer;
     border-radius: 6px;
+    padding: 0;
   }
 
-  .cart-drawer__close:hover {
+  .cart-drawer__close:hover,
+  .cart-drawer__close:focus-visible {
     background-color: #f7f7f8;
+    outline: none;
+  }
+
+  .cart-drawer__close:focus-visible {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
   }
 
   .cart-drawer__items {
@@ -1294,17 +1347,18 @@
   .cart-drawer__item-qty {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     margin-top: 8px;
   }
 
   .cart-drawer__qty-btn {
-    width: 26px;
-    height: 26px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     border: 1px solid #e2e2e4;
-    border-radius: 5px;
+    border-radius: 6px;
     background: transparent;
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -1312,19 +1366,26 @@
     justify-content: center;
     color: var(--color-foreground, #333);
     font-family: inherit;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    padding: 0;
   }
 
-  .cart-drawer__qty-btn:hover:not(:disabled) {
+  .cart-drawer__qty-btn:hover:not(:disabled),
+  .cart-drawer__qty-btn:focus-visible:not(:disabled) {
     border-color: var(--color-foreground, #333);
+    outline: none;
+  }
+
+  .cart-drawer__qty-btn:active:not(:disabled) {
+    background-color: #f0f0f2;
   }
 
   .cart-drawer__qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .cart-drawer__qty-value {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    min-width: 20px;
+    min-width: 24px;
     text-align: center;
   }
 
@@ -1486,14 +1547,20 @@
     display: none;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border: none;
     border-radius: 8px;
     background: transparent;
     color: #fff;
     cursor: pointer;
     flex-shrink: 0;
+    padding: 0;
+  }
+
+  .header__menu-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
   }
 
   /* Mobile drawer */
@@ -1552,23 +1619,68 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border: none;
     background: transparent;
     color: var(--color-foreground, #333);
     cursor: pointer;
     border-radius: 6px;
+    padding: 0;
   }
 
-  .mobile-drawer__close:hover {
+  .mobile-drawer__close:hover,
+  .mobile-drawer__close:focus-visible {
     background-color: #f7f7f8;
+    outline: none;
+  }
+
+  .mobile-drawer__close:focus-visible {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
   }
 
   .mobile-drawer__nav {
     flex: 1;
     overflow-y: auto;
     padding: 8px 0;
+  }
+
+  .mobile-drawer__search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 16px 4px;
+    padding: 0 12px;
+    background-color: #f0f0f2;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .mobile-drawer__search:focus-within {
+    border-color: var(--color-foreground, #333);
+    background-color: #fff;
+  }
+
+  .mobile-drawer__search-icon {
+    flex-shrink: 0;
+    color: #6b7280;
+  }
+
+  .mobile-drawer__search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 12px 0;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--color-foreground, #333);
+    min-width: 0;
+  }
+
+  .mobile-drawer__search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
   }
 
   .mobile-drawer__shipment {
@@ -1607,11 +1719,16 @@
 
   .mobile-nav__link {
     flex: 1;
-    padding: 10px 20px;
+    padding: 14px 20px;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-foreground, #333);
     text-decoration: none;
+  }
+
+  .mobile-nav__link:focus-visible {
+    outline: 2px solid var(--color-foreground, #333);
+    outline-offset: -2px;
   }
 
   .mobile-nav__link--sub {
@@ -1657,6 +1774,10 @@
   /* Desktop */
   @media (max-width: 749px) {
     .header__menu-toggle {
+      display: flex;
+    }
+
+    .header__search-toggle {
       display: flex;
     }
 
@@ -1782,6 +1903,8 @@
     /* Mobile drawer */
     var drawer = document.getElementById('mobile-drawer');
     var toggleBtn = document.querySelector('[data-drawer-toggle]');
+    var searchToggleBtn = document.querySelector('[data-mobile-search-toggle]');
+    var mobileSearchInput = document.querySelector('[data-mobile-search-input]');
 
     if (drawer) {
       var mobileDrawer = initDrawer(drawer, 'mobile-drawer--open', '[data-drawer-close]',
@@ -1790,6 +1913,15 @@
       );
 
       if (toggleBtn) toggleBtn.addEventListener('click', mobileDrawer.open);
+
+      if (searchToggleBtn) {
+        searchToggleBtn.addEventListener('click', function() {
+          mobileDrawer.open();
+          requestAnimationFrame(function() {
+            if (mobileSearchInput) mobileSearchInput.focus();
+          });
+        });
+      }
 
       drawer.querySelectorAll('[data-mobile-expand]').forEach(function(btn) {
         btn.addEventListener('click', function() {

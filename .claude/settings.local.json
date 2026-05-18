@@ -65,7 +65,10 @@
       "Bash(git -C /Users/angelovlastaras/projects/kings-theme-v2 commit -m ' *)",
       "Bash(python3 -c \"import json, re; json.loads\\(re.sub\\(r'/\\\\*.*?\\\\*/', '', open\\('templates/page.we-buy-collections.json'\\).read\\(\\), flags=re.DOTALL\\)\\); print\\('Template OK'\\)\")",
       "Read(//Users/angelovlastaras/.claude/plugins/cache/shopify-ai-toolkit/shopify-plugin/1.2.1/skills/shopify-liquid/**)",
-      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/product.liquid,sections/announcement-bar.liquid,sections/cta-banner.liquid,sections/store-hours.liquid,sections/subscription-info.liquid,sections/timeline.liquid,sections/image-with-text.liquid,sections/feature-cards.liquid,sections/page-hero.liquid,sections/steps-list.liquid,sections/faq-accordion.liquid,sections/contact-form.liquid,snippets/product-card.liquid,snippets/product-card-list.liquid --model claude-opus-4-7 --client-name claude-code --client-version 1.0 --artifact-id kings-theme-review-001 --revision 1)"
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files sections/product.liquid,sections/announcement-bar.liquid,sections/cta-banner.liquid,sections/store-hours.liquid,sections/subscription-info.liquid,sections/timeline.liquid,sections/image-with-text.liquid,sections/feature-cards.liquid,sections/page-hero.liquid,sections/steps-list.liquid,sections/faq-accordion.liquid,sections/contact-form.liquid,snippets/product-card.liquid,snippets/product-card-list.liquid --model claude-opus-4-7 --client-name claude-code --client-version 1.0 --artifact-id kings-theme-review-001 --revision 1)",
+      "mcp__plugin_shopify-plugin_shopify-mcp__learn_shopify_api",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/Users/angelovlastaras/projects/kings-theme-v2/locales/en.default.json'\\)\\); print\\(json.dumps\\(d.get\\('header', {}\\), indent=2\\)\\)\")",
+      "mcp__plugin_shopify-plugin_shopify-mcp__validate_theme"
     ]
   }
 }

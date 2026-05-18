@@ -36,8 +36,8 @@
 {% stylesheet %}
   .cart-toast {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    right: max(20px, env(safe-area-inset-right));
     z-index: 400;
     max-width: 340px;
     width: calc(100% - 32px);
@@ -55,8 +55,8 @@
 
   @media (max-width: 749px) {
     .cart-toast {
-      bottom: 16px;
-      right: 16px;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      right: max(16px, env(safe-area-inset-right));
       max-width: calc(100% - 32px);
     }
   }
@@ -133,20 +133,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 36px;
+    height: 36px;
     border: none;
     background: none;
     color: #9b9ba0;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: color 0.15s ease, background-color 0.15s ease;
     padding: 0;
   }
 
-  .cart-toast__close:hover {
+  .cart-toast__close:hover,
+  .cart-toast__close:focus-visible {
     color: var(--color-foreground, #333);
     background-color: #f0f0f2;
+    outline: none;
   }
 {% endstylesheet %}
 

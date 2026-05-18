@@ -390,15 +390,21 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 6px 8px;
+    padding: 12px 8px;
+    min-height: 44px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     transition: background-color 0.15s ease;
   }
 
   .collection-filters__checkbox-label:hover {
     background-color: #ededef;
+  }
+
+  .collection-filters__checkbox:focus-visible + .collection-filters__checkbox-custom {
+    outline: 2px solid var(--color-foreground, #333);
+    outline-offset: 2px;
   }
 
   .collection-filters__checkbox {
