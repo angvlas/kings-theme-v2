@@ -12,33 +12,42 @@
             <a href="{{ block.settings.link }}" class="slideshow__link">
           {% endif %}
 
-          {% if block.settings.image %}
-            {{ block.settings.image | image_url: width: 1800 | image_tag:
-              alt: block.settings.image.alt | default: block.settings.heading | default: '',
-              loading: forloop.first | default: 'lazy',
-              class: 'slideshow__image slideshow__image--desktop'
-            }}
-          {% endif %}
-
-          {% if block.settings.mobile_image %}
-            {{ block.settings.mobile_image | image_url: width: 610 | image_tag:
-              alt: block.settings.mobile_image.alt | default: block.settings.heading | default: '',
-              loading: forloop.first | default: 'lazy',
-              class: 'slideshow__image slideshow__image--mobile'
-            }}
-          {% elsif block.settings.image %}
-            {{ block.settings.image | image_url: width: 610 | image_tag:
-              alt: block.settings.image.alt | default: block.settings.heading | default: '',
-              loading: forloop.first | default: 'lazy',
-              class: 'slideshow__image slideshow__image--mobile'
-            }}
-          {% endif %}
-
-          {% unless block.settings.image or block.settings.mobile_image %}
+          {% if block.settings.image or block.settings.mobile_image %}
+            {%- if forloop.first -%}
+              {%- assign slide_loading = 'eager' -%}
+            {%- else -%}
+              {%- assign slide_loading = 'lazy' -%}
+            {%- endif -%}
+            {%- assign slide_alt = block.settings.image.alt | default: block.settings.mobile_image.alt | default: block.settings.heading | default: '' -%}
+            <picture class="slideshow__picture">
+              {% if block.settings.image and block.settings.mobile_image %}
+                <source media="(min-width: 750px)" srcset="{{ block.settings.image | image_url: width: 1800 }}">
+              {% endif %}
+              {% if block.settings.mobile_image %}
+                <img
+                  src="{{ block.settings.mobile_image | image_url: width: 610 }}"
+                  alt="{{ slide_alt | escape }}"
+                  class="slideshow__image"
+                  loading="{{ slide_loading }}"
+                  width="{{ block.settings.mobile_image.width }}"
+                  height="{{ block.settings.mobile_image.height }}"
+                >
+              {% else %}
+                <img
+                  src="{{ block.settings.image | image_url: width: 1800 }}"
+                  alt="{{ slide_alt | escape }}"
+                  class="slideshow__image"
+                  loading="{{ slide_loading }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                >
+              {% endif %}
+            </picture>
+          {% else %}
             <div class="slideshow__placeholder">
               {{ 'lifestyle-1' | placeholder_svg_tag }}
             </div>
-          {% endunless %}
+          {% endif %}
 
           {% if block.settings.heading != blank or block.settings.subheading != blank %}
             <div class="slideshow__content">
@@ -141,28 +150,16 @@
     color: inherit;
   }
 
+  .slideshow__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
   .slideshow__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-
-  .slideshow__image--desktop {
-    display: none;
-  }
-
-  .slideshow__image--mobile {
-    display: block;
-  }
-
-  @media (min-width: 750px) {
-    .slideshow__image--desktop {
-      display: block;
-    }
-
-    .slideshow__image--mobile {
-      display: none;
-    }
   }
 
   .slideshow__placeholder {
