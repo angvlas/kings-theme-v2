@@ -37,7 +37,9 @@
         "slide_FjNJet": {
           "type": "slide",
           "settings": {
-            "link": "",
+            "image": "shopify://shop_images/Odin__1.png",
+            "mobile_image": "shopify://shop_images/m_Odin__1.png",
+            "link": "https://kingscomics.com/search?type=product&q=Odin+%282026%29+%231",
             "heading": "",
             "subheading": "",
             "button_text": ""
