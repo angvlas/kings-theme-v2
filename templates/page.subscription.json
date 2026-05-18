@@ -13,6 +13,7 @@
       "type": "page-hero",
       "settings": {
         "heading": "What is a Subscription Order?",
+        "subheading": "",
         "intro": "<p>A comic subscription is a convenient way for you to receive your favourite comic book issues regularly without visiting the store each time. Simply choose the series you love, set up automatic billing, and enjoy the latest releases delivered to your doorstep.</p>"
       }
     },
@@ -60,38 +61,62 @@
           }
         }
       },
-      "block_order": ["no_minimum", "priority", "weekly", "hassle_free"],
-      "settings": {}
+      "block_order": [
+        "no_minimum",
+        "priority",
+        "weekly",
+        "hassle_free"
+      ],
+      "settings": {
+        "heading": ""
+      }
     },
     "steps": {
       "type": "steps-list",
       "blocks": {
         "step_1": {
           "type": "step",
-          "settings": { "description": "Download the Subscription Order Agreement" }
+          "settings": {
+            "description": "Download the Subscription Order Agreement"
+          }
         },
         "step_2": {
           "type": "step",
-          "settings": { "description": "Complete Subscription Order Agreement" }
+          "settings": {
+            "description": "Complete Subscription Order Agreement"
+          }
         },
         "step_3": {
           "type": "step",
-          "settings": { "description": "Return the Agreement to info@kingscomics.com" }
+          "settings": {
+            "description": "Return the Agreement to info@kingscomics.com"
+          }
         },
         "step_4": {
           "type": "step",
-          "settings": { "description": "Sit back and wait for confirmation" }
+          "settings": {
+            "description": "Sit back and wait for confirmation"
+          }
         }
       },
-      "block_order": ["step_1", "step_2", "step_3", "step_4"],
-      "settings": {}
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4"
+      ],
+      "settings": {
+        "heading": ""
+      }
     },
     "cta": {
       "type": "cta-banner",
       "settings": {
         "heading": "Start now!",
         "description": "Download our Subscription Order Agreement",
-        "button_label": "Download"
+        "button_label": "Download",
+        "button_url": "https://cdn.shopify.com/s/files/1/1620/8083/files/Subscription_Agreement_December_2023.pdf?v=1705039159",
+        "download": true
       }
     },
     "info": {
@@ -99,6 +124,7 @@
       "settings": {
         "faq_heading": "FAQs",
         "form_heading": "Need help?",
+        "form_intro": "",
         "submit_label": "Send",
         "success_message": "Thanks! We'll be in touch about your subscription soon.",
         "form_subject": "Subscription enquiry",
