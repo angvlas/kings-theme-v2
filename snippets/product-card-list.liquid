@@ -118,9 +118,25 @@
 
     <div class="pcl__mobile-action">
       {% if is_preorder %}
-        <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--preorder" data-pcl-btn>{{ 'collection.pre_order' | t }}</a>
+        <button
+          type="button"
+          class="pcl__btn pcl__btn--preorder"
+          data-pcl-btn
+          data-pcl-add-to-cart
+          data-variant-id="{{ variant.id }}"
+        >
+          {{ 'collection.pre_order' | t }}
+        </button>
       {% elsif is_backorder %}
-        <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--backorder" data-pcl-btn>{{ 'collection.back_order' | t }}</a>
+        <button
+          type="button"
+          class="pcl__btn pcl__btn--backorder"
+          data-pcl-btn
+          data-pcl-add-to-cart
+          data-variant-id="{{ variant.id }}"
+        >
+          {{ 'collection.back_order' | t }}
+        </button>
       {% elsif sold_out %}
         <button class="pcl__btn pcl__btn--disabled" disabled data-pcl-btn>{{ 'collection.sold_out' | t }}</button>
       {% else %}
@@ -173,9 +189,25 @@
     </div>
 
     {% if is_preorder %}
-      <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--preorder" data-pcl-btn>{{ 'collection.pre_order' | t }}</a>
+      <button
+        type="button"
+        class="pcl__btn pcl__btn--preorder"
+        data-pcl-btn
+        data-pcl-add-to-cart
+        data-variant-id="{{ variant.id }}"
+      >
+        {{ 'collection.pre_order' | t }}
+      </button>
     {% elsif is_backorder %}
-      <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="pcl__btn pcl__btn--backorder" data-pcl-btn>{{ 'collection.back_order' | t }}</a>
+      <button
+        type="button"
+        class="pcl__btn pcl__btn--backorder"
+        data-pcl-btn
+        data-pcl-add-to-cart
+        data-variant-id="{{ variant.id }}"
+      >
+        {{ 'collection.back_order' | t }}
+      </button>
     {% elsif sold_out %}
       <button class="pcl__btn pcl__btn--disabled" disabled data-pcl-btn>{{ 'collection.sold_out' | t }}</button>
     {% else %}

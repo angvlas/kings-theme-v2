@@ -41,7 +41,8 @@
     "only_x_available": "Only {{ count }} available",
     "show_notices": "Show notices",
     "hide_notices": "Hide notices",
-    "item_added": "Added to cart"
+    "item_added": "Added to cart",
+    "remove_all": "Remove all"
   },
   "pages": {
     "we_buy": {

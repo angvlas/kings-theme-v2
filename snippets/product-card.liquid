@@ -149,13 +149,25 @@
   </a>
 
   {% if is_preorder %}
-    <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="product-card__button product-card__button--preorder" data-card-button>
+    <button
+      type="button"
+      class="product-card__button product-card__button--preorder"
+      data-card-button
+      data-add-to-cart
+      data-variant-id="{{ variant.id }}"
+    >
       {{ 'collection.pre_order' | t }}
-    </a>
+    </button>
   {% elsif is_backorder %}
-    <a href="{{ product.url }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}" class="product-card__button product-card__button--backorder" data-card-button>
+    <button
+      type="button"
+      class="product-card__button product-card__button--backorder"
+      data-card-button
+      data-add-to-cart
+      data-variant-id="{{ variant.id }}"
+    >
       {{ 'collection.back_order' | t }}
-    </a>
+    </button>
   {% elsif sold_out %}
     <button class="product-card__button product-card__button--disabled" disabled data-card-button>
       {{ 'collection.sold_out' | t }}
