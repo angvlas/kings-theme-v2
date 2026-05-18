@@ -36,10 +36,48 @@
       "name": "t:sections.slideshow.name",
       "settings": {}
     },
-    "advantages": {
+    "feature_cards_Q8Waih": {
       "type": "feature-cards",
+      "blocks": {
+        "feature_AKTgGr": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-piggy-bank",
+            "icon_color": "#fff3e0",
+            "icon_text_color": "#333333",
+            "title": "Instant Cash-out",
+            "description": "Cash-outs are completed instantly via bank transfer"
+          }
+        },
+        "feature_dh3qQ4": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-truck",
+            "icon_color": "#fff3e0",
+            "icon_text_color": "#333333",
+            "title": "Bulk Buy",
+            "description": "Large collection? We can buy any collection, in any size"
+          }
+        },
+        "feature_pP6ycV": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-thumbs-up",
+            "icon_color": "#fff3e0",
+            "icon_text_color": "#333333",
+            "title": "Convenience",
+            "description": "Have no time to sell items individually? Cash-out now!"
+          }
+        }
+      },
+      "block_order": [
+        "feature_AKTgGr",
+        "feature_dh3qQ4",
+        "feature_pP6ycV"
+      ],
+      "name": "t:sections.feature_cards.name",
       "settings": {
-        "heading": "Why sell to us?"
+        "heading": ""
       }
     },
     "buying": {
@@ -102,58 +140,13 @@
         "faq_E4HVNX"
       ],
       "settings": {}
-    },
-    "feature_cards_Q8Waih": {
-      "type": "feature-cards",
-      "blocks": {
-        "feature_AKTgGr": {
-          "type": "feature",
-          "settings": {
-            "icon": "fa-solid fa-piggy-bank",
-            "icon_color": "#fff3e0",
-            "icon_text_color": "#333333",
-            "title": "Instant Cash-out",
-            "description": "Cash-outs are completed instantly via bank transfer"
-          }
-        },
-        "feature_dh3qQ4": {
-          "type": "feature",
-          "settings": {
-            "icon": "fa-solid fa-truck",
-            "icon_color": "#fff3e0",
-            "icon_text_color": "#333333",
-            "title": "Bulk Buy",
-            "description": "Large collection? We can buy any collection, in any size"
-          }
-        },
-        "feature_pP6ycV": {
-          "type": "feature",
-          "settings": {
-            "icon": "fa-solid fa-thumbs-up",
-            "icon_color": "#fff3e0",
-            "icon_text_color": "#333333",
-            "title": "Convenience",
-            "description": "Have no time to sell items individually? Cash-out now!"
-          }
-        }
-      },
-      "block_order": [
-        "feature_AKTgGr",
-        "feature_dh3qQ4",
-        "feature_pP6ycV"
-      ],
-      "name": "t:sections.feature_cards.name",
-      "settings": {
-        "heading": ""
-      }
     }
   },
   "order": [
     "hero",
-    "slideshow_tkhmyN",
-    "advantages",
     "buying",
-    "main",
-    "feature_cards_Q8Waih"
+    "slideshow_tkhmyN",
+    "feature_cards_Q8Waih",
+    "main"
   ]
 }
