@@ -110,20 +110,12 @@
         "collection": "newest-products",
         "products_to_show": 10
       }
-    },
-    "recommended": {
-      "type": "recommended-products",
-      "settings": {
-        "heading": "Recommended for you",
-        "products_to_show": 10
-      }
     }
   },
   "order": [
     "slideshow",
     "collection_row_1",
     "collection_row_2",
-    "collection_row_E3zT3g",
-    "recommended"
+    "collection_row_E3zT3g"
   ]
 }
