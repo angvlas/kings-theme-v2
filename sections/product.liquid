@@ -149,47 +149,54 @@
     </div>
 
     <div class="product-page__info">
-      <div class="product-page__vendor-row">
-        {% if product.vendor != blank %}
-          <p class="product-page__vendor">{{ product.vendor | escape }}</p>
-        {% endif %}
-        {% if next_in_series %}
-          <a href="{{ next_in_series.url }}" class="product-page__next-issue" title="{{ next_in_series.title | escape }}">
-            {{ 'product.next_issue' | t }}
-            <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        {% endif %}
-      </div>
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'vendor' %}
+            {% if product.vendor != blank or next_in_series %}
+              <div class="product-page__vendor-row" {{ block.shopify_attributes }}>
+                {% if product.vendor != blank %}
+                  <p class="product-page__vendor">{{ product.vendor | escape }}</p>
+                {% endif %}
+                {% if next_in_series %}
+                  <a href="{{ next_in_series.url }}" class="product-page__next-issue" title="{{ next_in_series.title | escape }}">
+                    {{ 'product.next_issue' | t }}
+                    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
 
-      <h1 class="product-page__title">
-        {{ product.title | escape }}
-        {% if product.metafields.kings.key_issue %}
-          <span class="product-card__key-badge" title="{{ 'collection.key_issue' | t }}">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M10.5 1.5a3.5 3.5 0 0 0-3.23 4.84L2 11.6V14h2.4l.6-.6v-1.4h1.4l.6-.6v-1.4h1.4l1.16-1.16A3.5 3.5 0 1 0 10.5 1.5Zm1 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" fill="currentColor"/>
-            </svg>
-            {{ 'collection.key_issue' | t }}
-          </span>
-        {% endif %}
-      </h1>
+          {% when 'title' %}
+            <h1 class="product-page__title" {{ block.shopify_attributes }}>
+              {{ product.title | escape }}
+              {% if product.metafields.kings.key_issue %}
+                <span class="product-card__key-badge" title="{{ 'collection.key_issue' | t }}">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M10.5 1.5a3.5 3.5 0 0 0-3.23 4.84L2 11.6V14h2.4l.6-.6v-1.4h1.4l.6-.6v-1.4h1.4l1.16-1.16A3.5 3.5 0 1 0 10.5 1.5Zm1 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" fill="currentColor"/>
+                  </svg>
+                  {{ 'collection.key_issue' | t }}
+                </span>
+              {% endif %}
+            </h1>
 
-      {% if current_variant.sku != blank or current_variant.barcode != blank %}
-        <p class="product-page__sku-line">
-          {% if current_variant.sku != blank %}
-            <span>{{ 'product.details.sku' | t }}: <strong data-product-sku>{{ current_variant.sku }}</strong></span>
-          {% endif %}
-          {% if current_variant.sku != blank and current_variant.barcode != blank %}
-            <span class="product-page__sku-divider">|</span>
-          {% endif %}
-          {% if current_variant.barcode != blank %}
-            <span>{{ 'product.details.barcode' | t }}: <strong data-product-barcode>{{ current_variant.barcode }}</strong></span>
-          {% endif %}
-        </p>
-      {% endif %}
+          {% when 'sku' %}
+            {% if current_variant.sku != blank or current_variant.barcode != blank %}
+              <p class="product-page__sku-line" {{ block.shopify_attributes }}>
+                {% if current_variant.sku != blank %}
+                  <span>{{ 'product.details.sku' | t }}: <strong data-product-sku>{{ current_variant.sku }}</strong></span>
+                {% endif %}
+                {% if current_variant.sku != blank and current_variant.barcode != blank %}
+                  <span class="product-page__sku-divider">|</span>
+                {% endif %}
+                {% if current_variant.barcode != blank %}
+                  <span>{{ 'product.details.barcode' | t }}: <strong data-product-barcode>{{ current_variant.barcode }}</strong></span>
+                {% endif %}
+              </p>
+            {% endif %}
 
-      {% if product.type == 'Comics' and section.settings.enable_condition_guide %}
+            {% if product.type == 'Comics' and section.settings.enable_condition_guide %}
       {%- liquid
         assign product_condition = 'NM'
         assign condition_grades = 'NM+,NM,NM-,VF+,VF,VF-,FN+,FN,FN-,VG+,VG,VG-,GD+,GD,GD-,FR,PR' | split: ','
@@ -283,171 +290,247 @@
           </div>
         </div>
       </div>
-      {% endif %}
+            {% endif %}
 
-      <div class="product-page__price-row">
-        <span class="product-page__price" data-product-price>{{ current_variant.price | money }}</span>
-        {% if on_sale %}
-          <span class="product-page__compare" data-product-compare>{{ current_variant.compare_at_price | money }}</span>
-          {% assign discount = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price %}
-          <span class="product-page__discount" data-product-discount>-{{ discount }}%</span>
-        {% endif %}
-      </div>
+          {% when 'price' %}
+            <div class="product-page__price-row" {{ block.shopify_attributes }}>
+              <span class="product-page__price" data-product-price>{{ current_variant.price | money }}</span>
+              {% if on_sale %}
+                <span class="product-page__compare" data-product-compare>{{ current_variant.compare_at_price | money }}</span>
+                {% assign discount = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price %}
+                <span class="product-page__discount" data-product-discount>-{{ discount }}%</span>
+              {% endif %}
+            </div>
 
-      {% if is_preorder %}
-        <p class="product-page__status product-page__status--preorder">
-          <span class="product-page__status-dot"></span>
-          {{ 'collection.pre_order' | t }} {{ release_date | date: "%b %d, %Y" }}
-        </p>
-      {% elsif is_backorder %}
-        <p class="product-page__status product-page__status--backorder" data-product-status>
-          <span class="product-page__status-dot"></span>
-          {{ 'collection.back_order' | t }} – {{ 'collection.back_order_shipping' | t }}
-        </p>
-      {% elsif current_variant.available %}
-        <p class="product-page__status product-page__status--in" data-product-status>
-          <span class="product-page__status-dot"></span>
-          {{ 'collection.in_stock' | t }}
-        </p>
-      {% else %}
-        <p class="product-page__status product-page__status--out" data-product-status>
-          <span class="product-page__status-dot"></span>
-          {{ 'collection.out_of_stock' | t }}
-        </p>
-      {% endif %}
+            {% if is_preorder %}
+              <p class="product-page__status product-page__status--preorder">
+                <span class="product-page__status-dot"></span>
+                {{ 'collection.pre_order' | t }} {{ release_date | date: "%b %d, %Y" }}
+              </p>
+            {% elsif is_backorder %}
+              <p class="product-page__status product-page__status--backorder" data-product-status>
+                <span class="product-page__status-dot"></span>
+                {{ 'collection.back_order' | t }} – {{ 'collection.back_order_shipping' | t }}
+              </p>
+            {% elsif current_variant.available %}
+              <p class="product-page__status product-page__status--in" data-product-status>
+                <span class="product-page__status-dot"></span>
+                {{ 'collection.in_stock' | t }}
+              </p>
+            {% else %}
+              <p class="product-page__status product-page__status--out" data-product-status>
+                <span class="product-page__status-dot"></span>
+                {{ 'collection.out_of_stock' | t }}
+              </p>
+            {% endif %}
 
-      <div class="product-page__form-wrapper">
-        {% if product.variants.size > 1 %}
-          <div class="product-page__variants">
-            <label class="product-page__label">{{ 'product.variant' | t }}</label>
-            <div class="product-page__variant-options" data-product-variants>
-              {% for variant in product.variants %}
+          {% when 'buy_buttons' %}
+            <div class="product-page__form-wrapper" {{ block.shopify_attributes }}>
+              {% if product.variants.size > 1 %}
+                <div class="product-page__variants">
+                  <label class="product-page__label">{{ 'product.variant' | t }}</label>
+                  <div class="product-page__variant-options" data-product-variants>
+                    {% for variant in product.variants %}
+                      <button
+                        type="button"
+                        class="product-page__variant-btn{% if variant == current_variant %} product-page__variant-btn--active{% endif %}{% unless variant.available %} product-page__variant-btn--unavailable{% endunless %}"
+                        data-variant-id="{{ variant.id }}"
+                        data-variant-price="{{ variant.price | money }}"
+                        data-variant-compare="{{ variant.compare_at_price | money }}"
+                        data-variant-available="{{ variant.available }}"
+                        data-variant-image="{{ variant.featured_image | image_url: width: 800 }}"
+                        data-variant-sku="{{ variant.sku }}"
+                        data-variant-barcode="{{ variant.barcode }}"
+                        {% unless variant.available %}disabled{% endunless %}
+                      >
+                        {{ variant.title }}
+                      </button>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+
+              <div class="product-page__actions">
+                <div class="product-page__quantity">
+                  <label for="product-qty" class="product-page__label">{{ 'product.quantity' | t }}</label>
+                  <div class="product-page__qty-control">
+                    <button type="button" class="product-page__qty-btn" data-qty-minus aria-label="{{ 'product.decrease' | t }}">-</button>
+                    <input type="number" id="product-qty" class="product-page__qty-input" value="1" min="1" data-qty-input>
+                    <button type="button" class="product-page__qty-btn" data-qty-plus aria-label="{{ 'product.increase' | t }}">+</button>
+                  </div>
+                </div>
+
                 <button
                   type="button"
-                  class="product-page__variant-btn{% if variant == current_variant %} product-page__variant-btn--active{% endif %}{% unless variant.available %} product-page__variant-btn--unavailable{% endunless %}"
-                  data-variant-id="{{ variant.id }}"
-                  data-variant-price="{{ variant.price | money }}"
-                  data-variant-compare="{{ variant.compare_at_price | money }}"
-                  data-variant-available="{{ variant.available }}"
-                  data-variant-image="{{ variant.featured_image | image_url: width: 800 }}"
-                  data-variant-sku="{{ variant.sku }}"
-                  data-variant-barcode="{{ variant.barcode }}"
-                  {% unless variant.available %}disabled{% endunless %}
+                  class="product-page__add-btn{% if is_preorder %} product-page__add-btn--preorder{% elsif is_backorder %} product-page__add-btn--backorder{% endif %}"
+                  data-product-add
+                  data-variant-id="{{ current_variant.id }}"
+                  {% unless current_variant.available or is_preorder %}disabled{% endunless %}
                 >
-                  {{ variant.title }}
+                  {% if is_preorder %}
+                    {{ 'collection.pre_order' | t }}
+                  {% elsif is_backorder %}
+                    {{ 'collection.back_order' | t }}
+                  {% elsif current_variant.available %}
+                    {{ 'collection.add_to_cart' | t }}
+                  {% else %}
+                    {{ 'collection.sold_out' | t }}
+                  {% endif %}
                 </button>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
+              </div>
 
-        <div class="product-page__actions">
-          <div class="product-page__quantity">
-            <label for="product-qty" class="product-page__label">{{ 'product.quantity' | t }}</label>
-            <div class="product-page__qty-control">
-              <button type="button" class="product-page__qty-btn" data-qty-minus aria-label="{{ 'product.decrease' | t }}">-</button>
-              <input type="number" id="product-qty" class="product-page__qty-input" value="1" min="1" data-qty-input>
-              <button type="button" class="product-page__qty-btn" data-qty-plus aria-label="{{ 'product.increase' | t }}">+</button>
+              {{ product | payment_button }}
             </div>
-          </div>
 
-          <button
-            type="button"
-            class="product-page__add-btn{% if is_preorder %} product-page__add-btn--preorder{% elsif is_backorder %} product-page__add-btn--backorder{% endif %}"
-            data-product-add
-            data-variant-id="{{ current_variant.id }}"
-            {% unless current_variant.available or is_preorder %}disabled{% endunless %}
-          >
-            {% if is_preorder %}
-              {{ 'collection.pre_order' | t }}
-            {% elsif is_backorder %}
-              {{ 'collection.back_order' | t }}
-            {% elsif current_variant.available %}
-              {{ 'collection.add_to_cart' | t }}
-            {% else %}
-              {{ 'collection.sold_out' | t }}
+          {% when 'series' %}
+            {%- liquid
+              assign sc = nil
+              for c in product.collections
+                if c.metafields.kings.is_this_a_series.value == true
+                  assign sc = c
+                  break
+                endif
+              endfor
+            -%}
+            {% if sc %}
+              <div class="product-page__block" {{ block.shopify_attributes }}>
+                {% render 'series-gallery-inline', series_collection: sc, current_product: product %}
+              </div>
             {% endif %}
-          </button>
-        </div>
 
-        {{ product | payment_button }}
-      </div>
-
-      {%- liquid
-        assign sc = nil
-        for c in product.collections
-          if c.metafields.kings.is_this_a_series.value == true
-            assign sc = c
-            break
-          endif
-        endfor
-      -%}
-      {% if sc %}
-        {% render 'series-gallery-inline', series_collection: sc, current_product: product %}
-      {% endif %}
-
-      <div class="product-info-split{% unless sc %} product-info-split--no-border{% endunless %}">
-        <div class="product-info-split__description">
-          <h3 class="product-info-split__heading">{{ 'product.tab_description' | t }}</h3>
-          {% if product.description != blank %}
-            <div class="product-info-split__text">
-              {{ product.description }}
+          {% when 'description' %}
+            <div class="product-info-split product-page__block" {{ block.shopify_attributes }}>
+              <div class="product-info-split__description">
+                <h3 class="product-info-split__heading">
+                  {%- if block.settings.heading != blank -%}
+                    {{ block.settings.heading }}
+                  {%- else -%}
+                    {{ 'product.tab_description' | t }}
+                  {%- endif -%}
+                </h3>
+                {% if product.description != blank %}
+                  <div class="product-info-split__text">
+                    {{ product.description }}
+                  </div>
+                {% else %}
+                  <p class="product-info-split__empty">{{ 'product.no_description' | t }}</p>
+                {% endif %}
+              </div>
             </div>
-          {% else %}
-            <p class="product-info-split__empty">{{ 'product.no_description' | t }}</p>
-          {% endif %}
-        </div>
 
-        <div class="product-info-split__details">
-          <h3 class="product-info-split__heading">{{ 'product.tab_details' | t }}</h3>
-          <table class="product-info-split__table">
-            <tbody>
-              {% if current_variant.sku != blank %}
-                <tr>
-                  <th>{{ 'product.details.sku' | t }}</th>
-                  <td data-detail-sku>{{ current_variant.sku }}</td>
-                </tr>
+          {% when 'details' %}
+            <div class="product-info-split product-page__block" {{ block.shopify_attributes }}>
+              <div class="product-info-split__details">
+                <h3 class="product-info-split__heading">
+                  {%- if block.settings.heading != blank -%}
+                    {{ block.settings.heading }}
+                  {%- else -%}
+                    {{ 'product.tab_details' | t }}
+                  {%- endif -%}
+                </h3>
+                <table class="product-info-split__table">
+                  <tbody>
+                    {% if current_variant.sku != blank %}
+                      <tr>
+                        <th>{{ 'product.details.sku' | t }}</th>
+                        <td data-detail-sku>{{ current_variant.sku }}</td>
+                      </tr>
+                    {% endif %}
+                    {% if current_variant.barcode != blank %}
+                      <tr>
+                        <th>{{ 'product.details.barcode' | t }}</th>
+                        <td data-detail-barcode>{{ current_variant.barcode }}</td>
+                      </tr>
+                    {% endif %}
+                    {% if product.metafields.kings.issue_number != blank %}
+                      <tr>
+                        <th>{{ 'product.details.issue_number' | t }}</th>
+                        <td>{{ product.metafields.kings.issue_number }}</td>
+                      </tr>
+                    {% endif %}
+                    {% if release_date != blank %}
+                      <tr>
+                        <th>{{ 'product.details.release_date' | t }}</th>
+                        <td>{{ release_date | date: "%b %d, %Y" }}</td>
+                      </tr>
+                    {% endif %}
+                    {% if product.metafields.kings.format != blank %}
+                      <tr>
+                        <th>{{ 'product.details.format' | t }}</th>
+                        <td>{{ product.metafields.kings.format }}</td>
+                      </tr>
+                    {% endif %}
+                    {% if product.vendor != blank %}
+                      <tr>
+                        <th>{{ 'product.details.brand' | t }}</th>
+                        <td>{{ product.vendor }}</td>
+                      </tr>
+                    {% endif %}
+                    {% if product.type != blank %}
+                      <tr>
+                        <th>{{ 'product.details.type' | t }}</th>
+                        <td>{{ product.type }}</td>
+                      </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          {% when 'text' %}
+            <div class="product-page__block product-block-text" {{ block.shopify_attributes }}>
+              {% if block.settings.heading != blank %}
+                <h3 class="product-info-split__heading">{{ block.settings.heading }}</h3>
               {% endif %}
-              {% if current_variant.barcode != blank %}
-                <tr>
-                  <th>{{ 'product.details.barcode' | t }}</th>
-                  <td data-detail-barcode>{{ current_variant.barcode }}</td>
-                </tr>
+              {% if block.settings.body != blank %}
+                <div class="product-info-split__text">{{ block.settings.body }}</div>
               {% endif %}
-              {% if product.metafields.kings.issue_number != blank %}
-                <tr>
-                  <th>{{ 'product.details.issue_number' | t }}</th>
-                  <td>{{ product.metafields.kings.issue_number }}</td>
-                </tr>
-              {% endif %}
-              {% if release_date != blank %}
-                <tr>
-                  <th>{{ 'product.details.release_date' | t }}</th>
-                  <td>{{ release_date | date: "%b %d, %Y" }}</td>
-                </tr>
-              {% endif %}
-              {% if product.metafields.kings.format != blank %}
-                <tr>
-                  <th>{{ 'product.details.format' | t }}</th>
-                  <td>{{ product.metafields.kings.format }}</td>
-                </tr>
-              {% endif %}
-              {% if product.vendor != blank %}
-                <tr>
-                  <th>{{ 'product.details.brand' | t }}</th>
-                  <td>{{ product.vendor }}</td>
-                </tr>
-              {% endif %}
-              {% if product.type != blank %}
-                <tr>
-                  <th>{{ 'product.details.type' | t }}</th>
-                  <td>{{ product.type }}</td>
-                </tr>
-              {% endif %}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </div>
+
+          {% when 'image' %}
+            {% if block.settings.image != blank %}
+              <div class="product-page__block product-block-image" {{ block.shopify_attributes }}>
+                <div class="product-block-image__media">
+                  {{
+                    block.settings.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      sizes: '(min-width: 750px) 50vw, 100vw',
+                      widths: '300, 500, 700, 900, 1200',
+                      alt: block.settings.caption
+                  }}
+                </div>
+                {% if block.settings.caption != blank %}
+                  <p class="product-block-image__caption">{{ block.settings.caption }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+
+          {% when 'spacer' %}
+            <div
+              class="product-page__block product-block-spacer"
+              style="--spacer-size: {{ block.settings.size }}px"
+              {{ block.shopify_attributes }}
+            ></div>
+
+          {% when 'collapsible' %}
+            <details class="product-page__block product-block-collapsible" {{ block.shopify_attributes }}>
+              <summary class="product-block-collapsible__summary">
+                <span>{{ block.settings.heading }}</span>
+                <svg class="product-block-collapsible__icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="product-block-collapsible__content">{{ block.settings.content }}</div>
+            </details>
+
+          {% when '@app' %}
+            <div class="product-page__block product-block-app" {{ block.shopify_attributes }}>
+              {% render block %}
+            </div>
+        {% endcase %}
+      {% endfor %}
     </div>
   </div>
 </div>
@@ -1865,6 +1948,63 @@
       "label": "t:labels.enable_condition_guide",
       "default": true
     }
+  ],
+  "blocks": [
+    { "type": "vendor",      "name": "t:sections.product_blocks.vendor",      "limit": 1 },
+    { "type": "title",       "name": "t:sections.product_blocks.title",       "limit": 1 },
+    { "type": "sku",         "name": "t:sections.product_blocks.sku",         "limit": 1 },
+    { "type": "price",       "name": "t:sections.product_blocks.price",       "limit": 1 },
+    { "type": "buy_buttons", "name": "t:sections.product_blocks.buy_buttons", "limit": 1 },
+    { "type": "series",      "name": "t:sections.product_blocks.series",      "limit": 1 },
+    {
+      "type": "description",
+      "name": "t:sections.product_blocks.description",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Description" }
+      ]
+    },
+    {
+      "type": "details",
+      "name": "t:sections.product_blocks.details",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Product details" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.product_blocks.text",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "richtext", "id": "body", "label": "t:labels.description" }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "t:sections.product_blocks.image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "t:labels.image" },
+        { "type": "text", "id": "caption", "label": "t:sections.product_blocks.caption" }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "name": "t:sections.product_blocks.collapsible",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Shipping & returns" },
+        { "type": "richtext", "id": "content", "label": "t:sections.product_blocks.content" }
+      ]
+    },
+    {
+      "type": "spacer",
+      "name": "t:sections.product_blocks.spacer",
+      "settings": [
+        { "type": "range", "id": "size", "label": "t:sections.product_blocks.spacer_size",
+          "min": 8, "max": 80, "step": 4, "unit": "px", "default": 24 }
+      ]
+    },
+    { "type": "@app" }
   ],
   "disabled_on": {
     "groups": ["header", "footer"]

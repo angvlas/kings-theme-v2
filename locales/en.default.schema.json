@@ -196,6 +196,23 @@
     "collection_row": {
       "name": "Collection row"
     },
+    "product_blocks": {
+      "vendor": "Vendor",
+      "title": "Title",
+      "sku": "SKU & barcode",
+      "price": "Price",
+      "buy_buttons": "Add to cart",
+      "series": "Series gallery",
+      "description": "Description",
+      "details": "Product details",
+      "text": "Text",
+      "image": "Image",
+      "collapsible": "Collapsible row",
+      "spacer": "Spacer",
+      "caption": "Caption",
+      "content": "Content",
+      "spacer_size": "Size"
+    },
     "recommended": {
       "name": "Recommended for you"
     },
