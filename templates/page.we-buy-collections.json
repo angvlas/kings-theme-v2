@@ -17,6 +17,25 @@
         "intro": ""
       }
     },
+    "slideshow_tkhmyN": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_x8mwtE": {
+          "type": "slide",
+          "settings": {
+            "link": "",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_x8mwtE"
+      ],
+      "name": "t:sections.slideshow.name",
+      "settings": {}
+    },
     "advantages": {
       "type": "feature-cards",
       "settings": {
@@ -71,25 +90,70 @@
     "main": {
       "type": "we-buy-collections",
       "blocks": {
-        "faq_Tjy47R": {
+        "faq_E4HVNX": {
           "type": "faq",
-          "repeater": "{{ page.metafields.pages.faq.value }}",
           "settings": {
-            "question": "{{ block.repeater.questions.value }}",
-            "answer": "{{ block.repeater.answer | metafield_tag }}"
+            "question": "",
+            "answer": ""
           }
         }
       },
       "block_order": [
-        "faq_Tjy47R"
+        "faq_E4HVNX"
       ],
       "settings": {}
+    },
+    "feature_cards_Q8Waih": {
+      "type": "feature-cards",
+      "blocks": {
+        "feature_AKTgGr": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-piggy-bank",
+            "icon_color": "#fff3e0",
+            "icon_text_color": "#333333",
+            "title": "Instant Cash-out",
+            "description": "Cash-outs are completed instantly via bank transfer"
+          }
+        },
+        "feature_dh3qQ4": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-truck",
+            "icon_color": "#fff3e0",
+            "icon_text_color": "#333333",
+            "title": "Bulk Buy",
+            "description": "Large collection? We can buy any collection, in any size"
+          }
+        },
+        "feature_pP6ycV": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-thumbs-up",
+            "icon_color": "#fff3e0",
+            "icon_text_color": "#333333",
+            "title": "Convenience",
+            "description": "Have no time to sell items individually? Cash-out now!"
+          }
+        }
+      },
+      "block_order": [
+        "feature_AKTgGr",
+        "feature_dh3qQ4",
+        "feature_pP6ycV"
+      ],
+      "name": "t:sections.feature_cards.name",
+      "settings": {
+        "heading": ""
+      }
     }
   },
   "order": [
     "hero",
+    "slideshow_tkhmyN",
     "advantages",
     "buying",
-    "main"
+    "main",
+    "feature_cards_Q8Waih"
   ]
 }
