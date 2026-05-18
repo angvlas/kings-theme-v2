@@ -1,19 +1,22 @@
 {% if section.blocks.size > 0 %}
-  <div class="wbc-advantages">
+  <div class="feature-cards">
     {% if section.settings.heading != blank %}
-      <h2 class="wbc-advantages__title">{{ section.settings.heading }}</h2>
+      <h2 class="feature-cards__title">{{ section.settings.heading }}</h2>
     {% endif %}
-    <div class="wbc-advantages__grid">
+    <div class="feature-cards__grid">
       {% for block in section.blocks %}
-        <div class="wbc-advantages__card" {{ block.shopify_attributes }}>
+        <div class="feature-cards__card" {{ block.shopify_attributes }}>
           {% if block.settings.icon != blank %}
-            <div class="wbc-advantages__icon" style="--icon-bg: {{ block.settings.icon_color }}; --icon-color: {{ block.settings.icon_text_color }}">
+            <div
+              class="feature-cards__icon"
+              style="--icon-bg: {{ block.settings.icon_color }}; --icon-color: {{ block.settings.icon_text_color }}"
+            >
               <i class="{{ block.settings.icon }}" aria-hidden="true"></i>
             </div>
           {% endif %}
-          <h3 class="wbc-advantages__card-title">{{ block.settings.title }}</h3>
+          <h3 class="feature-cards__card-title">{{ block.settings.title }}</h3>
           {% if block.settings.description != blank %}
-            <p class="wbc-advantages__card-desc">{{ block.settings.description }}</p>
+            <p class="feature-cards__card-desc">{{ block.settings.description }}</p>
           {% endif %}
         </div>
       {% endfor %}
@@ -22,49 +25,49 @@
 {% endif %}
 
 {% stylesheet %}
-  .wbc-advantages {
+  .feature-cards {
     padding: 16px 0;
   }
 
   @media (min-width: 750px) {
-    .wbc-advantages {
+    .feature-cards {
       padding: 24px 0;
     }
   }
 
-  .wbc-advantages__title {
+  .feature-cards__title {
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 16px;
   }
 
   @media (min-width: 750px) {
-    .wbc-advantages__title {
+    .feature-cards__title {
       font-size: 1.4rem;
       margin-bottom: 24px;
     }
   }
 
-  .wbc-advantages__grid {
+  .feature-cards__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
   @media (min-width: 550px) {
-    .wbc-advantages__grid {
+    .feature-cards__grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (min-width: 990px) {
-    .wbc-advantages__grid {
-      grid-template-columns: repeat(3, 1fr);
+    .feature-cards__grid {
+      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
     }
   }
 
-  .wbc-advantages__card {
+  .feature-cards__card {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -76,13 +79,13 @@
   }
 
   @media (min-width: 750px) {
-    .wbc-advantages__card {
+    .feature-cards__card {
       padding: 32px 24px;
       gap: 12px;
     }
   }
 
-  .wbc-advantages__icon {
+  .feature-cards__icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,18 +97,18 @@
     font-size: 1.25rem;
   }
 
-  .wbc-advantages__card-title {
+  .feature-cards__card-title {
     font-size: 0.95rem;
     font-weight: 700;
   }
 
   @media (min-width: 750px) {
-    .wbc-advantages__card-title {
+    .feature-cards__card-title {
       font-size: 1.05rem;
     }
   }
 
-  .wbc-advantages__card-desc {
+  .feature-cards__card-desc {
     font-size: 0.8rem;
     color: #718096;
     line-height: 1.5;
@@ -115,26 +118,25 @@
 
 {% schema %}
 {
-  "name": "t:sections.we_buy.advantages",
+  "name": "t:sections.feature_cards.name",
   "settings": [
     {
       "type": "text",
       "id": "heading",
-      "label": "t:labels.heading",
-      "default": "Why sell to us?"
+      "label": "t:labels.heading"
     }
   ],
   "blocks": [
     {
-      "type": "advantage",
-      "name": "t:sections.we_buy.advantage_item",
+      "type": "feature",
+      "name": "t:sections.feature_cards.item",
       "settings": [
         {
           "type": "text",
           "id": "icon",
           "label": "t:labels.icon",
           "info": "t:labels.icon_info",
-          "default": "fa-solid fa-money-bill-wave"
+          "default": "fa-solid fa-star"
         },
         {
           "type": "color",
@@ -163,36 +165,36 @@
   ],
   "presets": [
     {
-      "name": "t:sections.we_buy.advantages",
+      "name": "t:sections.feature_cards.name",
       "blocks": [
         {
-          "type": "advantage",
+          "type": "feature",
           "settings": {
-            "icon": "fa-solid fa-money-bill-wave",
+            "icon": "fa-solid fa-star",
             "icon_color": "#e8f5e9",
             "icon_text_color": "#2d6a4f",
-            "title": "Instant cash out",
-            "description": "Get paid on the spot for your collection"
+            "title": "Feature one",
+            "description": "Describe the feature here"
           }
         },
         {
-          "type": "advantage",
+          "type": "feature",
           "settings": {
-            "icon": "fa-solid fa-boxes-stacked",
+            "icon": "fa-solid fa-heart",
             "icon_color": "#e3f2fd",
             "icon_text_color": "#1565c0",
-            "title": "Bulk buy",
-            "description": "We buy collections of any size"
+            "title": "Feature two",
+            "description": "Describe the feature here"
           }
         },
         {
-          "type": "advantage",
+          "type": "feature",
           "settings": {
-            "icon": "fa-solid fa-clock",
+            "icon": "fa-solid fa-bolt",
             "icon_color": "#fff3e0",
             "icon_text_color": "#e65100",
-            "title": "Convenience",
-            "description": "We can come to you for large collections"
+            "title": "Feature three",
+            "description": "Describe the feature here"
           }
         }
       ]

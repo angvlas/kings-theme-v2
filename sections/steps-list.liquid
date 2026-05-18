@@ -1,0 +1,126 @@
+{% if section.blocks.size > 0 %}
+  <div class="steps-list">
+    {% if section.settings.heading != blank %}
+      <h2 class="steps-list__title">{{ section.settings.heading }}</h2>
+    {% endif %}
+    <div class="steps-list__grid">
+      {% for block in section.blocks %}
+        <div class="steps-list__item" {{ block.shopify_attributes }}>
+          <p class="steps-list__step">{{ 'sections.steps_list.step' | t: number: forloop.index }}</p>
+          {% if block.settings.description != blank %}
+            <p class="steps-list__desc">{{ block.settings.description }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .steps-list {
+    background-color: #000;
+    color: #fff;
+    padding: 32px 24px;
+    border-radius: 12px;
+  }
+
+  @media (min-width: 750px) {
+    .steps-list {
+      padding: 40px 32px;
+    }
+  }
+
+  .steps-list__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  @media (min-width: 750px) {
+    .steps-list__title {
+      font-size: 1.4rem;
+      margin-bottom: 28px;
+    }
+  }
+
+  .steps-list__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 550px) {
+    .steps-list__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 990px) {
+    .steps-list__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+  }
+
+  .steps-list__item {
+    text-align: center;
+  }
+
+  .steps-list__step {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  @media (min-width: 750px) {
+    .steps-list__step {
+      font-size: 1.25rem;
+    }
+  }
+
+  .steps-list__desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    max-width: 28ch;
+    margin: 0 auto;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.steps_list.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "t:sections.steps_list.item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "description",
+          "label": "t:labels.description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.steps_list.name",
+      "blocks": [
+        { "type": "step", "settings": { "description": "Download the agreement" } },
+        { "type": "step", "settings": { "description": "Complete the agreement" } },
+        { "type": "step", "settings": { "description": "Return the agreement to us" } },
+        { "type": "step", "settings": { "description": "Sit back and wait for confirmation" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

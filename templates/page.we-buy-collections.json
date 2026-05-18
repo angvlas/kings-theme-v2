@@ -1,12 +1,17 @@
 {
   "sections": {
     "hero": {
-      "type": "wbc-hero",
-      "settings": {}
+      "type": "page-hero",
+      "settings": {
+        "heading": "We buy collections",
+        "subheading": "Interested in selling your comic collection? We'd love to hear from you."
+      }
     },
     "advantages": {
-      "type": "wbc-advantages",
-      "settings": {}
+      "type": "feature-cards",
+      "settings": {
+        "heading": "Why sell to us?"
+      }
     },
     "buying": {
       "type": "we-are-buying",

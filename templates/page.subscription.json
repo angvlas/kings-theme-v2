@@ -1,0 +1,159 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "What is a Subscription Order?",
+        "intro": "<p>A comic subscription is a convenient way for you to receive your favourite comic book issues regularly without visiting the store each time. Simply choose the series you love, set up automatic billing, and enjoy the latest releases delivered to your doorstep.</p>"
+      }
+    },
+    "features": {
+      "type": "feature-cards",
+      "blocks": {
+        "no_minimum": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-regular fa-face-smile",
+            "icon_color": "#f4f4f5",
+            "icon_text_color": "#1a1a1a",
+            "title": "No title minimum",
+            "description": "We no longer require you to subscribe to a minimum amount of titles!"
+          }
+        },
+        "priority": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-user-group",
+            "icon_color": "#f4f4f5",
+            "icon_text_color": "#1a1a1a",
+            "title": "Priority allocation",
+            "description": "Subscribe Thursday COB before release and receive priority allocation on your items requested."
+          }
+        },
+        "weekly": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-solid fa-box",
+            "icon_color": "#f4f4f5",
+            "icon_text_color": "#1a1a1a",
+            "title": "Weekly deliveries",
+            "description": "Opt for mail order and receive your new comics weekly!"
+          }
+        },
+        "hassle_free": {
+          "type": "feature",
+          "settings": {
+            "icon": "fa-regular fa-thumbs-up",
+            "icon_color": "#f4f4f5",
+            "icon_text_color": "#1a1a1a",
+            "title": "Hassle free",
+            "description": "Set up your subscription and wait for your comics to arrive."
+          }
+        }
+      },
+      "block_order": ["no_minimum", "priority", "weekly", "hassle_free"],
+      "settings": {}
+    },
+    "steps": {
+      "type": "steps-list",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": { "description": "Download the Subscription Order Agreement" }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": { "description": "Complete Subscription Order Agreement" }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": { "description": "Return the Agreement to info@kingscomics.com" }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": { "description": "Sit back and wait for confirmation" }
+        }
+      },
+      "block_order": ["step_1", "step_2", "step_3", "step_4"],
+      "settings": {}
+    },
+    "cta": {
+      "type": "cta-banner",
+      "settings": {
+        "heading": "Start now!",
+        "description": "Download our Subscription Order Agreement",
+        "button_label": "Download"
+      }
+    },
+    "faq": {
+      "type": "faq-accordion",
+      "blocks": {
+        "q1": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I start a Subscription order?",
+            "answer": "<p>Download the Subscription Order Agreement above, complete it, and return it to info@kingscomics.com. We'll set you up and confirm by email.</p>"
+          }
+        },
+        "q2": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I add or remove a title from my Subscription?",
+            "answer": "<p>Yes — email us anytime to add or remove titles from your subscription.</p>"
+          }
+        },
+        "q3": {
+          "type": "faq",
+          "settings": {
+            "question": "When am I billed?",
+            "answer": "<p>You're billed when your comics arrive in-store and are allocated to your subscription.</p>"
+          }
+        },
+        "q4": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I have my Subscription delivered to me?",
+            "answer": "<p>Yes — opt for mail order and we'll ship your new comics weekly.</p>"
+          }
+        },
+        "q5": {
+          "type": "faq",
+          "settings": {
+            "question": "Is there a minimum subscription?",
+            "answer": "<p>No, there's no longer a minimum amount of titles required to subscribe.</p>"
+          }
+        },
+        "q6": {
+          "type": "faq",
+          "settings": {
+            "question": "How often is my mail order subscription sent to me?",
+            "answer": "<p>Mail order subscriptions are sent weekly as new releases arrive.</p>"
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"],
+      "settings": {
+        "eyebrow": "Frequently asked questions",
+        "heading": "Subscription Order"
+      }
+    },
+    "contact": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Need help?",
+        "submit_label": "Send",
+        "success_message": "Thanks! We'll be in touch about your subscription soon.",
+        "form_subject": "Subscription enquiry",
+        "form_tag": "subscription"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "features",
+    "steps",
+    "cta",
+    "faq",
+    "contact"
+  ]
+}

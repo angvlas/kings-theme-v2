@@ -213,6 +213,16 @@
       "next": "More products",
       "view_all": "View all"
     },
+    "steps_list": {
+      "step": "Step {{ number }}."
+    },
+    "contact_form": {
+      "field_name": "Name",
+      "field_name_placeholder": "John Smith",
+      "field_email": "Email",
+      "field_phone": "Phone number",
+      "field_message": "Message"
+    },
     "recommended": {
       "name": "Recommended for you",
       "title": "Recommended for you"

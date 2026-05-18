@@ -78,6 +78,18 @@
     "heading": "Heading",
     "subheading": "Subheading",
     "intro": "Introduction",
+    "eyebrow": "Eyebrow",
+    "button_label": "Button label",
+    "success_message": "Success message",
+    "form_subject": "Form subject",
+    "form_tag": "Form tag",
+    "form_tag_info": "Tag added to the customer/enquiry to help filter submissions",
+    "contact_form_meta": "Form metadata",
+    "cta_destination": "Destination",
+    "cta_file": "File to download",
+    "cta_file_info": "Used as the download link if set",
+    "cta_link": "Link (fallback)",
+    "cta_link_info": "Used if no file is selected",
     "body_background": "Body background",
     "card_background": "Card background",
     "header_color": "Header colour",
@@ -197,6 +209,27 @@
       "buying_section": "We are buying",
       "advantages": "Advantages",
       "advantage_item": "Advantage"
+    },
+    "page_hero": {
+      "name": "Page hero"
+    },
+    "feature_cards": {
+      "name": "Feature cards",
+      "item": "Feature"
+    },
+    "steps_list": {
+      "name": "Steps list",
+      "item": "Step"
+    },
+    "cta_banner": {
+      "name": "CTA banner"
+    },
+    "faq_accordion": {
+      "name": "FAQ accordion",
+      "item": "FAQ item"
+    },
+    "contact_form": {
+      "name": "Contact form"
     },
     "slideshow": {
       "name": "Slideshow",

@@ -1,0 +1,188 @@
+<div class="faq-accordion">
+  {% if section.settings.eyebrow != blank %}
+    <p class="faq-accordion__eyebrow">{{ section.settings.eyebrow }}</p>
+  {% endif %}
+  {% if section.settings.heading != blank %}
+    <h2 class="faq-accordion__title">{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="faq-accordion__list">
+    {% if page.metafields.pages.faq != blank %}
+      {% for faq in page.metafields.pages.faq.value %}
+        <details class="faq-accordion__item">
+          <summary class="faq-accordion__question">
+            <span>{{ faq.questions.value }}</span>
+            <svg
+              class="faq-accordion__icon"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
+          <div class="faq-accordion__answer">
+            {{ faq.answer.value }}
+          </div>
+        </details>
+      {% endfor %}
+    {% else %}
+      {% for block in section.blocks %}
+        {% if block.type == 'faq' %}
+          <details class="faq-accordion__item" {{ block.shopify_attributes }}>
+            <summary class="faq-accordion__question">
+              <span>{{ block.settings.question }}</span>
+              <svg
+                class="faq-accordion__icon"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </summary>
+            <div class="faq-accordion__answer">
+              {{ block.settings.answer }}
+            </div>
+          </details>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .faq-accordion {
+    padding: 24px 0;
+  }
+
+  @media (min-width: 750px) {
+    .faq-accordion {
+      padding: 32px 0;
+    }
+  }
+
+  .faq-accordion__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9b9ba0;
+    margin-bottom: 4px;
+  }
+
+  .faq-accordion__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  @media (min-width: 750px) {
+    .faq-accordion__title {
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+    }
+  }
+
+  .faq-accordion__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .faq-accordion__item {
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #e2e2e4;
+    overflow: hidden;
+  }
+
+  .faq-accordion__item[open] {
+    background-color: #fdfdfd;
+  }
+
+  .faq-accordion__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .faq-accordion__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-accordion__question:hover {
+    background-color: #f7f7f8;
+  }
+
+  .faq-accordion__icon {
+    flex-shrink: 0;
+    color: #9b9ba0;
+    transition: transform 0.2s ease;
+  }
+
+  details[open] .faq-accordion__icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-accordion__answer {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.6;
+    padding: 4px 20px 20px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.faq_accordion.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "FAQs"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "t:sections.faq_accordion.item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "t:labels.question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "t:labels.answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.faq_accordion.name"
+    }
+  ]
+}
+{% endschema %}

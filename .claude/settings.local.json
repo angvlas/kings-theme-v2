@@ -52,7 +52,10 @@
       "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/product-card-list.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0 --artifact-id pcl-review-001 --revision 1)",
       "Bash(node scripts/search_docs.mjs \"toast notification popup animation CSS\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
       "Bash(node scripts/search_docs.mjs \"cart add.js response item\" --model claude-opus-4-6 --client-name claude-code --client-version 1.0)",
-      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/cart-toast.liquid,snippets/product-card.liquid,snippets/product-card-list.liquid,sections/product.liquid,layout/theme.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0 --artifact-id cart-toast-001 --revision 1)"
+      "Bash(node scripts/validate.mjs --theme-path /Users/angelovlastaras/projects/kings-theme-v2 --files snippets/cart-toast.liquid,snippets/product-card.liquid,snippets/product-card-list.liquid,sections/product.liquid,layout/theme.liquid --model claude-opus-4-6 --client-name claude-code --client-version 1.0 --artifact-id cart-toast-001 --revision 1)",
+      "Bash(git -C /Users/angelovlastaras/projects/kings-theme-v2 mv sections/wbc-hero.liquid sections/page-hero.liquid)",
+      "Bash(git -C /Users/angelovlastaras/projects/kings-theme-v2 mv sections/wbc-advantages.liquid sections/feature-cards.liquid)",
+      "Bash(python3 -c 'import json, sys; json.load\\(open\\('\\\\''__TRACKED_VAR__'\\\\''\\)\\)')"
     ]
   }
 }
