@@ -18,18 +18,24 @@
           "type": "message",
           "settings": {
             "text": "Free shipping on Australian orders over $100",
-            "icon": "fa-solid fa-truck"
+            "icon": "fa-solid fa-truck",
+            "link": ""
           }
         },
         "msg_releases": {
           "type": "message",
           "settings": {
             "text": "New comics drop every Wednesday",
-            "icon": "fa-solid fa-bolt"
+            "icon": "fa-solid fa-bolt",
+            "link": ""
           }
         }
       },
-      "block_order": ["msg_shipping", "msg_releases"],
+      "block_order": [
+        "msg_shipping",
+        "msg_releases"
+      ],
+      "disabled": true,
       "settings": {
         "bg_color": "#1a1a1a",
         "text_color": "#ffffff",
