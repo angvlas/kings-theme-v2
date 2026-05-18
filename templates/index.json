@@ -15,6 +15,37 @@
         "slide_nRXwzd": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/Absolute_Green_Arrow_1.png",
+            "mobile_image": "shopify://shop_images/m_Absolute_Green_Arrow_1.png",
+            "link": "https://kingscomics.com/search?type=product&q=Absolute+Green+Arrow+%282026%29+%231",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
+        "slide_N3dXqN": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Ultimate_Impact_Reborn__1.png",
+            "mobile_image": "shopify://shop_images/m_Ultimate_Impact_Reborn__1.png",
+            "link": "https://kingscomics.com/search?type=product&q=Ultimate+Impact+Reborn+%282026%29+%231",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
+        "slide_FjNJet": {
+          "type": "slide",
+          "settings": {
+            "link": "",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
+        "slide_DWjCc8": {
+          "type": "slide",
+          "settings": {
             "link": "",
             "heading": "",
             "subheading": "",
@@ -44,6 +75,9 @@
       },
       "block_order": [
         "slide_nRXwzd",
+        "slide_N3dXqN",
+        "slide_FjNJet",
+        "slide_DWjCc8",
         "slide_enLH7L",
         "slide_1"
       ],
