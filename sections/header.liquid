@@ -11,7 +11,7 @@
       {% if section.settings.top_menu.links.size > 0 %}
         <nav class="header-bar__left" aria-label="{{ 'header.top_navigation' | t }}">
           {% for link in section.settings.top_menu.links %}
-            <a href="{{ link.url }}" class="header-bar__link">{{ link.title }}</a>
+            <a href="{{ link.url }}" class="header-bar__link">{% render 'menu-label', title: link.title %}</a>
           {% endfor %}
         </nav>
       {% endif %}
@@ -317,7 +317,7 @@
                   aria-expanded="false"
                   data-mobile-expand
                 >
-                  <span class="mobile-nav__label">{{ link.title }}</span>
+                  <span class="mobile-nav__label">{% render 'menu-label', title: link.title %}</span>
                   <svg class="mobile-nav__chevron-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                     <path d="M4 5.5L7 8.5L10 5.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
@@ -332,7 +332,7 @@
                           aria-expanded="false"
                           data-mobile-expand
                         >
-                          <span class="mobile-nav__label">{{ child.title }}</span>
+                          <span class="mobile-nav__label">{% render 'menu-label', title: child.title %}</span>
                           <svg class="mobile-nav__chevron-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                             <path d="M4 5.5L7 8.5L10 5.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
@@ -347,7 +347,7 @@
                                   aria-expanded="false"
                                   data-mobile-expand
                                 >
-                                  <span class="mobile-nav__label">{{ grandchild.title }}</span>
+                                  <span class="mobile-nav__label">{% render 'menu-label', title: grandchild.title %}</span>
                                   <svg class="mobile-nav__chevron-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                                     <path d="M4 5.5L7 8.5L10 5.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
                                   </svg>
@@ -355,24 +355,24 @@
                                 <ul class="mobile-nav__sub" hidden>
                                   {% for item in grandchild.links %}
                                     <li class="mobile-nav__item">
-                                      <a href="{{ item.url }}" class="mobile-nav__link mobile-nav__link--deep">{{ item.title }}</a>
+                                      <a href="{{ item.url }}" class="mobile-nav__link mobile-nav__link--deep">{% render 'menu-label', title: item.title %}</a>
                                     </li>
                                   {% endfor %}
                                 </ul>
                               {% else %}
-                                <a href="{{ grandchild.url }}" class="mobile-nav__link mobile-nav__link--deep">{{ grandchild.title }}</a>
+                                <a href="{{ grandchild.url }}" class="mobile-nav__link mobile-nav__link--deep">{% render 'menu-label', title: grandchild.title %}</a>
                               {% endif %}
                             </li>
                           {% endfor %}
                         </ul>
                       {% else %}
-                        <a href="{{ child.url }}" class="mobile-nav__link mobile-nav__link--sub">{{ child.title }}</a>
+                        <a href="{{ child.url }}" class="mobile-nav__link mobile-nav__link--sub">{% render 'menu-label', title: child.title %}</a>
                       {% endif %}
                     </li>
                   {% endfor %}
                 </ul>
               {% else %}
-                <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+                <a href="{{ link.url }}" class="mobile-nav__link">{% render 'menu-label', title: link.title %}</a>
               {% endif %}
             </li>
           {% endfor %}
@@ -383,7 +383,7 @@
         <ul class="mobile-nav mobile-nav--extra">
           {% for link in section.settings.extra_menu.links %}
             <li class="mobile-nav__item">
-              <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+              <a href="{{ link.url }}" class="mobile-nav__link">{% render 'menu-label', title: link.title %}</a>
             </li>
           {% endfor %}
         </ul>
@@ -414,9 +414,10 @@
             <div class="mega-nav__panel-inner">
               <ul class="mega-nav__categories">
                 {% for link in section.settings.bottom_menu.links %}
-                  <li class="mega-nav__category{% if forloop.first %} mega-nav__category--active{% endif %}" data-mega-category>
+                  {%- assign mega_handle = link.title | split: '|' | first | strip | handleize -%}
+                  <li class="mega-nav__category{% if forloop.first %} mega-nav__category--active{% endif %}" data-mega-category data-mega-handle="{{ mega_handle }}">
                     <a href="{{ link.url }}" class="mega-nav__category-link">
-                      <span>{{ link.title }}</span>
+                      <span>{% render 'menu-label', title: link.title %}</span>
                       {% if link.links.size > 0 %}
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
                           <path d="M3.5 2.5L6.5 5L3.5 7.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
@@ -429,19 +430,19 @@
 
               <div class="mega-nav__content">
                 {% for link in section.settings.bottom_menu.links %}
-                  <div class="mega-nav__subcontent{% if forloop.first %} mega-nav__subcontent--active{% endif %}" data-mega-content="{{ link.title | handleize }}">
+                  <div class="mega-nav__subcontent{% if forloop.first %} mega-nav__subcontent--active{% endif %}" data-mega-content="{{ link.title | split: '|' | first | strip | handleize }}">
                     {% if link.links.size > 0 %}
                       <div class="mega-nav__columns">
                         {% for group in link.links %}
                           <div class="mega-nav__column">
                             <p class="mega-nav__column-title">
-                              <a href="{{ group.url }}" class="mega-nav__column-title-link">{{ group.title }}</a>
+                              <a href="{{ group.url }}" class="mega-nav__column-title-link">{% render 'menu-label', title: group.title %}</a>
                             </p>
                             {% if group.links.size > 0 %}
                               <ul class="mega-nav__column-list">
                                 {% for item in group.links %}
                                   <li>
-                                    <a href="{{ item.url }}" class="mega-nav__column-link">{{ item.title }}</a>
+                                    <a href="{{ item.url }}" class="mega-nav__column-link">{% render 'menu-label', title: item.title %}</a>
                                   </li>
                                 {% endfor %}
                               </ul>
@@ -451,7 +452,7 @@
                       </div>
                     {% else %}
                       <p class="mega-nav__empty">
-                        <a href="{{ link.url }}" class="mega-nav__column-link">{{ 'header.view_all' | t }} {{ link.title }}</a>
+                        <a href="{{ link.url }}" class="mega-nav__column-link">{{ 'header.view_all' | t }} {% render 'menu-label', title: link.title, text_only: true %}</a>
                       </p>
                     {% endif %}
                   </div>
@@ -465,7 +466,7 @@
           {% for link in section.settings.extra_menu.links %}
             <li class="mega-nav__item">
               <a href="{{ link.url }}" class="mega-nav__link{% if link.active %} mega-nav__link--active{% endif %}">
-                {{ link.title }}
+                {% render 'menu-label', title: link.title %}
               </a>
             </li>
           {% endfor %}
@@ -477,7 +478,7 @@
           {% for link in section.settings.right_menu.links %}
             <li class="mega-nav__item">
               <a href="{{ link.url }}" class="mega-nav__link{% if link.active %} mega-nav__link--active{% endif %}">
-                {{ link.title }}
+                {% render 'menu-label', title: link.title %}
               </a>
             </li>
           {% endfor %}
@@ -510,6 +511,31 @@
     top: 0;
     z-index: 100;
   }
+
+  /* Menu item custom badges
+     Set a menu link title as "Title|BADGE" or "Title|BADGE|color" in Navigation. */
+  .menu-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 6px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    vertical-align: middle;
+    background-color: #e53e3e;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .menu-badge--red    { background-color: #e53e3e; color: #fff; }
+  .menu-badge--green  { background-color: #38a169; color: #fff; }
+  .menu-badge--blue   { background-color: #3182ce; color: #fff; }
+  .menu-badge--yellow { background-color: #f6c453; color: #1a202c; }
+  .menu-badge--purple { background-color: #805ad5; color: #fff; }
+  .menu-badge--gray   { background-color: #718096; color: #fff; }
+  .menu-badge--black  { background-color: #1a202c; color: #fff; }
 
   /* When the cart or mobile drawer is open, lift the header section above
      the announcement bar so the overlay covers the announcement and
@@ -1895,9 +1921,8 @@
           contents.forEach(function(c) { c.classList.remove('mega-nav__subcontent--active'); });
           cat.classList.add('mega-nav__category--active');
 
-          var link = cat.querySelector('.mega-nav__category-link span');
-          if (!link) return;
-          var handle = link.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+          var handle = cat.getAttribute('data-mega-handle') || '';
+          if (!handle) return;
           var target = item.querySelector('[data-mega-content="' + handle + '"]');
           if (target) target.classList.add('mega-nav__subcontent--active');
         });

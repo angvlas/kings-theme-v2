@@ -1,0 +1,25 @@
+{% doc %}
+  Renders a menu link label, parsing an optional badge from the title.
+
+  Title format in Shopify Navigation:
+    "Title"                — plain link, no badge
+    "Title|BADGE"          — badge with default red color
+    "Title|BADGE|color"    — badge with a named color
+
+  Supported colors: red (default), green, blue, yellow, purple, gray, black.
+
+  @param {string} title - The raw link title from the navigation menu.
+  @param {boolean} [text_only] - If true, renders only the cleaned title (no badge).
+
+  @example
+  {% render 'menu-label', title: link.title %}
+  {% render 'menu-label', title: link.title, text_only: true %}
+{% enddoc %}
+
+{%- assign menu_label_parts = title | split: '|' -%}
+{{- menu_label_parts[0] | strip -}}
+{%- if menu_label_parts.size > 1 and text_only != true -%}
+  {%- assign menu_badge_text = menu_label_parts[1] | strip -%}
+  {%- assign menu_badge_color = menu_label_parts[2] | default: 'red' | strip -%}
+  <span class="menu-badge menu-badge--{{ menu_badge_color }}">{{ menu_badge_text }}</span>
+{%- endif -%}
