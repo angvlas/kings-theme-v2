@@ -62,7 +62,8 @@
       "Bash(python3 -c \"import json; json.load\\(open\\('templates/page.store-hours.json'\\)\\); print\\('Template OK'\\)\")",
       "Bash(python3 -c \"import json; json.load\\(open\\('templates/page.about.json'\\)\\); print\\('About template OK'\\)\")",
       "Bash(git -C /Users/angelovlastaras/projects/kings-theme-v2 add .claude/settings.local.json locales/en.default.json locales/en.default.schema.json sections/contact-form.liquid sections/cta-banner.liquid sections/faq-accordion.liquid sections/feature-cards.liquid sections/page-hero.liquid sections/we-are-buying.liquid sections/we-buy-collections.liquid templates/page.subscription.json sections/image-with-text.liquid sections/store-hours.liquid sections/subscription-info.liquid sections/timeline.liquid templates/page.about.json templates/page.contact.json templates/page.store-hours.json)",
-      "Bash(git -C /Users/angelovlastaras/projects/kings-theme-v2 commit -m ' *)"
+      "Bash(git -C /Users/angelovlastaras/projects/kings-theme-v2 commit -m ' *)",
+      "Bash(python3 -c \"import json, re; json.loads\\(re.sub\\(r'/\\\\*.*?\\\\*/', '', open\\('templates/page.we-buy-collections.json'\\).read\\(\\), flags=re.DOTALL\\)\\); print\\('Template OK'\\)\")"
     ]
   }
 }

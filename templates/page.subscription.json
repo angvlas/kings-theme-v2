@@ -14,7 +14,8 @@
       "settings": {
         "heading": "What is a Subscription Order?",
         "subheading": "",
-        "intro": "<p>A comic subscription is a convenient way for you to receive your favourite comic book issues regularly without visiting the store each time. Simply choose the series you love, set up automatic billing, and enjoy the latest releases delivered to your doorstep.</p>"
+        "intro": "<p>A comic subscription is a convenient way for you to receive your favourite comic book issues regularly without visiting the store each time. Simply choose the series you love, set up automatic billing, and enjoy the latest releases delivered to your doorstep.</p>",
+        "accent_line": true
       }
     },
     "features": {
@@ -24,7 +25,7 @@
           "type": "feature",
           "settings": {
             "icon": "fa-regular fa-face-smile",
-            "icon_color": "#f4f4f5",
+            "icon_color": "#f1f5f9",
             "icon_text_color": "#1a1a1a",
             "title": "No title minimum",
             "description": "We no longer require you to subscribe to a minimum amount of titles!"
@@ -34,7 +35,7 @@
           "type": "feature",
           "settings": {
             "icon": "fa-solid fa-user-group",
-            "icon_color": "#f4f4f5",
+            "icon_color": "#f1f5f9",
             "icon_text_color": "#1a1a1a",
             "title": "Priority allocation",
             "description": "Subscribe Thursday COB before release and receive priority allocation on your items requested."
@@ -44,7 +45,7 @@
           "type": "feature",
           "settings": {
             "icon": "fa-solid fa-box",
-            "icon_color": "#f4f4f5",
+            "icon_color": "#f1f5f9",
             "icon_text_color": "#1a1a1a",
             "title": "Weekly deliveries",
             "description": "Opt for mail order and receive your new comics weekly!"
@@ -54,7 +55,7 @@
           "type": "feature",
           "settings": {
             "icon": "fa-regular fa-thumbs-up",
-            "icon_color": "#f4f4f5",
+            "icon_color": "#f1f5f9",
             "icon_text_color": "#1a1a1a",
             "title": "Hassle free",
             "description": "Set up your subscription and wait for your comics to arrive."

@@ -6,6 +6,7 @@
     <div class="steps-list__grid">
       {% for block in section.blocks %}
         <div class="steps-list__item" {{ block.shopify_attributes }}>
+          <span class="steps-list__badge" aria-hidden="true">{{ forloop.index }}</span>
           <p class="steps-list__step">{{ 'sections.steps_list.step' | t: number: forloop.index }}</p>
           {% if block.settings.description != blank %}
             <p class="steps-list__desc">{{ block.settings.description }}</p>
@@ -18,10 +19,11 @@
 
 {% stylesheet %}
   .steps-list {
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
+    color: #1a1a1a;
     padding: 32px 24px;
     border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   @media (min-width: 750px) {
@@ -35,6 +37,7 @@
     font-weight: 700;
     margin-bottom: 20px;
     text-align: center;
+    color: #1a1a1a;
   }
 
   @media (min-width: 750px) {
@@ -65,23 +68,56 @@
 
   .steps-list__item {
     text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
   }
 
-  .steps-list__step {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  @media (min-width: 750px) {
-    .steps-list__step {
-      font-size: 1.25rem;
+  /* Connecting line between badges on desktop */
+  @media (min-width: 990px) {
+    .steps-list__item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: calc(50% + 28px);
+      right: calc(-50% + 28px);
+      height: 2px;
+      background: repeating-linear-gradient(to right, rgba(244, 180, 0, 0.5) 0 6px, transparent 6px 12px);
+      z-index: 0;
     }
   }
 
-  .steps-list__desc {
+  .steps-list__badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #f4b400;
+    color: #1a1a1a;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.18);
+    position: relative;
+    z-index: 1;
+  }
+
+  .steps-list__step {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
+    font-weight: 700;
+    color: #f4b400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .steps-list__desc {
+    font-size: 0.9rem;
+    color: #555;
     line-height: 1.5;
     max-width: 28ch;
     margin: 0 auto;

@@ -212,7 +212,8 @@
       "advantage_item": "Advantage"
     },
     "page_hero": {
-      "name": "Page hero"
+      "name": "Page hero",
+      "accent_line": "Show yellow accent line under heading"
     },
     "feature_cards": {
       "name": "Feature cards",
@@ -243,6 +244,15 @@
       "year": "Year",
       "image": "Image",
       "image_info": "Optional — shown at the top of the card. 16:9 aspect ratio works best."
+    },
+    "announcement_bar": {
+      "name": "Announcement bar",
+      "message_item": "Message",
+      "message_text": "Message text",
+      "bg_color": "Bar background colour",
+      "text_color": "Text colour",
+      "rotation_speed": "Rotation speed",
+      "rotation_speed_info": "How long each message is shown before rotating"
     },
     "image_with_text": {
       "name": "Image with text",

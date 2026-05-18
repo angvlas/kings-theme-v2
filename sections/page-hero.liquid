@@ -1,5 +1,8 @@
 <div class="page-hero">
   <h1 class="page-hero__title">{{ section.settings.heading }}</h1>
+  {% if section.settings.accent_line %}
+    <span class="page-hero__accent" aria-hidden="true"></span>
+  {% endif %}
   {% if section.settings.subheading != blank %}
     <p class="page-hero__subtitle">{{ section.settings.subheading }}</p>
   {% endif %}
@@ -34,11 +37,19 @@
     }
   }
 
+  .page-hero__accent {
+    display: block;
+    width: 48px;
+    height: 3px;
+    margin: 12px auto 16px;
+    background-color: #f4b400;
+    border-radius: 2px;
+  }
+
   .page-hero__subtitle {
     font-size: 0.95rem;
     color: #718096;
-    max-width: 50ch;
-    margin: 0 auto;
+    margin: 0;
     line-height: 1.5;
   }
 
@@ -46,8 +57,7 @@
     font-size: 0.9rem;
     color: #555;
     line-height: 1.7;
-    max-width: 70ch;
-    margin: 16px auto 0;
+    margin: 16px 0 0;
   }
 {% endstylesheet %}
 
@@ -70,6 +80,12 @@
       "type": "richtext",
       "id": "intro",
       "label": "t:labels.intro"
+    },
+    {
+      "type": "checkbox",
+      "id": "accent_line",
+      "label": "t:sections.page_hero.accent_line",
+      "default": false
     }
   ],
   "presets": [
