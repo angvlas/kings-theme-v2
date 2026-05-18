@@ -14,7 +14,8 @@
     "header": {
       "type": "header",
       "settings": {
-        "logo": "shopify://shop_images/KINGS_LOGO_COL_RGB.png",
+        "logo": "shopify://shop_images/KINGS_LOGO_COL_RGB_KEY_add7610a-9e9f-4101-bf02-29956dc9dfa7.png",
+        "logo_size": 50,
         "top_menu": "kings-comics",
         "bottom_menu": "products-2-0",
         "extra_menu": "main-menu",
