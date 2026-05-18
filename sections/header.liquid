@@ -458,6 +458,13 @@
     z-index: 100;
   }
 
+  /* When the cart drawer is open, lift the header section above the
+     announcement bar so the overlay covers the announcement and everything
+     else fades together. */
+  .shopify-section.shopify-section-group-header-group:has(.cart-drawer--open) {
+    z-index: 202 !important;
+  }
+
   /* Force header section children to span full width */
   .header-bar,
   .header {
