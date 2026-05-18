@@ -14,30 +14,20 @@
     "announcement": {
       "type": "announcement-bar",
       "blocks": {
-        "msg_shipping": {
-          "type": "message",
-          "settings": {
-            "text": "Free shipping on Australian orders over $100",
-            "icon": "fa-solid fa-truck",
-            "link": ""
-          }
-        },
         "msg_releases": {
           "type": "message",
           "settings": {
-            "text": "New comics drop every Wednesday",
-            "icon": "fa-solid fa-bolt",
+            "text": "Due to distributor delays titles from Marvel, BOOM! Studios, and Dark Horse will be delayed by 1 week until further notice. We appreciate your patience and understanding.",
+            "icon": "fa-solid fa-truck",
             "link": ""
           }
         }
       },
       "block_order": [
-        "msg_shipping",
         "msg_releases"
       ],
-      "disabled": true,
       "settings": {
-        "bg_color": "#1a1a1a",
+        "bg_color": "#ef3042",
         "text_color": "#ffffff",
         "rotation_speed": 4
       }
