@@ -129,7 +129,7 @@
             "transparent": 1,
             "verticalPositionId": "bottom",
             "horizontalPositionId": "left",
-            "minimize": false
+            "minimize": true
           }
         },
         "google_reviews_carousel_dual_carousel_DLEN8J": {
