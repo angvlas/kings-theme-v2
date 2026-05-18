@@ -70,6 +70,19 @@
     },
     "main": {
       "type": "we-buy-collections",
+      "blocks": {
+        "faq_Tjy47R": {
+          "type": "faq",
+          "repeater": "{{ page.metafields.pages.faq.value }}",
+          "settings": {
+            "question": "{{ block.repeater.questions.value }}",
+            "answer": "{{ block.repeater.answer | metafield_tag }}"
+          }
+        }
+      },
+      "block_order": [
+        "faq_Tjy47R"
+      ],
       "settings": {}
     }
   },
