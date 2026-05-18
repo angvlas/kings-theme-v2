@@ -48,7 +48,9 @@
         "slide_DWjCc8": {
           "type": "slide",
           "settings": {
-            "link": "",
+            "image": "shopify://shop_images/Zorro__1.png",
+            "mobile_image": "shopify://shop_images/m_Zorro__1.png",
+            "link": "https://kingscomics.com/search?type=product&q=Zorro+%282026%29+%231",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -57,7 +59,9 @@
         "slide_enLH7L": {
           "type": "slide",
           "settings": {
-            "link": "",
+            "image": "shopify://shop_images/Gotham_Central_Compact_b32b765a-b87f-484d-92d9-0959bfb99bb4.png",
+            "mobile_image": "shopify://shop_images/m_Gotham_Central_Compact_682fd7fe-a774-487f-948a-af6b7a0a58b7.png",
+            "link": "https://kingscomics.com/products/gotham-central-tp-dc-compact-comics-edition?_pos=2&_psq=Gotham+Central&_ss=e&_v=1.0",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -66,9 +70,9 @@
         "slide_1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/DC_X_Sonic_The_Metal_Legion__1.png",
-            "mobile_image": "shopify://shop_images/m_DC_X_Sonic_The_Metal_Legion__1.png",
-            "link": "",
+            "image": "shopify://shop_images/Of_the_Earth__1.png",
+            "mobile_image": "shopify://shop_images/m_Of_the_Earth__1.png",
+            "link": "https://kingscomics.com/search?type=product&q=%22Of+The+Earth+%282026%29+%231%22",
             "heading": "",
             "subheading": "",
             "button_text": ""
