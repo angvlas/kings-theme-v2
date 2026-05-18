@@ -17,6 +17,51 @@
         "intro": ""
       }
     },
+    "buying": {
+      "type": "we-are-buying",
+      "blocks": {
+        "item_GWYfTK": {
+          "type": "item",
+          "settings": {
+            "label": "Pokemon Cards"
+          }
+        },
+        "item_dkmKxC": {
+          "type": "item",
+          "settings": {
+            "label": "Comics - Silver Age"
+          }
+        },
+        "item_aiNJw3": {
+          "type": "item",
+          "settings": {
+            "label": "Comics - Bronze Age"
+          }
+        },
+        "item_UDrMPV": {
+          "type": "item",
+          "settings": {
+            "label": "Trading Cards"
+          }
+        },
+        "item_ygJMjV": {
+          "type": "item",
+          "settings": {
+            "label": "Vintage Toys"
+          }
+        }
+      },
+      "block_order": [
+        "item_GWYfTK",
+        "item_dkmKxC",
+        "item_aiNJw3",
+        "item_UDrMPV",
+        "item_ygJMjV"
+      ],
+      "settings": {
+        "heading": "We are currently buying"
+      }
+    },
     "slideshow_tkhmyN": {
       "type": "slideshow",
       "blocks": {
@@ -80,59 +125,15 @@
         "heading": ""
       }
     },
-    "buying": {
-      "type": "we-are-buying",
-      "blocks": {
-        "item_GWYfTK": {
-          "type": "item",
-          "settings": {
-            "label": "Pokemon Cards"
-          }
-        },
-        "item_dkmKxC": {
-          "type": "item",
-          "settings": {
-            "label": "Comics - Silver Age"
-          }
-        },
-        "item_aiNJw3": {
-          "type": "item",
-          "settings": {
-            "label": "Comics - Bronze Age"
-          }
-        },
-        "item_UDrMPV": {
-          "type": "item",
-          "settings": {
-            "label": "Trading Cards"
-          }
-        },
-        "item_ygJMjV": {
-          "type": "item",
-          "settings": {
-            "label": "Vintage Toys"
-          }
-        }
-      },
-      "block_order": [
-        "item_GWYfTK",
-        "item_dkmKxC",
-        "item_aiNJw3",
-        "item_UDrMPV",
-        "item_ygJMjV"
-      ],
-      "settings": {
-        "heading": "We are currently buying"
-      }
-    },
     "main": {
       "type": "we-buy-collections",
       "blocks": {
         "faq_E4HVNX": {
           "type": "faq",
+          "repeater": "{{ page.metafields.pages.faq.value }}",
           "settings": {
-            "question": "",
-            "answer": ""
+            "question": "{{ block.repeater.questions.value }}",
+            "answer": "{{ block.repeater.answer | metafield_tag }}"
           }
         }
       },
