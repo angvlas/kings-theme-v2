@@ -74,7 +74,7 @@
         "disabled": false,
         "settings": {
           "show_ui": true,
-          "storefront_layout_enabled": false,
+          "storefront_layout_enabled": true,
           "storefront_layout_primary_bg_color": "#000000",
           "storefront_layout_primary_text_color": "#ffffff",
           "storefront_layout_secondary_bg_color": "#f4f8fe",
