@@ -78,6 +78,7 @@
       "block_order": [
         "slide_x8mwtE"
       ],
+      "disabled": true,
       "name": "t:sections.slideshow.name",
       "settings": {}
     },
@@ -146,8 +147,8 @@
   "order": [
     "hero",
     "buying",
-    "slideshow_tkhmyN",
     "feature_cards_Q8Waih",
+    "slideshow_tkhmyN",
     "main"
   ]
 }
