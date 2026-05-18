@@ -11,12 +11,15 @@
   "sections": {
     "main": {
       "type": "product",
-      "settings": {}
+      "settings": {
+        "enable_condition_guide": true
+      }
     },
     "recommended": {
       "type": "recommended-products",
       "settings": {
-        "heading": "You may also like"
+        "heading": "You may also like",
+        "products_to_show": 10
       }
     }
   },
