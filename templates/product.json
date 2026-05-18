@@ -12,7 +12,7 @@
     "main": {
       "type": "product",
       "settings": {
-        "enable_condition_guide": true
+        "enable_condition_guide": false
       }
     },
     "recommended": {
