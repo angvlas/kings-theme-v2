@@ -14,11 +14,12 @@
       "settings": {
         "heading": "About us",
         "subheading": "A short line about who you are.",
-        "intro": "<p>Tell your story here — what you do, who you serve, what you care about. Replace this copy in the theme editor.</p>"
+        "intro": "<p><strong>KINGS Comics</strong> is Australia's most well-known comic book and pop culture specialty store.  Recognised internationally, KINGS Comics retails the widest range of comic books and graphic novels in Australia, as well as a comprehensive range of current collectible merchandise. We are a family run business that started as mail order way before the days of the internet with the first store opening in 1986. We have dedicated staff, some of which have been with us for many years and now have the next generation of family helping in running the store to continue our legacy for many more years to come.</p><p></p><p><strong>Our website </strong>has had an online presence since the mid 1990s and has evolved from information based to a fully integrated online shopping experience. Customers can easily order and re-order hard to find titles, weekly new releases, as well as having the convenience of in-store pick up or Australia Post delivery.  Our complimentary weekly e-newsletter and social media platforms (Facebook, Twitter, Instagram) allow us to keep customers informed about all the latest happenings and new releases in the comic book world. </p><p></p><p><strong>Awards</strong> We remain to this day, very customer focused and service oriented. We have been acknowledged as industry leaders by winning such international awards as the <a href=\"http://www.comic-con.org/node/504\"><span style=\"text-decoration:underline\">Will Eisner Spirit of Comics Retailer Award</span></a><span style=\"text-decoration:underline\"> </span>(presented at Comic-Con International, San Diego in 1996). This award recognises excellence in comics retailing and a commitment to the promotion of the comic book industry. We also have five international <span style=\"text-decoration:underline\">Diamond Best Practices in Comic Retailing Awards</span> and with Australia’s very own comic industry awards ‘The Ledger Awards’, we have been awarded <span style=\"text-decoration:underline\">Retail Outlet of the Year</span> three times.</p><p></p><p><strong>Over the years</strong> KINGS has implemented other customer focused initiatives including running Australia’s very first annual comic book convention called OzCon. This was the first convention of its kind to be held annually in Australia and was showcased each year in Sydney from 1992 to 1998. OzCon was successful in promoting comic books to the general public by partnering with major comic book publishers and other entertainment media companies and the event furthered the growth in collectibles and trading cards.  OzCon also brought to Australia a number of international comic book creators, giving Australian fans a rare opportunity to meet comic book legends.</p><p><strong>Visit us on Clarence Street</strong> We’ve had stores across all points of Sydney but our main stay has always been the city store. After a number of years at both the Elizabeth and Pitt St locations (as well as our temporary locations on George St), we have now settled at our brand new store on CLARENCE ST. It’s truly a pop culture entertainment destination focusing on comics, action figures, statues, apparel, toys and collectibles from a wide range of genres.  We carry super-hero, crime and mystery, sci-fi and fantasy, comedy, drama and romance, TV and movie, horror and thrillers, manga, gaming related, young adult, all ages and independent comic books and graphic novels - a great way to welcome both our long time customers and introduce new customers to the now-mainstream world of graphic storytelling. Our new store also includes a huge range of back issue comics - both CGC graded and ungraded, as well as coins and other high end collectibles. So whether you’re a reader, investor, or just want to browse our vast inventory, we look forward to welcoming you in store and with a whole new look KINGS, we invite you to visit us and see how we have evolved throughout the years.</p><p></p><p><strong>Want to know more? </strong>To find out more about KINGS Comics and the products and services we provide, please take an adventure through our site - we're sure you'll find something in our online store that will be exciting and fun and if you have any questions you can always e-mail us at <a href=\"mailto:info@kingscomics.com\"><strong>info@kingscomics.com</strong></a> Our staff are more than happy to answer your questions - and we will guarantee to send a response to your query ASAP!</p><p> </p>"
       }
     },
     "intro": {
       "type": "image-with-text",
+      "disabled": true,
       "settings": {
         "layout": "media-left",
         "eyebrow": "Who we are",
@@ -87,7 +88,14 @@
           }
         }
       },
-      "block_order": ["founded", "milestone_1", "milestone_2", "milestone_3", "milestone_4"],
+      "block_order": [
+        "founded",
+        "milestone_1",
+        "milestone_2",
+        "milestone_3",
+        "milestone_4"
+      ],
+      "disabled": true,
       "settings": {
         "heading": "Our story"
       }
