@@ -1,10 +1,20 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "page-hero",
       "settings": {
         "heading": "We buy collections",
-        "subheading": "Interested in selling your comic collection? We'd love to hear from you."
+        "subheading": "Interested in selling your comic collection? We'd love to hear from you.",
+        "intro": ""
       }
     },
     "advantages": {
@@ -15,7 +25,48 @@
     },
     "buying": {
       "type": "we-are-buying",
-      "settings": {}
+      "blocks": {
+        "item_GWYfTK": {
+          "type": "item",
+          "settings": {
+            "label": "Pokemon Cards"
+          }
+        },
+        "item_dkmKxC": {
+          "type": "item",
+          "settings": {
+            "label": "Comics - Silver Age"
+          }
+        },
+        "item_aiNJw3": {
+          "type": "item",
+          "settings": {
+            "label": "Comics - Bronze Age"
+          }
+        },
+        "item_UDrMPV": {
+          "type": "item",
+          "settings": {
+            "label": "Trading Cards"
+          }
+        },
+        "item_ygJMjV": {
+          "type": "item",
+          "settings": {
+            "label": "Vintage Toys"
+          }
+        }
+      },
+      "block_order": [
+        "item_GWYfTK",
+        "item_dkmKxC",
+        "item_aiNJw3",
+        "item_UDrMPV",
+        "item_ygJMjV"
+      ],
+      "settings": {
+        "heading": "We are currently buying"
+      }
     },
     "main": {
       "type": "we-buy-collections",
