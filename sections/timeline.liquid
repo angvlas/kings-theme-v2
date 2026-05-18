@@ -1,0 +1,296 @@
+{% if section.blocks.size > 0 %}
+  <div class="timeline">
+    {% if section.settings.heading != blank %}
+      <h2 class="timeline__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <ol class="timeline__list">
+      {% for block in section.blocks %}
+        {% if block.type == 'event' %}
+          <li class="timeline__item" {{ block.shopify_attributes }}>
+            <span
+              class="timeline__icon"
+              style="--icon-bg: {{ block.settings.icon_color }}; --icon-color: {{ block.settings.icon_text_color }}"
+            >
+              {% if block.settings.icon != blank %}
+                <i class="{{ block.settings.icon }}" aria-hidden="true"></i>
+              {% endif %}
+            </span>
+            <div class="timeline__content">
+              {% if block.settings.image != blank %}
+                <div class="timeline__image">
+                  {{
+                    block.settings.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      sizes: '(min-width: 990px) 560px, (min-width: 750px) 70vw, 100vw',
+                      widths: '300, 500, 700, 900, 1200',
+                      alt: block.settings.title
+                  }}
+                </div>
+              {% endif %}
+              <div class="timeline__text">
+                {% if block.settings.year != blank %}
+                  <p class="timeline__year">{{ block.settings.year }}</p>
+                {% endif %}
+                {% if block.settings.title != blank %}
+                  <h3 class="timeline__title">{{ block.settings.title }}</h3>
+                {% endif %}
+                {% if block.settings.description != blank %}
+                  <div class="timeline__desc">{{ block.settings.description }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .timeline {
+    padding: 4px 0 48px;
+  }
+
+  @media (min-width: 750px) {
+    .timeline {
+      padding: 8px 0 64px;
+    }
+  }
+
+  .timeline__heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 20px;
+  }
+
+  @media (min-width: 750px) {
+    .timeline__heading {
+      font-size: 1.6rem;
+      margin-bottom: 28px;
+    }
+  }
+
+  .timeline__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    padding-bottom: 16px;
+    position: relative;
+  }
+
+  @media (min-width: 750px) {
+    .timeline__item {
+      gap: 20px;
+      padding-bottom: 20px;
+    }
+  }
+
+  .timeline__item:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline__item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 56px;
+    bottom: 0;
+    width: 2px;
+    background: #e2e2e4;
+  }
+
+  .timeline__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--icon-bg, #fff);
+    color: var(--icon-color, #1a1a1a);
+    border: 2px solid #e2e2e4;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .timeline__content {
+    background: #fff;
+    border: 1px solid #e2e2e4;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .timeline__image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #f7f7f8;
+    overflow: hidden;
+  }
+
+  .timeline__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .timeline__text {
+    padding: 14px 18px;
+  }
+
+  @media (min-width: 750px) {
+    .timeline__text {
+      padding: 16px 20px;
+    }
+  }
+
+  .timeline__year {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #9b9ba0;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px;
+  }
+
+  .timeline__title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 6px;
+    line-height: 1.3;
+  }
+
+  @media (min-width: 750px) {
+    .timeline__title {
+      font-size: 1.05rem;
+    }
+  }
+
+  .timeline__desc {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .timeline__desc p {
+    margin: 0 0 8px;
+  }
+
+  .timeline__desc p:last-child {
+    margin-bottom: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.timeline.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Our story"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "event",
+      "name": "t:sections.timeline.event_item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "t:sections.timeline.year",
+          "default": "2010"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "t:labels.icon",
+          "info": "t:labels.icon_info",
+          "default": "fa-solid fa-star"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "t:labels.icon_color",
+          "default": "#fff8e1"
+        },
+        {
+          "type": "color",
+          "id": "icon_text_color",
+          "label": "t:labels.icon_text_color",
+          "default": "#e65100"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:labels.title",
+          "default": "Milestone title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:labels.description"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.timeline.image",
+          "info": "t:sections.timeline.image_info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.timeline.name",
+      "blocks": [
+        {
+          "type": "event",
+          "settings": {
+            "year": "2010",
+            "icon": "fa-solid fa-flag",
+            "icon_color": "#fff8e1",
+            "icon_text_color": "#e65100",
+            "title": "The beginning",
+            "description": "<p>Where it all started.</p>"
+          }
+        },
+        {
+          "type": "event",
+          "settings": {
+            "year": "2015",
+            "icon": "fa-solid fa-store",
+            "icon_color": "#e3f2fd",
+            "icon_text_color": "#1565c0",
+            "title": "A new chapter",
+            "description": "<p>Growth and expansion.</p>"
+          }
+        },
+        {
+          "type": "event",
+          "settings": {
+            "year": "2020",
+            "icon": "fa-solid fa-trophy",
+            "icon_color": "#e8f5e9",
+            "icon_text_color": "#2d6a4f",
+            "title": "Reaching new heights",
+            "description": "<p>Continued success.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

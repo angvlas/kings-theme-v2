@@ -1,0 +1,92 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "About us",
+        "subheading": "A short line about who you are.",
+        "intro": "<p>Tell your story here — what you do, who you serve, what you care about. Replace this copy in the theme editor.</p>"
+      }
+    },
+    "intro": {
+      "type": "image-with-text",
+      "settings": {
+        "layout": "media-left",
+        "eyebrow": "Who we are",
+        "heading": "Australia's longest-running comic shop",
+        "body": "<p>For 40 years we've helped fans build collections worth getting excited about. From the latest Marvel and DC releases to rare keys and manga, our team lives and breathes comics — and we'd love to help you find your next great read.</p>",
+        "button_label": "Visit us",
+        "button_url": "/pages/store-hours"
+      }
+    },
+    "timeline": {
+      "type": "timeline",
+      "blocks": {
+        "founded": {
+          "type": "event",
+          "settings": {
+            "year": "1985",
+            "icon": "fa-solid fa-flag",
+            "icon_color": "#fff8e1",
+            "icon_text_color": "#e65100",
+            "title": "Kings Comics opens",
+            "description": "<p>The doors swing open for the first time on a small storefront with a big collection.</p>"
+          }
+        },
+        "milestone_1": {
+          "type": "event",
+          "settings": {
+            "year": "1998",
+            "icon": "fa-solid fa-store",
+            "icon_color": "#e3f2fd",
+            "icon_text_color": "#1565c0",
+            "title": "Moving up",
+            "description": "<p>Outgrowing the original shop, we move into our current Sydney location.</p>"
+          }
+        },
+        "milestone_2": {
+          "type": "event",
+          "settings": {
+            "year": "2010",
+            "icon": "fa-solid fa-globe",
+            "icon_color": "#e8f5e9",
+            "icon_text_color": "#2d6a4f",
+            "title": "Online launch",
+            "description": "<p>Kings Comics goes online — comic fans across Australia can now order from anywhere.</p>"
+          }
+        },
+        "milestone_3": {
+          "type": "event",
+          "settings": {
+            "year": "2020",
+            "icon": "fa-solid fa-heart",
+            "icon_color": "#fde7ef",
+            "icon_text_color": "#c2185b",
+            "title": "Standing with our community",
+            "description": "<p>Through tough times, our subscribers and community kept the doors open. Thank you.</p>"
+          }
+        },
+        "milestone_4": {
+          "type": "event",
+          "settings": {
+            "year": "2025",
+            "icon": "fa-solid fa-trophy",
+            "icon_color": "#f3e5f5",
+            "icon_text_color": "#6a1b9a",
+            "title": "40 years strong",
+            "description": "<p>Four decades of serving Australian comic fans — and we're just getting started.</p>"
+          }
+        }
+      },
+      "block_order": ["founded", "milestone_1", "milestone_2", "milestone_3", "milestone_4"],
+      "settings": {
+        "heading": "Our story"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "intro",
+    "timeline"
+  ]
+}

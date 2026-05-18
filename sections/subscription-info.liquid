@@ -1,8 +1,8 @@
-<div class="wbc-page">
-  <div class="wbc-grid">
-    <div class="wbc-main">
-      <div class="wbc-faq" data-wbc-faq>
-        <h2 class="wbc-section-title">{{ 'pages.we_buy.faq_title' | t }}</h2>
+<div class="sub-info">
+  <div class="sub-info__grid">
+    <div class="sub-info__main">
+      <div class="sub-info__faq">
+        <h2 class="sub-info__title">{{ section.settings.faq_heading }}</h2>
 
         {% if page.metafields.pages.faq != blank %}
           {% for faq in page.metafields.pages.faq.value %}
@@ -10,14 +10,14 @@
               assign faq_question = faq.question.value | default: faq.questions.value
               assign faq_answer = faq.answer.value | default: faq.answers.value
             %}
-            <details class="wbc-faq__item">
-              <summary class="wbc-faq__question">
+            <details class="sub-info__faq-item">
+              <summary class="sub-info__faq-question">
                 <span>{{ faq_question }}</span>
-                <svg class="wbc-faq__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <svg class="sub-info__faq-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </summary>
-              <div class="wbc-faq__answer">
+              <div class="sub-info__faq-answer">
                 {{ faq_answer }}
               </div>
             </details>
@@ -25,14 +25,14 @@
         {% else %}
           {% for block in section.blocks %}
             {% if block.type == 'faq' %}
-              <details class="wbc-faq__item" {{ block.shopify_attributes }}>
-                <summary class="wbc-faq__question">
+              <details class="sub-info__faq-item" {{ block.shopify_attributes }}>
+                <summary class="sub-info__faq-question">
                   <span>{{ block.settings.question }}</span>
-                  <svg class="wbc-faq__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <svg class="sub-info__faq-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </summary>
-                <div class="wbc-faq__answer">
+                <div class="sub-info__faq-answer">
                   {{ block.settings.answer }}
                 </div>
               </details>
@@ -42,91 +42,95 @@
       </div>
     </div>
 
-    <div class="wbc-sidebar">
-      <h2 class="wbc-section-title">{{ 'pages.we_buy.form_title' | t }}</h2>
-      <p class="wbc-form-intro">{{ 'pages.we_buy.form_intro' | t }}</p>
-      <div class="wbc-form-wrapper">
-        {% form 'contact', class: 'wbc-form' %}
+    <div class="sub-info__sidebar">
+      {% if section.settings.form_heading != blank %}
+        <h2 class="sub-info__title">{{ section.settings.form_heading }}</h2>
+      {% endif %}
+      {% if section.settings.form_intro != blank %}
+        <p class="sub-info__form-intro">{{ section.settings.form_intro }}</p>
+      {% endif %}
+      <div class="sub-info__form-wrapper">
+        {% form 'contact', class: 'sub-info__form' %}
           {% if form.posted_successfully? %}
-            <div class="wbc-form__success">
+            <div class="sub-info__success">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <circle cx="10" cy="10" r="9" stroke="#38a169" stroke-width="1.5"/>
                 <path d="M6 10.5l2.5 2.5 5.5-5.5" stroke="#38a169" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <p>{{ 'pages.we_buy.form_success' | t }}</p>
+              <p>{{ section.settings.success_message }}</p>
             </div>
           {% endif %}
 
           {% if form.errors %}
-            <div class="wbc-form__errors">
+            <div class="sub-info__errors">
               {{ form.errors | default_errors }}
             </div>
           {% endif %}
 
-          <input type="hidden" name="contact[tags]" value="we-buy-collections">
-          <input type="hidden" name="contact[subject]" value="{{ 'pages.we_buy.form_subject' | t }}">
+          {% if section.settings.form_tag != blank %}
+            <input type="hidden" name="contact[tags]" value="{{ section.settings.form_tag }}">
+          {% endif %}
+          {% if section.settings.form_subject != blank %}
+            <input type="hidden" name="contact[subject]" value="{{ section.settings.form_subject }}">
+          {% endif %}
 
-          <div class="wbc-form__field">
-            <label for="wbc-name" class="wbc-form__label">{{ 'pages.we_buy.field_name' | t }} <span aria-hidden="true">*</span></label>
+          <div class="sub-info__field">
+            <label for="sub-info-name" class="sub-info__label">
+              {{ 'sections.contact_form.field_name' | t }} <span aria-hidden="true">*</span>
+            </label>
             <input
               type="text"
-              id="wbc-name"
+              id="sub-info-name"
               name="contact[name]"
-              class="wbc-form__input"
+              class="sub-info__input"
+              placeholder="{{ 'sections.contact_form.field_name_placeholder' | t }}"
               required
               autocomplete="name"
             >
           </div>
 
-          <div class="wbc-form__field">
-            <label for="wbc-email" class="wbc-form__label">{{ 'pages.we_buy.field_email' | t }} <span aria-hidden="true">*</span></label>
+          <div class="sub-info__field">
+            <label for="sub-info-email" class="sub-info__label">
+              {{ 'sections.contact_form.field_email' | t }} <span aria-hidden="true">*</span>
+            </label>
             <input
               type="email"
-              id="wbc-email"
+              id="sub-info-email"
               name="contact[email]"
-              class="wbc-form__input"
+              class="sub-info__input"
               required
               autocomplete="email"
             >
           </div>
 
-          <div class="wbc-form__field">
-            <label for="wbc-phone" class="wbc-form__label">{{ 'pages.we_buy.field_phone' | t }}</label>
+          <div class="sub-info__field">
+            <label for="sub-info-phone" class="sub-info__label">
+              {{ 'sections.contact_form.field_phone' | t }}
+            </label>
             <input
               type="tel"
-              id="wbc-phone"
+              id="sub-info-phone"
               name="contact[phone]"
-              class="wbc-form__input"
+              class="sub-info__input"
               autocomplete="tel"
             >
           </div>
 
-          <div class="wbc-form__field">
-            <label for="wbc-collection-type" class="wbc-form__label">{{ 'pages.we_buy.field_collection_type' | t }} <span aria-hidden="true">*</span></label>
-            <select id="wbc-collection-type" name="contact[collection_type]" class="wbc-form__select" required>
-              <option value="" disabled selected>{{ 'pages.we_buy.field_collection_type_placeholder' | t }}</option>
-              <option value="Comics">{{ 'pages.we_buy.type_comics' | t }}</option>
-              <option value="Graphic Novels">{{ 'pages.we_buy.type_graphic_novels' | t }}</option>
-              <option value="Manga">{{ 'pages.we_buy.type_manga' | t }}</option>
-              <option value="Collectibles">{{ 'pages.we_buy.type_collectibles' | t }}</option>
-              <option value="Mixed">{{ 'pages.we_buy.type_mixed' | t }}</option>
-            </select>
-          </div>
-
-          <div class="wbc-form__field">
-            <label for="wbc-description" class="wbc-form__label">{{ 'pages.we_buy.field_description' | t }} <span aria-hidden="true">*</span></label>
+          <div class="sub-info__field">
+            <label for="sub-info-message" class="sub-info__label">
+              {{ 'sections.contact_form.field_message' | t }} <span aria-hidden="true">*</span>
+            </label>
             <textarea
-              id="wbc-description"
+              id="sub-info-message"
               name="contact[body]"
-              class="wbc-form__textarea"
+              class="sub-info__textarea"
               rows="5"
               required
-              placeholder="{{ 'pages.we_buy.field_description_placeholder' | t }}"
             ></textarea>
           </div>
 
-          <button type="submit" class="wbc-form__submit">
-            {{ 'pages.we_buy.form_submit' | t }}
+          <button type="submit" class="sub-info__submit">
+            {{ section.settings.submit_label }}
           </button>
         {% endform %}
       </div>
@@ -135,60 +139,60 @@
 </div>
 
 {% stylesheet %}
-  .wbc-page {
-    padding: 0 0 60px;
+  .sub-info {
+    padding: 4px 0 48px;
   }
 
   @media (min-width: 750px) {
-    .wbc-page {
-      padding: 0 0 80px;
+    .sub-info {
+      padding: 8px 0 64px;
     }
   }
 
-  .wbc-grid {
+  .sub-info__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 32px;
   }
 
   @media (min-width: 990px) {
-    .wbc-grid {
+    .sub-info__grid {
       grid-template-columns: 1fr 1fr;
       gap: 48px;
     }
   }
 
-  .wbc-section-title {
-    font-size: 1.2rem;
+  .sub-info__title {
+    font-size: 1.4rem;
     font-weight: 700;
     margin-bottom: 16px;
   }
 
   @media (min-width: 750px) {
-    .wbc-section-title {
-      font-size: 1.4rem;
+    .sub-info__title {
+      font-size: 1.6rem;
       margin-bottom: 20px;
     }
   }
 
-  .wbc-faq {
+  .sub-info__faq {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
 
-  .wbc-faq__item {
+  .sub-info__faq-item {
     background-color: #fff;
     border: 1px solid #e2e2e4;
     border-radius: 12px;
     overflow: hidden;
   }
 
-  .wbc-faq__item[open] {
+  .sub-info__faq-item[open] {
     background-color: #fdfdfd;
   }
 
-  .wbc-faq__question {
+  .sub-info__faq-question {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -201,68 +205,67 @@
     transition: background-color 0.15s ease;
   }
 
-  .wbc-faq__question::-webkit-details-marker {
+  .sub-info__faq-question::-webkit-details-marker {
     display: none;
   }
 
-  .wbc-faq__question:hover {
+  .sub-info__faq-question:hover {
     background-color: #f7f7f8;
   }
 
-  .wbc-faq__icon {
+  .sub-info__faq-icon {
     flex-shrink: 0;
     color: #9b9ba0;
     transition: transform 0.2s ease;
   }
 
-  details[open] .wbc-faq__icon {
+  details[open] .sub-info__faq-icon {
     transform: rotate(180deg);
   }
 
-  .wbc-faq__answer {
+  .sub-info__faq-answer {
     font-size: 0.9rem;
     color: #555;
     line-height: 1.6;
     padding: 4px 20px 20px;
   }
 
-  .wbc-form-wrapper {
+  .sub-info__form-wrapper {
     background: transparent;
     padding: 0;
   }
 
-  .wbc-form-intro {
+  .sub-info__form-intro {
     font-size: 0.9rem;
     color: #718096;
     margin: -8px 0 16px;
     line-height: 1.5;
   }
 
-  .wbc-form {
+  .sub-info__form {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
 
-  .wbc-form__field {
+  .sub-info__field {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .wbc-form__label {
+  .sub-info__label {
     font-size: 0.8rem;
     font-weight: 600;
     color: #555;
   }
 
-  .wbc-form__label span {
+  .sub-info__label span {
     color: #e53e3e;
   }
 
-  .wbc-form__input,
-  .wbc-form__select,
-  .wbc-form__textarea {
+  .sub-info__input,
+  .sub-info__textarea {
     padding: 10px 12px;
     border: 1px solid #e2e2e4;
     border-radius: 8px;
@@ -273,28 +276,18 @@
     transition: border-color 0.15s ease;
   }
 
-  .wbc-form__input:focus,
-  .wbc-form__select:focus,
-  .wbc-form__textarea:focus {
+  .sub-info__input:focus,
+  .sub-info__textarea:focus {
     outline: none;
     border-color: var(--color-foreground, #333);
   }
 
-  .wbc-form__select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%239b9ba0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
-  }
-
-  .wbc-form__textarea {
+  .sub-info__textarea {
     resize: vertical;
     min-height: 100px;
   }
 
-  .wbc-form__submit {
+  .sub-info__submit {
     padding: 12px 24px;
     background-color: var(--color-foreground, #333);
     color: var(--color-background, #fff);
@@ -307,11 +300,11 @@
     transition: opacity 0.15s ease;
   }
 
-  .wbc-form__submit:hover {
+  .sub-info__submit:hover {
     opacity: 0.9;
   }
 
-  .wbc-form__success {
+  .sub-info__success {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -324,7 +317,7 @@
     font-weight: 500;
   }
 
-  .wbc-form__errors {
+  .sub-info__errors {
     padding: 12px;
     background-color: #fff5f5;
     border: 1px solid #fed7d7;
@@ -336,12 +329,62 @@
 
 {% schema %}
 {
-  "name": "t:sections.we_buy.name",
-  "settings": [],
+  "name": "t:sections.subscription_info.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.subscription_info.faq_header"
+    },
+    {
+      "type": "text",
+      "id": "faq_heading",
+      "label": "t:labels.heading",
+      "default": "FAQs"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.subscription_info.form_header"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "t:labels.heading",
+      "default": "Need help?"
+    },
+    {
+      "type": "text",
+      "id": "form_intro",
+      "label": "t:labels.intro"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "t:labels.button_label",
+      "default": "Send"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "t:labels.success_message",
+      "default": "Thanks! We'll be in touch soon."
+    },
+    {
+      "type": "text",
+      "id": "form_subject",
+      "label": "t:labels.form_subject",
+      "default": "Subscription enquiry"
+    },
+    {
+      "type": "text",
+      "id": "form_tag",
+      "label": "t:labels.form_tag",
+      "default": "subscription"
+    }
+  ],
   "blocks": [
     {
       "type": "faq",
-      "name": "t:sections.we_buy.faq_item",
+      "name": "t:sections.faq_accordion.item",
       "settings": [
         {
           "type": "text",
@@ -358,7 +401,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.we_buy.name"
+      "name": "t:sections.subscription_info.name"
     }
   ]
 }

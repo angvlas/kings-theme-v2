@@ -85,62 +85,11 @@
         "button_label": "Download"
       }
     },
-    "faq": {
-      "type": "faq-accordion",
-      "blocks": {
-        "q1": {
-          "type": "faq",
-          "settings": {
-            "question": "How do I start a Subscription order?",
-            "answer": "<p>Download the Subscription Order Agreement above, complete it, and return it to info@kingscomics.com. We'll set you up and confirm by email.</p>"
-          }
-        },
-        "q2": {
-          "type": "faq",
-          "settings": {
-            "question": "Can I add or remove a title from my Subscription?",
-            "answer": "<p>Yes — email us anytime to add or remove titles from your subscription.</p>"
-          }
-        },
-        "q3": {
-          "type": "faq",
-          "settings": {
-            "question": "When am I billed?",
-            "answer": "<p>You're billed when your comics arrive in-store and are allocated to your subscription.</p>"
-          }
-        },
-        "q4": {
-          "type": "faq",
-          "settings": {
-            "question": "Can I have my Subscription delivered to me?",
-            "answer": "<p>Yes — opt for mail order and we'll ship your new comics weekly.</p>"
-          }
-        },
-        "q5": {
-          "type": "faq",
-          "settings": {
-            "question": "Is there a minimum subscription?",
-            "answer": "<p>No, there's no longer a minimum amount of titles required to subscribe.</p>"
-          }
-        },
-        "q6": {
-          "type": "faq",
-          "settings": {
-            "question": "How often is my mail order subscription sent to me?",
-            "answer": "<p>Mail order subscriptions are sent weekly as new releases arrive.</p>"
-          }
-        }
-      },
-      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"],
+    "info": {
+      "type": "subscription-info",
       "settings": {
-        "eyebrow": "Frequently asked questions",
-        "heading": "Subscription Order"
-      }
-    },
-    "contact": {
-      "type": "contact-form",
-      "settings": {
-        "heading": "Need help?",
+        "faq_heading": "FAQs",
+        "form_heading": "Need help?",
         "submit_label": "Send",
         "success_message": "Thanks! We'll be in touch about your subscription soon.",
         "form_subject": "Subscription enquiry",
@@ -153,7 +102,6 @@
     "features",
     "steps",
     "cta",
-    "faq",
-    "contact"
+    "info"
   ]
 }

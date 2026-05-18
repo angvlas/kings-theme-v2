@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Contact us",
+        "subheading": "Got a question, a comic-shaped problem, or a request? Drop us a line."
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Send us a message",
+        "intro": "We typically reply within one business day.",
+        "submit_label": "Send",
+        "success_message": "Thanks! We'll get back to you shortly.",
+        "form_subject": "Contact enquiry",
+        "form_tag": "contact"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "form"
+  ]
+}

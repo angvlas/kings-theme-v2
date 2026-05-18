@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Store hours",
+        "subheading": "Come visit us — here's when we're open."
+      }
+    },
+    "hours": {
+      "type": "store-hours",
+      "blocks": {
+        "kings_sydney": {
+          "type": "location",
+          "settings": {
+            "name": "Kings Comics — Sydney",
+            "address": "<p>Shop 1, 28 Wilmot Street<br>Sydney NSW 2000</p>",
+            "mon_hours": "9:00 AM – 5:30 PM",
+            "tue_hours": "9:00 AM – 5:30 PM",
+            "wed_hours": "9:00 AM – 7:00 PM",
+            "thu_hours": "9:00 AM – 5:30 PM",
+            "fri_hours": "9:00 AM – 5:30 PM",
+            "sat_hours": "9:00 AM – 5:00 PM",
+            "sun_hours": "10:00 AM – 4:00 PM"
+          }
+        },
+        "anzac_day": {
+          "type": "exception",
+          "settings": {
+            "date_label": "Anzac Day — 25 April",
+            "closed": true
+          }
+        }
+      },
+      "block_order": ["kings_sydney", "anzac_day"],
+      "settings": {
+        "exceptions_heading": "Special hours"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "hours"
+  ]
+}

@@ -46,7 +46,7 @@
   "pages": {
     "we_buy": {
       "buying_title": "We are currently buying",
-      "faq_title": "Frequently asked questions",
+      "faq_title": "FAQs",
       "form_title": "Tell us about your collection",
       "form_intro": "Fill out the form below and we'll get back to you as soon as possible.",
       "form_subject": "We Buy Collections enquiry",
@@ -215,6 +215,9 @@
     },
     "steps_list": {
       "step": "Step {{ number }}."
+    },
+    "store_hours": {
+      "closed": "Closed"
     },
     "contact_form": {
       "field_name": "Name",

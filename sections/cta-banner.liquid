@@ -1,14 +1,3 @@
-{% liquid
-  assign has_file = false
-  if section.settings.file != blank
-    assign has_file = true
-  endif
-  assign has_link = false
-  if section.settings.link != blank
-    assign has_link = true
-  endif
-%}
-
 <div class="cta-banner">
   <div class="cta-banner__text">
     {% if section.settings.heading != blank %}
@@ -18,16 +7,11 @@
       <p class="cta-banner__desc">{{ section.settings.description }}</p>
     {% endif %}
   </div>
-  {% if has_file or has_link %}
-    {% if has_file %}
-      {% assign cta_url = section.settings.file %}
-    {% else %}
-      {% assign cta_url = section.settings.link %}
-    {% endif %}
+  {% if section.settings.button_url != blank %}
     <a
       class="cta-banner__button"
-      href="{{ cta_url }}"
-      {% if has_file %}
+      href="{{ section.settings.button_url }}"
+      {% if section.settings.download %}
         download
       {% endif %}
     >
@@ -46,8 +30,9 @@
     gap: 20px;
     background-color: #000;
     color: #fff;
-    padding: 28px 24px;
+    padding: 16px 20px;
     border-radius: 12px;
+    margin-top: 12px;
   }
 
   @media (min-width: 750px) {
@@ -56,7 +41,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 24px;
-      padding: 32px 40px;
+      padding: 20px 28px;
+      margin-top: 20px;
     }
   }
 
@@ -134,20 +120,17 @@
       "default": "Download"
     },
     {
-      "type": "header",
-      "content": "t:labels.cta_destination"
-    },
-    {
-      "type": "file_reference",
-      "id": "file",
-      "label": "t:labels.cta_file",
-      "info": "t:labels.cta_file_info"
-    },
-    {
       "type": "url",
-      "id": "link",
+      "id": "button_url",
       "label": "t:labels.cta_link",
       "info": "t:labels.cta_link_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "download",
+      "label": "t:labels.cta_download",
+      "info": "t:labels.cta_download_info",
+      "default": true
     }
   ],
   "presets": [

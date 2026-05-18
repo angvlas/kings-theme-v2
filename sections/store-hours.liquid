@@ -1,0 +1,314 @@
+<div class="store-hours">
+  {% if section.blocks.size > 0 %}
+    <div class="store-hours__locations">
+      {% for block in section.blocks %}
+        {% if block.type == 'location' %}
+          {% assign days = 'mon,tue,wed,thu,fri,sat,sun' | split: ',' %}
+          {% assign day_labels = 'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday' | split: ',' %}
+          <article class="store-hours__location" {{ block.shopify_attributes }}>
+            {% if block.settings.name != blank %}
+              <h3 class="store-hours__location-name">{{ block.settings.name }}</h3>
+            {% endif %}
+            {% if block.settings.address != blank %}
+              <div class="store-hours__address">{{ block.settings.address }}</div>
+            {% endif %}
+
+            <dl class="store-hours__list">
+              {% for day in days %}
+                {% assign hours_key = day | append: '_hours' %}
+                {% assign closed_key = day | append: '_closed' %}
+                {% assign is_closed = block.settings[closed_key] %}
+                {% assign day_hours = block.settings[hours_key] %}
+                {% assign day_label = day_labels[forloop.index0] %}
+                <div class="store-hours__row">
+                  <dt class="store-hours__day">{{ day_label }}</dt>
+                  <dd class="store-hours__time {% if is_closed %}store-hours__time--closed{% endif %}">
+                    {% if is_closed %}
+                      {{ 'sections.store_hours.closed' | t }}
+                    {% else %}
+                      {{ day_hours }}
+                    {% endif %}
+                  </dd>
+                </div>
+              {% endfor %}
+            </dl>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% assign exception_blocks = section.blocks | where: 'type', 'exception' %}
+  {% if exception_blocks.size > 0 %}
+    <div class="store-hours__exceptions">
+      {% if section.settings.exceptions_heading != blank %}
+        <h3 class="store-hours__exceptions-title">{{ section.settings.exceptions_heading }}</h3>
+      {% endif %}
+      <dl class="store-hours__list">
+        {% for block in exception_blocks %}
+          <div class="store-hours__row" {{ block.shopify_attributes }}>
+            <dt class="store-hours__day">{{ block.settings.date_label }}</dt>
+            <dd class="store-hours__time {% if block.settings.closed %}store-hours__time--closed{% endif %}">
+              {% if block.settings.closed %}
+                {{ 'sections.store_hours.closed' | t }}
+              {% else %}
+                {{ block.settings.hours }}
+              {% endif %}
+            </dd>
+          </div>
+        {% endfor %}
+      </dl>
+    </div>
+  {% endif %}
+
+  {% if section.settings.notice != blank %}
+    <div class="store-hours__notice">
+      {{ section.settings.notice }}
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .store-hours {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 0 48px;
+  }
+
+  @media (min-width: 750px) {
+    .store-hours {
+      gap: 20px;
+      padding: 4px 0 64px;
+    }
+  }
+
+  .store-hours__locations {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @media (min-width: 990px) {
+    .store-hours__locations {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .store-hours__location {
+    background-color: #fff;
+    border: 1px solid #e2e2e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 750px) {
+    .store-hours__location {
+      padding: 24px 28px;
+    }
+  }
+
+  .store-hours__location-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  @media (min-width: 750px) {
+    .store-hours__location-name {
+      font-size: 1.2rem;
+    }
+  }
+
+  .store-hours__address {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .store-hours__address p {
+    margin: 0;
+  }
+
+  .store-hours__list {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .store-hours__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f2;
+    font-size: 0.9rem;
+  }
+
+  .store-hours__row:last-child {
+    border-bottom: none;
+  }
+
+  .store-hours__day {
+    font-weight: 600;
+    color: var(--color-foreground, #1a1a1a);
+    margin: 0;
+  }
+
+  .store-hours__time {
+    color: #555;
+    margin: 0;
+    text-align: right;
+  }
+
+  .store-hours__time--closed {
+    color: #9b9ba0;
+    font-style: italic;
+  }
+
+  .store-hours__exceptions {
+    background-color: #fff;
+    border: 1px solid #e2e2e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+
+  @media (min-width: 750px) {
+    .store-hours__exceptions {
+      padding: 24px 28px;
+    }
+  }
+
+  .store-hours__exceptions-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+
+  @media (min-width: 750px) {
+    .store-hours__exceptions-title {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+  }
+
+  .store-hours__notice {
+    background-color: #fff;
+    border: 1px solid #e2e2e4;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .store-hours__notice p {
+    margin: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.store_hours.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.store_hours.exceptions_header"
+    },
+    {
+      "type": "text",
+      "id": "exceptions_heading",
+      "label": "t:sections.store_hours.exceptions_heading",
+      "default": "Special hours"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.store_hours.notice_header"
+    },
+    {
+      "type": "richtext",
+      "id": "notice",
+      "label": "t:sections.store_hours.notice",
+      "info": "t:sections.store_hours.notice_info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "location",
+      "name": "t:sections.store_hours.location_item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "t:sections.store_hours.location_name",
+          "default": "Store"
+        },
+        {
+          "type": "richtext",
+          "id": "address",
+          "label": "t:sections.store_hours.address"
+        },
+        { "type": "header", "content": "Monday" },
+        { "type": "text", "id": "mon_hours", "label": "t:sections.store_hours.hours", "default": "9:00 AM – 5:30 PM" },
+        { "type": "checkbox", "id": "mon_closed", "label": "t:sections.store_hours.closed_label", "default": false },
+        { "type": "header", "content": "Tuesday" },
+        { "type": "text", "id": "tue_hours", "label": "t:sections.store_hours.hours", "default": "9:00 AM – 5:30 PM" },
+        { "type": "checkbox", "id": "tue_closed", "label": "t:sections.store_hours.closed_label", "default": false },
+        { "type": "header", "content": "Wednesday" },
+        { "type": "text", "id": "wed_hours", "label": "t:sections.store_hours.hours", "default": "9:00 AM – 7:00 PM" },
+        { "type": "checkbox", "id": "wed_closed", "label": "t:sections.store_hours.closed_label", "default": false },
+        { "type": "header", "content": "Thursday" },
+        { "type": "text", "id": "thu_hours", "label": "t:sections.store_hours.hours", "default": "9:00 AM – 5:30 PM" },
+        { "type": "checkbox", "id": "thu_closed", "label": "t:sections.store_hours.closed_label", "default": false },
+        { "type": "header", "content": "Friday" },
+        { "type": "text", "id": "fri_hours", "label": "t:sections.store_hours.hours", "default": "9:00 AM – 5:30 PM" },
+        { "type": "checkbox", "id": "fri_closed", "label": "t:sections.store_hours.closed_label", "default": false },
+        { "type": "header", "content": "Saturday" },
+        { "type": "text", "id": "sat_hours", "label": "t:sections.store_hours.hours", "default": "9:00 AM – 5:00 PM" },
+        { "type": "checkbox", "id": "sat_closed", "label": "t:sections.store_hours.closed_label", "default": false },
+        { "type": "header", "content": "Sunday" },
+        { "type": "text", "id": "sun_hours", "label": "t:sections.store_hours.hours", "default": "10:00 AM – 4:00 PM" },
+        { "type": "checkbox", "id": "sun_closed", "label": "t:sections.store_hours.closed_label", "default": false }
+      ]
+    },
+    {
+      "type": "exception",
+      "name": "t:sections.store_hours.exception_item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "date_label",
+          "label": "t:sections.store_hours.exception_date",
+          "info": "t:sections.store_hours.exception_date_info",
+          "default": "Anzac Day — 25 April"
+        },
+        {
+          "type": "text",
+          "id": "hours",
+          "label": "t:sections.store_hours.hours",
+          "info": "t:sections.store_hours.exception_hours_info"
+        },
+        {
+          "type": "checkbox",
+          "id": "closed",
+          "label": "t:sections.store_hours.closed_label",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.store_hours.name",
+      "blocks": [
+        { "type": "location", "settings": { "name": "Main store" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

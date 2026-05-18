@@ -80,16 +80,17 @@
     "intro": "Introduction",
     "eyebrow": "Eyebrow",
     "button_label": "Button label",
+    "button_url": "Button URL",
+    "image": "Image",
     "success_message": "Success message",
     "form_subject": "Form subject",
     "form_tag": "Form tag",
     "form_tag_info": "Tag added to the customer/enquiry to help filter submissions",
     "contact_form_meta": "Form metadata",
-    "cta_destination": "Destination",
-    "cta_file": "File to download",
-    "cta_file_info": "Used as the download link if set",
-    "cta_link": "Link (fallback)",
-    "cta_link_info": "Used if no file is selected",
+    "cta_link": "Button URL",
+    "cta_link_info": "Paste a file URL from Settings → Files, or any URL.",
+    "cta_download": "Force download",
+    "cta_download_info": "Adds the HTML download attribute so the browser saves the file instead of opening it",
     "body_background": "Body background",
     "card_background": "Card background",
     "header_color": "Header colour",
@@ -230,6 +231,42 @@
     },
     "contact_form": {
       "name": "Contact form"
+    },
+    "subscription_info": {
+      "name": "Subscription FAQ + form",
+      "faq_header": "FAQ column",
+      "form_header": "Form column"
+    },
+    "timeline": {
+      "name": "Timeline",
+      "event_item": "Event",
+      "year": "Year",
+      "image": "Image",
+      "image_info": "Optional — shown at the top of the card. 16:9 aspect ratio works best."
+    },
+    "image_with_text": {
+      "name": "Image with text",
+      "layout": "Layout",
+      "media_left": "Image left, text right",
+      "text_left": "Text left, image right",
+      "button_header": "Button (optional)"
+    },
+    "store_hours": {
+      "name": "Store hours",
+      "location_item": "Location",
+      "exception_item": "Special day",
+      "exceptions_header": "Special / holiday hours",
+      "exceptions_heading": "Heading",
+      "exception_date": "Date label",
+      "exception_date_info": "Free text — e.g. \"Anzac Day — 25 April\" or \"Christmas Eve\"",
+      "exception_hours_info": "Leave blank if closed all day",
+      "notice_header": "Notice",
+      "location_name": "Location name",
+      "address": "Address",
+      "notice": "Notice",
+      "notice_info": "Free-form notice shown beneath everything else",
+      "hours": "Hours",
+      "closed_label": "Closed all day"
     },
     "slideshow": {
       "name": "Slideshow",

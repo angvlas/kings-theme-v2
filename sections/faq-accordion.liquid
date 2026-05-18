@@ -1,7 +1,4 @@
 <div class="faq-accordion">
-  {% if section.settings.eyebrow != blank %}
-    <p class="faq-accordion__eyebrow">{{ section.settings.eyebrow }}</p>
-  {% endif %}
   {% if section.settings.heading != blank %}
     <h2 class="faq-accordion__title">{{ section.settings.heading }}</h2>
   {% endif %}
@@ -9,9 +6,13 @@
   <div class="faq-accordion__list">
     {% if page.metafields.pages.faq != blank %}
       {% for faq in page.metafields.pages.faq.value %}
+        {% liquid
+          assign faq_question = faq.question.value | default: faq.questions.value
+          assign faq_answer = faq.answer.value | default: faq.answers.value
+        %}
         <details class="faq-accordion__item">
           <summary class="faq-accordion__question">
-            <span>{{ faq.questions.value }}</span>
+            <span>{{ faq_question }}</span>
             <svg
               class="faq-accordion__icon"
               width="16"
@@ -24,7 +25,7 @@
             </svg>
           </summary>
           <div class="faq-accordion__answer">
-            {{ faq.answer.value }}
+            {{ faq_answer }}
           </div>
         </details>
       {% endfor %}
@@ -57,22 +58,13 @@
 
 {% stylesheet %}
   .faq-accordion {
-    padding: 24px 0;
+    padding: 12px 0;
   }
 
   @media (min-width: 750px) {
     .faq-accordion {
-      padding: 32px 0;
+      padding: 16px 0;
     }
-  }
-
-  .faq-accordion__eyebrow {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #9b9ba0;
-    margin-bottom: 4px;
   }
 
   .faq-accordion__title {
@@ -148,12 +140,6 @@
 {
   "name": "t:sections.faq_accordion.name",
   "settings": [
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "t:labels.eyebrow",
-      "default": "Frequently asked questions"
-    },
     {
       "type": "text",
       "id": "heading",
