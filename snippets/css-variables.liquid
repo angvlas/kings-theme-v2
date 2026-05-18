@@ -17,4 +17,10 @@
     --color-header: {{ settings.header_color }};
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
   }
+
+  @media (max-width: 749px) {
+    :root {
+      --page-margin: 16px;
+    }
+  }
 {% endstyle %}
