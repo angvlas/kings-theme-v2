@@ -114,24 +114,6 @@
     "17790769850479b40e": {
       "type": "apps",
       "blocks": {
-        "google_reviews_sticky_compact_widget_block_w7xYC3": {
-          "type": "shopify://apps/google-reviews/blocks/sticky-compact-widget-block/8b378e9e-c56d-47ce-a754-feca5e0caf59",
-          "settings": {
-            "contentIndex": "1",
-            "customContentIndex": 31,
-            "font": "default",
-            "themeId": "dark",
-            "ratingType": "stars",
-            "emojiType": "0",
-            "cardColor": "#F3F6F9",
-            "starsColor": "#FBB000",
-            "textColor": "#404040",
-            "transparent": 1,
-            "verticalPositionId": "bottom",
-            "horizontalPositionId": "left",
-            "minimize": true
-          }
-        },
         "google_reviews_carousel_dual_carousel_DLEN8J": {
           "type": "shopify://apps/google-reviews/blocks/carousel-dual_carousel/8b378e9e-c56d-47ce-a754-feca5e0caf59",
           "settings": {
@@ -156,8 +138,34 @@
         }
       },
       "block_order": [
-        "google_reviews_sticky_compact_widget_block_w7xYC3",
         "google_reviews_carousel_dual_carousel_DLEN8J"
+      ],
+      "settings": {}
+    },
+    "17790769951350367f": {
+      "type": "apps",
+      "blocks": {
+        "google_reviews_sticky_compact_widget_block_tHGQ7c": {
+          "type": "shopify://apps/google-reviews/blocks/sticky-compact-widget-block/8b378e9e-c56d-47ce-a754-feca5e0caf59",
+          "settings": {
+            "contentIndex": "1",
+            "customContentIndex": 31,
+            "font": "default",
+            "themeId": "dark",
+            "ratingType": "stars",
+            "emojiType": "0",
+            "cardColor": "#F3F6F9",
+            "starsColor": "#FBB000",
+            "textColor": "#404040",
+            "transparent": 1,
+            "verticalPositionId": "bottom",
+            "horizontalPositionId": "left",
+            "minimize": true
+          }
+        }
+      },
+      "block_order": [
+        "google_reviews_sticky_compact_widget_block_tHGQ7c"
       ],
       "settings": {}
     }
@@ -167,6 +175,7 @@
     "collection_row_1",
     "collection_row_2",
     "collection_row_E3zT3g",
-    "17790769850479b40e"
+    "17790769850479b40e",
+    "17790769951350367f"
   ]
 }
