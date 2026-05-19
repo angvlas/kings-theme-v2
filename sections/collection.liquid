@@ -208,6 +208,8 @@
             data-load-more-wrapper
             data-total-products="{{ collection.products_count }}"
             data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}"
+            data-total-pages="{{ paginate.pages }}"
+            data-current-page="{{ paginate.current_page }}"
           >
             <button
               class="collection__load-more"
@@ -880,6 +882,57 @@
         });
     }
 
+    function prefetchAllRemainingPages() {
+      if (!productGrid || !wrapper || !nextUrl) return Promise.resolve();
+      var totalPages = parseInt(wrapper.getAttribute('data-total-pages'), 10) || 1;
+
+      function buildPageUrl(pageNum) {
+        return nextUrl.replace(/([?&])page=\d+/, '$1page=' + pageNum);
+      }
+
+      function fetchPage(pageNum) {
+        return fetch(buildPageUrl(pageNum))
+          .then(function(r) { return r.text(); })
+          .then(function(html) {
+            var doc = new DOMParser().parseFromString(html, 'text/html');
+            var gridItems = [];
+            var listItems = [];
+            doc.querySelectorAll('[data-product-grid] .collection__item').forEach(function(el) {
+              gridItems.push(el);
+            });
+            doc.querySelectorAll('[data-product-list] .collection__list-item').forEach(function(el) {
+              listItems.push(el);
+            });
+            return { page: pageNum, gridItems: gridItems, listItems: listItems };
+          })
+          .catch(function() {
+            return { page: pageNum, gridItems: [], listItems: [], error: true };
+          });
+      }
+
+      /* Determine the first page we still need. The next URL tells us
+         the next page number; fetch from there to the last page. */
+      var nextPageMatch = nextUrl.match(/[?&]page=(\d+)/);
+      var startPage = nextPageMatch ? parseInt(nextPageMatch[1], 10) : 2;
+      var pageNums = [];
+      for (var i = startPage; i <= totalPages; i++) {
+        pageNums.push(i);
+      }
+
+      if (pageNums.length === 0) return Promise.resolve();
+
+      return Promise.all(pageNums.map(fetchPage)).then(function(results) {
+        results.sort(function(a, b) { return a.page - b.page; });
+        results.forEach(function(r) {
+          r.gridItems.forEach(function(el) { productGrid.appendChild(el); });
+          if (productList) {
+            r.listItems.forEach(function(el) { productList.appendChild(el); });
+          }
+        });
+        nextUrl = '';
+      });
+    }
+
     function showUntil(target) {
       /* If we already have enough items loaded, just show/hide */
       if (totalLoaded() >= target) {
@@ -962,35 +1015,54 @@
       });
     }
 
-    /* Key issue filter */
+    /* Key issue filter — applies across all pages, not just the current view */
     var keyIssueToggle = document.querySelector('[data-key-issue-filter]');
+    var defaultPerPage = 24;
+    var firstPerPageBtn = section.querySelector('[data-per-page]');
+    if (firstPerPageBtn) {
+      defaultPerPage = parseInt(firstPerPageBtn.getAttribute('data-per-page'), 10) || 24;
+    }
+
+    function applyKeyIssueFilter(filterOn) {
+      if (filterOn) {
+        var keyCount = 0;
+        allGridItems().forEach(function(item) {
+          var isKey = !!item.querySelector('[data-key-issue]');
+          if (isKey) keyCount++;
+          item.style.display = isKey ? '' : 'none';
+          item.hidden = false;
+        });
+        allListItems().forEach(function(item) {
+          var isKey = !!item.querySelector('[data-key-issue]');
+          item.style.display = isKey ? '' : 'none';
+          item.hidden = false;
+        });
+        if (countEl) {
+          countEl.textContent = keyCount + ' key ' + (keyCount === 1 ? 'issue' : 'issues') + ' of ' + total + ' products';
+        }
+        if (btn) btn.hidden = true;
+        isLoading = false;
+      } else {
+        allGridItems().forEach(function(item) { item.style.display = ''; });
+        allListItems().forEach(function(item) { item.style.display = ''; });
+        applyLimit(perPageLimit || defaultPerPage);
+        refreshUI();
+      }
+    }
+
     if (keyIssueToggle) {
       keyIssueToggle.addEventListener('change', function() {
         var filterOn = this.checked;
+        keyIssueToggle.disabled = true;
 
-        if (productGrid) {
-          productGrid.querySelectorAll('.collection__item').forEach(function(item) {
-            if (item.hidden) return;
-            var card = item.querySelector('[data-key-issue]');
-            if (filterOn && !card) {
-              item.style.display = 'none';
-            } else {
-              item.style.display = '';
-            }
-          });
-        }
+        var work = (filterOn && nextUrl) ? prefetchAllRemainingPages() : Promise.resolve();
 
-        if (productList) {
-          productList.querySelectorAll('.collection__list-item').forEach(function(item) {
-            if (item.hidden) return;
-            var card = item.querySelector('[data-key-issue]');
-            if (filterOn && !card) {
-              item.style.display = 'none';
-            } else {
-              item.style.display = '';
-            }
-          });
-        }
+        work.then(function() {
+          applyKeyIssueFilter(filterOn);
+          keyIssueToggle.disabled = false;
+        }).catch(function() {
+          keyIssueToggle.disabled = false;
+        });
       });
     }
 
