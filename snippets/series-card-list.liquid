@@ -33,16 +33,17 @@
     assign issue_count = series_collection.products_count
   endif
 
-  assign publisher = series_collection.metafields.kings.publisher
-  if publisher == blank
-    assign publisher = first_product.vendor
+  assign brand = series_collection.metafields.kings.brand
+  if brand == blank
+    assign brand = first_product.vendor
   endif
 -%}
 
 <div class="scl"
+  data-series-handle="{{ series_collection.handle }}"
   data-series-title="{{ series_collection.title | downcase | escape }}"
   data-series-start="{{ series_start }}"
-  data-series-publisher="{{ publisher | escape }}">
+  data-series-brand="{{ brand | escape }}">
   <a href="{{ series_collection.url }}" class="scl__image">
     {% if cover %}
       {{ cover | image_url: width: 400 | image_tag: loading: 'lazy', alt: series_collection.title }}
@@ -56,8 +57,8 @@
       {{ series_collection.title | escape }}
     </a>
 
-    {% if publisher != blank %}
-      <p class="scl__meta scl__publisher">{{ publisher | escape }}</p>
+    {% if brand != blank %}
+      <p class="scl__meta scl__brand">{{ brand | escape }}</p>
     {% endif %}
 
     {% if year_range != blank %}
@@ -88,6 +89,10 @@
     background-color: var(--color-card-background, #fff);
     border-radius: 10px;
     overflow: hidden;
+  }
+
+  .scl[hidden] {
+    display: none;
   }
 
   @media (min-width: 750px) {

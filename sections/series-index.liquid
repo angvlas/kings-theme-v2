@@ -30,51 +30,97 @@
     -%}
 
     {% if series_rendered > 0 or paginate.next %}
-      <div class="series-index__filters" data-series-filters>
-        <input
-          type="search"
-          class="series-index__search"
-          data-filter-search
-          placeholder="{{ 'series.filter_search_placeholder' | t }}"
-          aria-label="{{ 'series.filter_search_placeholder' | t }}"
-        >
-        <select class="series-index__select" data-filter-publisher aria-label="{{ 'series.filter_publisher' | t }}">
-          <option value="">{{ 'series.filter_all_publishers' | t }}</option>
-        </select>
-        <select class="series-index__select" data-filter-decade aria-label="{{ 'series.filter_decade' | t }}">
-          <option value="">{{ 'series.filter_all_decades' | t }}</option>
-          <option value="1950">1950s</option>
-          <option value="1960">1960s</option>
-          <option value="1970">1970s</option>
-          <option value="1980">1980s</option>
-          <option value="1990">1990s</option>
-          <option value="2000">2000s</option>
-          <option value="2010">2010s</option>
-          <option value="2020">2020s</option>
-        </select>
-        <button type="button" class="series-index__clear" data-filter-clear hidden>{{ 'series.filter_clear' | t }}</button>
-      </div>
-
-      <p class="series-index__status" data-series-status>
-        <span data-status-text></span>
-        <span data-status-spinner class="series-index__spinner" hidden>
-          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 20" />
+      <div class="series-index__search-bar">
+        <div class="series-index__search-wrap">
+          <svg class="series-index__search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.75"/>
+            <path d="M14 14L17 17" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
           </svg>
-        </span>
-      </p>
-
-      <div class="series-index__list" data-series-list>
-        {{ series_rows }}
+          <input
+            id="series-search"
+            type="search"
+            class="series-index__search"
+            data-filter-search
+            placeholder="{{ 'series.filter_search_placeholder' | t }}"
+            aria-label="{{ 'series.filter_search_placeholder' | t }}"
+          >
+        </div>
       </div>
 
-      <p class="series-index__empty" data-series-no-matches hidden>{{ 'series.no_matches' | t }}</p>
+      <div class="series-index__layout">
+        <aside class="series-index__sidebar">
+          <form class="series-filters" data-series-filters onsubmit="return false">
+            <div class="series-filters__header">
+              <h2 class="series-filters__title">{{ 'series.filter_title' | t }}</h2>
+              <button type="button" class="series-filters__clear-all" data-filter-clear hidden>{{ 'series.filter_clear' | t }}</button>
+            </div>
 
-      <div
-        data-load-more-wrapper
-        data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}"
-        hidden
-      ></div>
+            <details class="series-filters__group" open>
+              <summary class="series-filters__group-header">
+                <span class="series-filters__group-title">{{ 'series.filter_brand' | t }}</span>
+                <svg class="series-filters__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="series-filters__group-body">
+                <ul class="series-filters__list" data-brand-list>
+                  <li class="series-filters__empty" data-brand-empty>{{ 'series.filter_loading' | t }}</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="series-filters__group" open>
+              <summary class="series-filters__group-header">
+                <span class="series-filters__group-title">{{ 'series.filter_decade' | t }}</span>
+                <svg class="series-filters__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="series-filters__group-body">
+                <ul class="series-filters__list" data-decade-list>
+                  {%- assign decades = '1950,1960,1970,1980,1990,2000,2010,2020' | split: ',' -%}
+                  {%- for decade in decades -%}
+                    <li class="series-filters__item">
+                      <label class="series-filters__checkbox-label">
+                        <input type="checkbox" class="series-filters__checkbox" data-filter-decade value="{{ decade }}">
+                        <span class="series-filters__checkbox-custom"></span>
+                        <span class="series-filters__checkbox-text">{{ decade }}s</span>
+                        <span class="series-filters__count" data-decade-count="{{ decade }}">0</span>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </details>
+          </form>
+        </aside>
+
+        <div class="series-index__content">
+          <p class="series-index__status" data-series-status>
+            <span data-status-text></span>
+            <span data-status-spinner class="series-index__spinner" hidden>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 20" />
+              </svg>
+            </span>
+          </p>
+
+          <div class="series-index__list" data-series-list>
+            {{ series_rows }}
+          </div>
+
+          <p class="series-index__empty" data-series-no-matches hidden>{{ 'series.no_matches' | t }}</p>
+
+          <div
+            data-load-more-wrapper
+            data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}"
+            data-total-pages="{{ paginate.pages }}"
+            data-current-page="{{ paginate.current_page }}"
+            data-page-size="{{ section.settings.per_page }}"
+            hidden
+          ></div>
+        </div>
+      </div>
     {% else %}
       <p class="series-index__empty">{{ 'series.empty' | t }}</p>
     {% endif %}
@@ -83,14 +129,12 @@
 
 {% stylesheet %}
   .series-index {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 24px 16px 48px;
+    padding: 10px 16px;
   }
 
   @media (min-width: 750px) {
     .series-index {
-      padding: 32px 48px 64px;
+      padding: 20px 32px;
     }
   }
 
@@ -117,60 +161,253 @@
     max-width: 720px;
   }
 
-  .series-index__filters {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
+  /* Search bar — full width across the top */
+  .series-index__search-bar {
+    margin-bottom: 20px;
   }
 
-  @media (min-width: 750px) {
-    .series-index__filters {
-      grid-template-columns: 2fr 1fr 1fr auto;
-      gap: 10px;
-    }
-  }
-
-  .series-index__search,
-  .series-index__select {
+  .series-index__search-wrap {
+    position: relative;
     width: 100%;
-    padding: 10px 12px;
-    font-size: 0.9rem;
+  }
+
+  .series-index__search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9b9ba0;
+    pointer-events: none;
+  }
+
+  .series-index__search {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    font-size: 1rem;
     border: 1px solid #e2e2e4;
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: var(--color-card-background, #fff);
     color: inherit;
     font-family: inherit;
   }
 
-  .series-index__search:focus,
-  .series-index__select:focus {
+  .series-index__search:focus {
     outline: 2px solid var(--color-foreground, #333);
     outline-offset: -2px;
     border-color: transparent;
   }
 
-  .series-index__clear {
-    padding: 10px 16px;
+  /* Layout: sidebar + content */
+  .series-index__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  @media (min-width: 990px) {
+    .series-index__layout {
+      flex-direction: row;
+      gap: 32px;
+      align-items: flex-start;
+    }
+  }
+
+  .series-index__sidebar {
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 990px) {
+    .series-index__sidebar {
+      width: 280px;
+      position: sticky;
+      top: 140px;
+    }
+  }
+
+  .series-index__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Filter form (collection-style) */
+  .series-filters {
+    background-color: var(--color-card-background, #fff);
+    border-radius: 12px;
+    padding: 4px 16px;
+  }
+
+  .series-filters__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0 10px;
+    border-bottom: 1px solid #e2e2e4;
+  }
+
+  .series-filters__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .series-filters__clear-all {
     background: transparent;
-    border: 1px solid #e2e2e4;
-    border-radius: 8px;
-    font-size: 0.85rem;
+    border: none;
+    color: var(--color-foreground, #333);
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    color: inherit;
+    padding: 4px 0;
+    text-decoration: underline;
+  }
+
+  .series-filters__group {
+    border-top: 1px solid #e2e2e4;
+  }
+
+  .series-filters__group:first-of-type {
+    border-top: none;
+  }
+
+  .series-filters__group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .series-filters__group-header::-webkit-details-marker {
+    display: none;
+  }
+
+  .series-filters__group-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .series-filters__chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .series-filters__group[open] .series-filters__chevron {
+    transform: rotate(180deg);
+  }
+
+  .series-filters__group-body {
+    padding-bottom: 16px;
+  }
+
+  .series-filters__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 340px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+
+  .series-filters__list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .series-filters__list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .series-filters__list::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 2px;
+  }
+
+  .series-filters__empty {
+    padding: 8px;
+    font-size: 0.85rem;
+    color: #9b9ba0;
+  }
+
+  .series-filters__checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    min-height: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
     transition: background-color 0.15s ease;
   }
 
-  .series-index__clear:hover {
-    background-color: #f0f0f2;
+  .series-filters__checkbox-label:hover {
+    background-color: #ededef;
+  }
+
+  .series-filters__checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .series-filters__checkbox-custom {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #c4c4c8;
+    border-radius: 4px;
+    position: relative;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .series-filters__checkbox:checked + .series-filters__checkbox-custom {
+    background-color: var(--color-foreground, #333);
+    border-color: var(--color-foreground, #333);
+  }
+
+  .series-filters__checkbox:checked + .series-filters__checkbox-custom::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 4px;
+    height: 8px;
+    border: solid var(--color-background, #fff);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .series-filters__checkbox:disabled + .series-filters__checkbox-custom,
+  .series-filters__checkbox:disabled ~ .series-filters__checkbox-text,
+  .series-filters__checkbox:disabled ~ .series-filters__count {
+    opacity: 0.35;
+  }
+
+  .series-filters__checkbox:focus-visible + .series-filters__checkbox-custom {
+    outline: 2px solid var(--color-foreground, #333);
+    outline-offset: 2px;
+  }
+
+  .series-filters__checkbox-text {
+    flex: 1;
+  }
+
+  .series-filters__count {
+    font-size: 0.75rem;
+    color: #9b9ba0;
+    font-weight: 500;
   }
 
   .series-index__status {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 6px 0 16px;
+    margin: 0 0 16px;
     font-size: 0.85rem;
     color: #718096;
   }
@@ -199,6 +436,10 @@
     animation: series-index-spin 0.9s linear infinite;
   }
 
+  .series-index__spinner[hidden] {
+    display: none;
+  }
+
   @keyframes series-index-spin {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
@@ -207,80 +448,190 @@
 
 {% javascript %}
   (function() {
+    var CACHE_KEY = 'kings-series-index-v2';
+    var CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
     var section = document.querySelector('[data-series-section]');
     if (!section) return;
 
     var list = section.querySelector('[data-series-list]');
     var wrapper = section.querySelector('[data-load-more-wrapper]');
-    var statusBar = section.querySelector('[data-series-status]');
     var statusText = section.querySelector('[data-status-text]');
     var statusSpinner = section.querySelector('[data-status-spinner]');
     var noMatchesEl = section.querySelector('[data-series-no-matches]');
     var searchInput = section.querySelector('[data-filter-search]');
-    var publisherSelect = section.querySelector('[data-filter-publisher]');
-    var decadeSelect = section.querySelector('[data-filter-decade]');
+    var brandList = section.querySelector('[data-brand-list]');
+    var brandEmpty = section.querySelector('[data-brand-empty]');
+    var decadeList = section.querySelector('[data-decade-list]');
     var clearBtn = section.querySelector('[data-filter-clear]');
     if (!list || !wrapper) return;
 
-    var nextUrl = wrapper.getAttribute('data-next-url') || '';
+    var totalPages = parseInt(wrapper.getAttribute('data-total-pages'), 10) || 1;
+    var currentPage = parseInt(wrapper.getAttribute('data-current-page'), 10) || 1;
+    var nextUrlBase = wrapper.getAttribute('data-next-url') || '';
+
+    function getHandle(el) {
+      return el.getAttribute('data-series-handle') || el.getAttribute('data-series-title') || '';
+    }
+
+    function getCurrentHandles() {
+      var ids = [];
+      list.querySelectorAll('.scl').forEach(function(el) { ids.push(getHandle(el)); });
+      return ids;
+    }
+
+    function readCache() {
+      try {
+        var raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        var data = JSON.parse(raw);
+        if (!data || !data.html || data.v !== 2) return null;
+        if (Date.now() - data.timestamp > CACHE_TTL_MS) return null;
+        return data;
+      } catch (e) { return null; }
+    }
+
+    function writeCache() {
+      try {
+        var items = list.querySelectorAll('.scl');
+        var html = '';
+        var ids = [];
+        items.forEach(function(el) {
+          html += el.outerHTML;
+          ids.push(getHandle(el));
+        });
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          v: 2,
+          timestamp: Date.now(),
+          html: html,
+          ids: ids
+        }));
+      } catch (e) { /* localStorage full or disabled */ }
+    }
+
+    /* Replace server's page-1 render with cache if we have it */
+    var cache = readCache();
+    var hasServerFirstPage = true;
+    if (cache) {
+      list.innerHTML = cache.html;
+      hasServerFirstPage = false;
+    }
+
     var totalLoaded = list.querySelectorAll('.scl').length;
-    var seenPublishers = Object.create(null);
+    var pendingPages = Math.max(0, totalPages - (hasServerFirstPage ? currentPage : 0));
 
     function setStatus(msg, loading) {
       if (statusText) statusText.textContent = msg;
       if (statusSpinner) statusSpinner.hidden = !loading;
     }
 
-    function updatePublisherOptions() {
-      if (!publisherSelect) return;
-      var current = publisherSelect.value;
-      list.querySelectorAll('.scl').forEach(function(el) {
-        var p = el.getAttribute('data-series-publisher');
-        if (p && !seenPublishers[p]) {
-          seenPublishers[p] = true;
-        }
+    function getCheckedValues(root, selector) {
+      var checked = [];
+      if (!root) return checked;
+      root.querySelectorAll(selector + ':checked').forEach(function(cb) {
+        checked.push(cb.value);
       });
-      var publishers = Object.keys(seenPublishers).sort(function(a, b) {
+      return checked;
+    }
+
+    function rebuildBrandOptions() {
+      if (!brandList) return;
+      var checkedBrands = getCheckedValues(brandList, 'input[data-filter-brand]');
+      var counts = Object.create(null);
+      list.querySelectorAll('.scl').forEach(function(el) {
+        var b = el.getAttribute('data-series-brand');
+        if (!b) return;
+        counts[b] = (counts[b] || 0) + 1;
+      });
+
+      var brands = Object.keys(counts).sort(function(a, b) {
         return a.toLowerCase().localeCompare(b.toLowerCase());
       });
 
+      if (brandEmpty) brandEmpty.hidden = brands.length > 0;
+
       var existing = {};
-      publisherSelect.querySelectorAll('option').forEach(function(opt) {
-        if (opt.value) existing[opt.value] = opt;
+      brandList.querySelectorAll('input[data-filter-brand]').forEach(function(cb) {
+        existing[cb.value] = cb.closest('li');
       });
 
-      publishers.forEach(function(p) {
-        if (!existing[p]) {
-          var opt = document.createElement('option');
-          opt.value = p;
-          opt.textContent = p;
-          publisherSelect.appendChild(opt);
+      brands.forEach(function(b) {
+        var li = existing[b];
+        if (!li) {
+          li = document.createElement('li');
+          li.className = 'series-filters__item';
+          li.innerHTML =
+            '<label class="series-filters__checkbox-label">' +
+              '<input type="checkbox" class="series-filters__checkbox" data-filter-brand>' +
+              '<span class="series-filters__checkbox-custom"></span>' +
+              '<span class="series-filters__checkbox-text"></span>' +
+              '<span class="series-filters__count"></span>' +
+            '</label>';
+          var cb = li.querySelector('input');
+          cb.value = b;
+          cb.addEventListener('change', applyFilters);
+          li.querySelector('.series-filters__checkbox-text').textContent = b;
+          brandList.appendChild(li);
         }
+        li.querySelector('.series-filters__count').textContent = counts[b];
       });
 
-      if (current) publisherSelect.value = current;
+      checkedBrands.forEach(function(b) {
+        var cb = brandList.querySelector('input[data-filter-brand][value="' + cssEscape(b) + '"]');
+        if (cb) cb.checked = true;
+      });
+    }
+
+    function rebuildDecadeCounts() {
+      if (!decadeList) return;
+      var counts = Object.create(null);
+      list.querySelectorAll('.scl').forEach(function(el) {
+        var startStr = el.getAttribute('data-series-start') || '';
+        var start = parseInt(startStr, 10);
+        if (isNaN(start)) return;
+        var decade = Math.floor(start / 10) * 10;
+        counts[decade] = (counts[decade] || 0) + 1;
+      });
+      decadeList.querySelectorAll('[data-decade-count]').forEach(function(el) {
+        var d = el.getAttribute('data-decade-count');
+        var c = counts[d] || 0;
+        el.textContent = c;
+        var cb = el.parentElement.querySelector('input[data-filter-decade]');
+        if (cb) cb.disabled = c === 0;
+      });
+    }
+
+    function cssEscape(v) {
+      return String(v).replace(/(["\\])/g, '\\$1');
     }
 
     function applyFilters() {
       var q = searchInput ? searchInput.value.trim().toLowerCase() : '';
-      var publisher = publisherSelect ? publisherSelect.value : '';
-      var decade = decadeSelect ? parseInt(decadeSelect.value, 10) : 0;
-      var hasFilter = !!(q || publisher || decade);
+      var brands = getCheckedValues(brandList, 'input[data-filter-brand]');
+      var decades = getCheckedValues(decadeList, 'input[data-filter-decade]').map(function(d) {
+        return parseInt(d, 10);
+      });
+      var hasFilter = !!(q || brands.length || decades.length);
 
       var items = list.querySelectorAll('.scl');
       var visible = 0;
 
       items.forEach(function(el) {
         var title = el.getAttribute('data-series-title') || '';
-        var pub = el.getAttribute('data-series-publisher') || '';
+        var brand = el.getAttribute('data-series-brand') || '';
         var startStr = el.getAttribute('data-series-start') || '';
         var start = parseInt(startStr, 10);
 
         var match = true;
         if (q && title.indexOf(q) === -1) match = false;
-        if (publisher && pub !== publisher) match = false;
-        if (decade) {
-          if (isNaN(start) || start < decade || start >= decade + 10) match = false;
+        if (brands.length && brands.indexOf(brand) === -1) match = false;
+        if (decades.length) {
+          if (isNaN(start)) {
+            match = false;
+          } else {
+            var seriesDecade = Math.floor(start / 10) * 10;
+            if (decades.indexOf(seriesDecade) === -1) match = false;
+          }
         }
 
         el.hidden = !match;
@@ -291,59 +642,113 @@
       if (noMatchesEl) noMatchesEl.hidden = visible > 0;
 
       var msg = visible + ' of ' + totalLoaded + ' series';
-      if (nextUrl) msg = visible + ' shown · loading more…';
-      setStatus(msg, !!nextUrl);
+      if (pendingPages > 0) msg = visible + ' shown · loading more…';
+      setStatus(msg, pendingPages > 0);
     }
 
-    function fetchAllPages() {
-      if (!nextUrl) {
-        updatePublisherOptions();
-        applyFilters();
-        return;
+    function buildPageUrl(pageNum) {
+      if (nextUrlBase) {
+        return nextUrlBase.replace(/([?&])page=\d+/, '$1page=' + pageNum);
       }
+      return window.location.pathname + '?page=' + pageNum;
+    }
 
-      setStatus(totalLoaded + ' shown · loading more…', true);
-
-      fetch(nextUrl)
+    function fetchPage(pageNum) {
+      return fetch(buildPageUrl(pageNum))
         .then(function(r) { return r.text(); })
         .then(function(html) {
           var doc = new DOMParser().parseFromString(html, 'text/html');
           var fetchedList = doc.querySelector('[data-series-list]');
-          var fetchedWrapper = doc.querySelector('[data-load-more-wrapper]');
-
+          var items = [];
           if (fetchedList) {
             fetchedList.querySelectorAll('.scl').forEach(function(el) {
-              list.appendChild(el);
-              totalLoaded++;
+              items.push(el);
             });
           }
-
-          nextUrl = fetchedWrapper ? fetchedWrapper.getAttribute('data-next-url') || '' : '';
-
-          updatePublisherOptions();
-          applyFilters();
-          fetchAllPages();
+          return { page: pageNum, items: items };
         })
         .catch(function() {
-          setStatus(totalLoaded + ' series (some failed to load)', false);
+          return { page: pageNum, items: [], error: true };
         });
     }
 
-    if (searchInput) searchInput.addEventListener('input', applyFilters);
-    if (publisherSelect) publisherSelect.addEventListener('change', applyFilters);
-    if (decadeSelect) decadeSelect.addEventListener('change', applyFilters);
-    if (clearBtn) {
-      clearBtn.addEventListener('click', function() {
-        if (searchInput) searchInput.value = '';
-        if (publisherSelect) publisherSelect.value = '';
-        if (decadeSelect) decadeSelect.value = '';
+    function prefetchAllPages() {
+      var startPage = hasServerFirstPage ? currentPage + 1 : 1;
+      var pageNums = [];
+      for (var i = startPage; i <= totalPages; i++) {
+        pageNums.push(i);
+      }
+
+      if (pageNums.length === 0) {
+        pendingPages = 0;
+        rebuildBrandOptions();
+        rebuildDecadeCounts();
+        applyFilters();
+        writeCache();
+        return;
+      }
+
+      var loadingLabel = cache ? ' shown · refreshing…' : ' shown · loading more…';
+      setStatus(totalLoaded + loadingLabel, true);
+
+      Promise.all(pageNums.map(fetchPage)).then(function(results) {
+        results.sort(function(a, b) { return a.page - b.page; });
+
+        if (hasServerFirstPage) {
+          /* Cache miss path — append fetched pages after server's page 1 */
+          results.forEach(function(r) {
+            r.items.forEach(function(el) {
+              list.appendChild(el);
+              totalLoaded++;
+            });
+          });
+        } else {
+          /* Cache hit path — build canonical fresh list, swap only if different */
+          var freshItems = [];
+          results.forEach(function(r) {
+            r.items.forEach(function(el) { freshItems.push(el); });
+          });
+          var freshIds = freshItems.map(getHandle);
+          var currentIds = getCurrentHandles();
+
+          if (freshIds.join('|') !== currentIds.join('|')) {
+            list.innerHTML = '';
+            freshItems.forEach(function(el) { list.appendChild(el); });
+            totalLoaded = freshItems.length;
+          }
+        }
+
+        pendingPages = 0;
+        rebuildBrandOptions();
+        rebuildDecadeCounts();
+        applyFilters();
+        writeCache();
+      }).catch(function() {
+        pendingPages = 0;
         applyFilters();
       });
     }
 
-    updatePublisherOptions();
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (decadeList) {
+      decadeList.querySelectorAll('input[data-filter-decade]').forEach(function(cb) {
+        cb.addEventListener('change', applyFilters);
+      });
+    }
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function() {
+        if (searchInput) searchInput.value = '';
+        section.querySelectorAll('input[data-filter-brand], input[data-filter-decade]').forEach(function(cb) {
+          cb.checked = false;
+        });
+        applyFilters();
+      });
+    }
+
+    rebuildBrandOptions();
+    rebuildDecadeCounts();
     applyFilters();
-    fetchAllPages();
+    prefetchAllPages();
   })();
 {% endjavascript %}
 
@@ -366,11 +771,11 @@
       "type": "range",
       "id": "per_page",
       "label": "Collections per fetch",
-      "info": "How many collections are scanned per pagination fetch (not how many series are shown — non-series are filtered out).",
+      "info": "How many collections are scanned per pagination fetch (max 50). Higher = fewer requests but each request is slightly larger.",
       "min": 12,
       "max": 50,
       "step": 2,
-      "default": 24
+      "default": 50
     }
   ],
   "presets": [

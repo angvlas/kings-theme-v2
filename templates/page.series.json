@@ -5,7 +5,7 @@
       "settings": {
         "heading": "Comic series",
         "intro": "<p>Browse every comic series we stock. Click into any title to see all issues.</p>",
-        "per_page": 24
+        "per_page": 50
       }
     }
   },
