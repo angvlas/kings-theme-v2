@@ -994,6 +994,15 @@
       });
     }
 
+    function scrollToItem(index) {
+      var items = (listView && !listView.hidden) ? allListItems() : allGridItems();
+      var target = items[index];
+      if (!target) return;
+      var headerOffset = 140;
+      var top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+
     /* Load more button */
     if (btn) {
       btn.addEventListener('click', function() {
@@ -1001,19 +1010,23 @@
 
         /* If there are hidden items we can reveal, show the next batch */
         if (perPageLimit && totalLoaded() > visibleCount()) {
+          var firstHiddenIndex = visibleCount();
           var newLimit = perPageLimit + parseInt(section.querySelectorAll('[data-per-page]')[0].getAttribute('data-per-page'), 10);
           applyLimit(newLimit);
           refreshUI();
+          scrollToItem(firstHiddenIndex);
           return;
         }
 
         /* Otherwise fetch next page from server */
         if (!nextUrl) return;
+        var firstNewIndex = totalLoaded();
         showSpinner();
         fetchNext()
           .then(function() {
             if (perPageLimit) applyLimit(perPageLimit);
             refreshUI();
+            scrollToItem(firstNewIndex);
           })
           .catch(refreshUI);
       });
