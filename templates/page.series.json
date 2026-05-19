@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "series_index": {
+      "type": "series-index",
+      "settings": {
+        "heading": "Comic series",
+        "intro": "<p>Browse every comic series we stock. Click into any title to see all issues.</p>",
+        "per_page": 24
+      }
+    }
+  },
+  "order": [
+    "series_index"
+  ]
+}

@@ -1,0 +1,385 @@
+{% comment %}
+  Series index — lists every collection that has the metafield
+  kings.is_this_a_series set to true. Rendered as a list view with
+  load-more pagination, mirroring the collection page UX.
+{% endcomment %}
+
+<div class="series-index" data-series-section>
+  {% if section.settings.heading != blank or section.settings.intro != blank %}
+    <header class="series-index__header">
+      {% if section.settings.heading != blank %}
+        <h1 class="series-index__title">{{ section.settings.heading | escape }}</h1>
+      {% endif %}
+      {% if section.settings.intro != blank %}
+        <div class="series-index__intro rte">{{ section.settings.intro }}</div>
+      {% endif %}
+    </header>
+  {% endif %}
+
+  {% paginate collections by section.settings.per_page %}
+    {%- liquid
+      assign series_rendered = 0
+      capture series_rows
+        for c in collections
+          if c.metafields.kings.is_this_a_series.value == true
+            assign series_rendered = series_rendered | plus: 1
+            render 'series-card-list', series_collection: c
+          endif
+        endfor
+      endcapture
+    -%}
+
+    {% if series_rendered > 0 or paginate.next %}
+      <div class="series-index__filters" data-series-filters>
+        <input
+          type="search"
+          class="series-index__search"
+          data-filter-search
+          placeholder="{{ 'series.filter_search_placeholder' | t }}"
+          aria-label="{{ 'series.filter_search_placeholder' | t }}"
+        >
+        <select class="series-index__select" data-filter-publisher aria-label="{{ 'series.filter_publisher' | t }}">
+          <option value="">{{ 'series.filter_all_publishers' | t }}</option>
+        </select>
+        <select class="series-index__select" data-filter-decade aria-label="{{ 'series.filter_decade' | t }}">
+          <option value="">{{ 'series.filter_all_decades' | t }}</option>
+          <option value="1950">1950s</option>
+          <option value="1960">1960s</option>
+          <option value="1970">1970s</option>
+          <option value="1980">1980s</option>
+          <option value="1990">1990s</option>
+          <option value="2000">2000s</option>
+          <option value="2010">2010s</option>
+          <option value="2020">2020s</option>
+        </select>
+        <button type="button" class="series-index__clear" data-filter-clear hidden>{{ 'series.filter_clear' | t }}</button>
+      </div>
+
+      <p class="series-index__status" data-series-status>
+        <span data-status-text></span>
+        <span data-status-spinner class="series-index__spinner" hidden>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="40 20" />
+          </svg>
+        </span>
+      </p>
+
+      <div class="series-index__list" data-series-list>
+        {{ series_rows }}
+      </div>
+
+      <p class="series-index__empty" data-series-no-matches hidden>{{ 'series.no_matches' | t }}</p>
+
+      <div
+        data-load-more-wrapper
+        data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}"
+        hidden
+      ></div>
+    {% else %}
+      <p class="series-index__empty">{{ 'series.empty' | t }}</p>
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% stylesheet %}
+  .series-index {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  @media (min-width: 750px) {
+    .series-index {
+      padding: 32px 48px 64px;
+    }
+  }
+
+  .series-index__header {
+    margin-bottom: 24px;
+  }
+
+  .series-index__title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: 0 0 8px;
+  }
+
+  @media (min-width: 750px) {
+    .series-index__title {
+      font-size: 2rem;
+    }
+  }
+
+  .series-index__intro {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 720px;
+  }
+
+  .series-index__filters {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  @media (min-width: 750px) {
+    .series-index__filters {
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 10px;
+    }
+  }
+
+  .series-index__search,
+  .series-index__select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border: 1px solid #e2e2e4;
+    border-radius: 8px;
+    background-color: var(--color-card-background, #fff);
+    color: inherit;
+    font-family: inherit;
+  }
+
+  .series-index__search:focus,
+  .series-index__select:focus {
+    outline: 2px solid var(--color-foreground, #333);
+    outline-offset: -2px;
+    border-color: transparent;
+  }
+
+  .series-index__clear {
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid #e2e2e4;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: inherit;
+    transition: background-color 0.15s ease;
+  }
+
+  .series-index__clear:hover {
+    background-color: #f0f0f2;
+  }
+
+  .series-index__status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 16px;
+    font-size: 0.85rem;
+    color: #718096;
+  }
+
+  .series-index__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 750px) {
+    .series-index__list {
+      gap: 14px;
+    }
+  }
+
+  .series-index__empty {
+    padding: 40px 16px;
+    text-align: center;
+    color: #718096;
+    font-size: 0.95rem;
+  }
+
+  .series-index__spinner {
+    display: inline-flex;
+    animation: series-index-spin 0.9s linear infinite;
+  }
+
+  @keyframes series-index-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    var section = document.querySelector('[data-series-section]');
+    if (!section) return;
+
+    var list = section.querySelector('[data-series-list]');
+    var wrapper = section.querySelector('[data-load-more-wrapper]');
+    var statusBar = section.querySelector('[data-series-status]');
+    var statusText = section.querySelector('[data-status-text]');
+    var statusSpinner = section.querySelector('[data-status-spinner]');
+    var noMatchesEl = section.querySelector('[data-series-no-matches]');
+    var searchInput = section.querySelector('[data-filter-search]');
+    var publisherSelect = section.querySelector('[data-filter-publisher]');
+    var decadeSelect = section.querySelector('[data-filter-decade]');
+    var clearBtn = section.querySelector('[data-filter-clear]');
+    if (!list || !wrapper) return;
+
+    var nextUrl = wrapper.getAttribute('data-next-url') || '';
+    var totalLoaded = list.querySelectorAll('.scl').length;
+    var seenPublishers = Object.create(null);
+
+    function setStatus(msg, loading) {
+      if (statusText) statusText.textContent = msg;
+      if (statusSpinner) statusSpinner.hidden = !loading;
+    }
+
+    function updatePublisherOptions() {
+      if (!publisherSelect) return;
+      var current = publisherSelect.value;
+      list.querySelectorAll('.scl').forEach(function(el) {
+        var p = el.getAttribute('data-series-publisher');
+        if (p && !seenPublishers[p]) {
+          seenPublishers[p] = true;
+        }
+      });
+      var publishers = Object.keys(seenPublishers).sort(function(a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+      });
+
+      var existing = {};
+      publisherSelect.querySelectorAll('option').forEach(function(opt) {
+        if (opt.value) existing[opt.value] = opt;
+      });
+
+      publishers.forEach(function(p) {
+        if (!existing[p]) {
+          var opt = document.createElement('option');
+          opt.value = p;
+          opt.textContent = p;
+          publisherSelect.appendChild(opt);
+        }
+      });
+
+      if (current) publisherSelect.value = current;
+    }
+
+    function applyFilters() {
+      var q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      var publisher = publisherSelect ? publisherSelect.value : '';
+      var decade = decadeSelect ? parseInt(decadeSelect.value, 10) : 0;
+      var hasFilter = !!(q || publisher || decade);
+
+      var items = list.querySelectorAll('.scl');
+      var visible = 0;
+
+      items.forEach(function(el) {
+        var title = el.getAttribute('data-series-title') || '';
+        var pub = el.getAttribute('data-series-publisher') || '';
+        var startStr = el.getAttribute('data-series-start') || '';
+        var start = parseInt(startStr, 10);
+
+        var match = true;
+        if (q && title.indexOf(q) === -1) match = false;
+        if (publisher && pub !== publisher) match = false;
+        if (decade) {
+          if (isNaN(start) || start < decade || start >= decade + 10) match = false;
+        }
+
+        el.hidden = !match;
+        if (match) visible++;
+      });
+
+      if (clearBtn) clearBtn.hidden = !hasFilter;
+      if (noMatchesEl) noMatchesEl.hidden = visible > 0;
+
+      var msg = visible + ' of ' + totalLoaded + ' series';
+      if (nextUrl) msg = visible + ' shown · loading more…';
+      setStatus(msg, !!nextUrl);
+    }
+
+    function fetchAllPages() {
+      if (!nextUrl) {
+        updatePublisherOptions();
+        applyFilters();
+        return;
+      }
+
+      setStatus(totalLoaded + ' shown · loading more…', true);
+
+      fetch(nextUrl)
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var fetchedList = doc.querySelector('[data-series-list]');
+          var fetchedWrapper = doc.querySelector('[data-load-more-wrapper]');
+
+          if (fetchedList) {
+            fetchedList.querySelectorAll('.scl').forEach(function(el) {
+              list.appendChild(el);
+              totalLoaded++;
+            });
+          }
+
+          nextUrl = fetchedWrapper ? fetchedWrapper.getAttribute('data-next-url') || '' : '';
+
+          updatePublisherOptions();
+          applyFilters();
+          fetchAllPages();
+        })
+        .catch(function() {
+          setStatus(totalLoaded + ' series (some failed to load)', false);
+        });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (publisherSelect) publisherSelect.addEventListener('change', applyFilters);
+    if (decadeSelect) decadeSelect.addEventListener('change', applyFilters);
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function() {
+        if (searchInput) searchInput.value = '';
+        if (publisherSelect) publisherSelect.value = '';
+        if (decadeSelect) decadeSelect.value = '';
+        applyFilters();
+      });
+    }
+
+    updatePublisherOptions();
+    applyFilters();
+    fetchAllPages();
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Series index",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Series"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Collections per fetch",
+      "info": "How many collections are scanned per pagination fetch (not how many series are shown — non-series are filtered out).",
+      "min": 12,
+      "max": 50,
+      "step": 2,
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Series index"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["page"]
+  }
+}
+{% endschema %}

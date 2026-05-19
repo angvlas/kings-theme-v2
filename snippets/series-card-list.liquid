@@ -1,0 +1,258 @@
+{% doc %}
+  Renders a series collection in horizontal list layout with cover image
+  on the left, title + metadata in the middle, and a view-series button
+  on the right.
+
+  @param {collection} series_collection - The series collection to render.
+
+  @example
+  {% render 'series-card-list', series_collection: c %}
+{% enddoc %}
+
+{%- liquid
+  assign first_product = series_collection.products.first
+  assign cover = series_collection.image
+  if cover == blank
+    assign cover = first_product.featured_image
+  endif
+
+  assign series_start = series_collection.metafields.kings.series_start
+  assign series_end = series_collection.metafields.kings.series_end
+
+  assign year_range = ''
+  if series_start != blank and series_end != blank
+    assign year_range = series_start | append: ' – ' | append: series_end
+  elsif series_start != blank
+    assign year_range = 'Started ' | append: series_start
+  elsif series_end != blank
+    assign year_range = 'Ended ' | append: series_end
+  endif
+
+  assign issue_count = series_collection.metafields.kings.total_issues
+  if issue_count == blank
+    assign issue_count = series_collection.products_count
+  endif
+
+  assign publisher = series_collection.metafields.kings.publisher
+  if publisher == blank
+    assign publisher = first_product.vendor
+  endif
+-%}
+
+<div class="scl"
+  data-series-title="{{ series_collection.title | downcase | escape }}"
+  data-series-start="{{ series_start }}"
+  data-series-publisher="{{ publisher | escape }}">
+  <a href="{{ series_collection.url }}" class="scl__image">
+    {% if cover %}
+      {{ cover | image_url: width: 400 | image_tag: loading: 'lazy', alt: series_collection.title }}
+    {% else %}
+      {{ 'collection-1' | placeholder_svg_tag }}
+    {% endif %}
+  </a>
+
+  <div class="scl__body">
+    <a href="{{ series_collection.url }}" class="scl__title">
+      {{ series_collection.title | escape }}
+    </a>
+
+    {% if publisher != blank %}
+      <p class="scl__meta scl__publisher">{{ publisher | escape }}</p>
+    {% endif %}
+
+    {% if year_range != blank %}
+      <p class="scl__meta">{{ year_range }}</p>
+    {% endif %}
+
+    {% if issue_count and issue_count > 0 %}
+      <p class="scl__count">
+        {{ issue_count }} {% if issue_count == 1 %}issue{% else %}issues{% endif %}
+      </p>
+    {% endif %}
+
+    <div class="scl__mobile-action">
+      <a href="{{ series_collection.url }}" class="scl__btn">{{ 'series.view_series' | t }}</a>
+    </div>
+  </div>
+
+  <div class="scl__aside">
+    <a href="{{ series_collection.url }}" class="scl__btn">{{ 'series.view_series' | t }}</a>
+  </div>
+</div>
+
+{% stylesheet %}
+  .scl {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    grid-template-rows: auto;
+    background-color: var(--color-card-background, #fff);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 750px) {
+    .scl {
+      grid-template-columns: 100px 1fr 140px;
+      border-radius: 12px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .scl {
+      grid-template-columns: 160px 1fr 180px;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .scl {
+      grid-template-columns: 200px 1fr 200px;
+    }
+  }
+
+  .scl__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  @media (min-width: 750px) {
+    .scl__image {
+      grid-row: 1 / 2;
+      padding: 12px;
+    }
+  }
+
+  @media (min-width: 990px) {
+    .scl__image {
+      padding: 16px;
+    }
+  }
+
+  .scl__image img,
+  .scl__image svg {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .scl__image:hover img {
+    transform: scale(1.05);
+  }
+
+  .scl__body {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  @media (min-width: 750px) {
+    .scl__body {
+      padding: 20px 24px;
+      grid-row: 1 / 2;
+    }
+  }
+
+  .scl__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    text-decoration: none;
+    color: inherit;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  @media (min-width: 750px) {
+    .scl__title {
+      font-size: 1.05rem;
+    }
+  }
+
+  .scl__title:hover {
+    text-decoration: underline;
+  }
+
+  .scl__meta {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 2px;
+  }
+
+  .scl__count {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #9b9ba0;
+  }
+
+  .scl__mobile-action {
+    margin-top: 10px;
+  }
+
+  @media (min-width: 750px) {
+    .scl__mobile-action {
+      display: none;
+    }
+  }
+
+  .scl__aside {
+    display: none;
+  }
+
+  @media (min-width: 750px) {
+    .scl__aside {
+      display: flex;
+      grid-column: 3 / 4;
+      grid-row: 1 / 2;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      padding: 16px;
+      border-left: 1px solid #e2e2e4;
+      overflow: hidden;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .scl__aside {
+      padding: 20px 24px;
+    }
+  }
+
+  .scl__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 8px 14px;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    background-color: var(--color-foreground, #333);
+    color: var(--color-background, #fff);
+    white-space: nowrap;
+  }
+
+  @media (min-width: 750px) {
+    .scl__btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+  }
+
+  .scl__btn:hover { opacity: 0.9; }
+{% endstylesheet %}

@@ -171,6 +171,18 @@
   "collections": {
     "title": "Collections"
   },
+  "series": {
+    "view_series": "View series",
+    "load_more": "Load more series",
+    "empty": "No series found.",
+    "no_matches": "No series match these filters.",
+    "filter_search_placeholder": "Search series…",
+    "filter_publisher": "Publisher",
+    "filter_all_publishers": "All publishers",
+    "filter_decade": "Decade",
+    "filter_all_decades": "All decades",
+    "filter_clear": "Clear filters"
+  },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
     "card": "Gift card",
