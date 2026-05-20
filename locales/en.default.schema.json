@@ -236,6 +236,13 @@
       "name": "Feature cards",
       "item": "Feature"
     },
+    "shortcut_buttons": {
+      "name": "Shortcut buttons",
+      "item": "Button",
+      "border_color": "Border colour",
+      "padding_top": "Padding top",
+      "padding_bottom": "Padding bottom"
+    },
     "steps_list": {
       "name": "Steps list",
       "item": "Step"
