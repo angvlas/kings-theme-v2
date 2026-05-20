@@ -1,76 +1,49 @@
 {% doc %}
-  Renders a horizontal scrollable series gallery inline within a section.
+  Renders a horizontal scrollable series gallery centered on the current product.
+
+  The current product is highlighted and centered in a 30-item window. For
+  series with more than 50 products, JS lazily fetches additional paginate
+  pages via the Section Rendering API.
 
   @param {collection} series_collection - The series collection
   @param {product} current_product - The currently viewed product
+  @param {string} [section_id] - The host section's ID, used for Section Rendering API fetches
 
   @example
-  {% render 'series-gallery-inline', series_collection: sc, current_product: product %}
+  {% render 'series-gallery-inline', series_collection: sc, current_product: product, section_id: section.id %}
 {% enddoc %}
 
-{%- liquid
-  assign series_window = 30
-  assign series_context = 10
-  assign current_index = 0
-  assign series_total = series_collection.products_count
-
-  for p in series_collection.products limit: 50
-    if p.id == current_product.id
-      assign current_index = forloop.index0
-      break
-    endif
-  endfor
-
-  assign window_start = current_index | minus: series_context
-  if window_start < 0
-    assign window_start = 0
-  endif
-
-  assign window_end = window_start | plus: series_window | minus: 1
-  assign max_end = series_total | minus: 1
-  if max_end > 49
-    assign max_end = 49
-  endif
-  if window_end > max_end
-    assign window_end = max_end
-    assign window_start = window_end | minus: series_window | plus: 1
-    if window_start < 0
-      assign window_start = 0
-    endif
-  endif
--%}
-
-<div class="series-gallery-inline" data-series-gallery>
+<div
+  class="series-gallery-inline"
+  data-series-gallery
+  data-series-handle="{{ series_collection.handle | escape }}"
+  data-current-product-id="{{ current_product.id }}"
+  data-current-product-handle="{{ current_product.handle | escape }}"
+  data-series-total="{{ series_collection.products_count }}"
+  data-section-id="{{ section_id | default: '' | escape }}"
+  data-window-size="31"
+>
   <p class="series-gallery-inline__heading">{{ 'product.other_issues' | t }}</p>
   <div class="series-gallery-inline__row">
-  <button class="series-gallery-inline__arrow" type="button" data-series-prev aria-label="{{ 'sections.series_gallery.previous' | t }}">
-    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
-  <div class="series-gallery-inline__slider" data-series-slider>
-    <div class="series-gallery-inline__track" data-series-track>
-      {% paginate series_collection.products by 50 %}
-        {% for p in series_collection.products %}
-          {%- liquid
-            assign idx = forloop.index0
-            if idx < window_start
-              continue
-            endif
-            if idx > window_end
-              break
-            endif
-          -%}
-          {% render 'series-thumbnail', series_product: p, current_product: current_product %}
-        {% endfor %}
-      {% endpaginate %}
+    <button class="series-gallery-inline__arrow" type="button" data-series-prev aria-label="{{ 'sections.series_gallery.previous' | t }}">
+      <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="series-gallery-inline__slider" data-series-slider>
+      <div class="series-gallery-inline__track" data-series-track data-page-loaded="1">
+        {% paginate series_collection.products by 50 %}
+          {% for p in series_collection.products %}
+            {% render 'series-thumbnail', series_product: p, current_product: current_product %}
+          {% endfor %}
+        {% endpaginate %}
+      </div>
     </div>
-  </div>
-  <button class="series-gallery-inline__arrow" type="button" data-series-next aria-label="{{ 'sections.series_gallery.next' | t }}">
-    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
+    <button class="series-gallery-inline__arrow" type="button" data-series-next aria-label="{{ 'sections.series_gallery.next' | t }}">
+      <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
   </div>
 </div>
 
@@ -130,31 +103,74 @@
 
 {% javascript %}
   (function() {
+    var WINDOW_SIZE = 31;
+    var HALF_BEFORE = 15;
+
     document.querySelectorAll('.series-gallery-inline').forEach(function(gallery) {
       var slider = gallery.querySelector('[data-series-slider]');
+      var track = gallery.querySelector('[data-series-track]');
       var prevBtn = gallery.querySelector('[data-series-prev]');
       var nextBtn = gallery.querySelector('[data-series-next]');
-      if (!slider) return;
+      if (!slider || !track) return;
 
-      function updateArrows() {
-        var atStart = slider.scrollLeft <= 1;
-        var atEnd = slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 1;
-        if (prevBtn) prevBtn.disabled = atStart;
-        if (nextBtn) nextBtn.disabled = atEnd;
+      var currentId = gallery.dataset.currentProductId;
+      var currentHandle = gallery.dataset.currentProductHandle;
+      var seriesTotal = parseInt(gallery.dataset.seriesTotal, 10) || 0;
+      var sectionId = gallery.dataset.sectionId;
+      var windowSize = parseInt(gallery.dataset.windowSize, 10) || WINDOW_SIZE;
+
+      function getThumbs() {
+        return Array.from(track.querySelectorAll('.series-thumb'));
       }
 
-      if (prevBtn) prevBtn.addEventListener('click', function() {
-        slider.scrollTo({ left: slider.scrollLeft - slider.offsetWidth * 0.6, behavior: 'smooth' });
-      });
-      if (nextBtn) nextBtn.addEventListener('click', function() {
-        slider.scrollTo({ left: slider.scrollLeft + slider.offsetWidth * 0.6, behavior: 'smooth' });
-      });
+      function findCurrentIndex(thumbs) {
+        for (var i = 0; i < thumbs.length; i++) {
+          if (thumbs[i].dataset.productId === currentId) return i;
+        }
+        return -1;
+      }
 
-      slider.addEventListener('scroll', updateArrows);
+      function computeWindow(currentIdx, total) {
+        var start = currentIdx - HALF_BEFORE;
+        var end = start + windowSize - 1;
+        if (start < 0) {
+          start = 0;
+          end = Math.min(total - 1, windowSize - 1);
+        }
+        if (end > total - 1) {
+          end = total - 1;
+          start = Math.max(0, end - windowSize + 1);
+        }
+        return { start: start, end: end };
+      }
 
-      function centerActive() {
-        var active = gallery.querySelector('.series-thumb--active');
-        if (!active) { updateArrows(); return; }
+      function applyWindow() {
+        var thumbs = getThumbs();
+        var currentIdx = findCurrentIndex(thumbs);
+        if (currentIdx === -1) {
+          var range = { start: 0, end: Math.min(thumbs.length - 1, windowSize - 1) };
+          showRange(thumbs, range);
+          return;
+        }
+        var range2 = computeWindow(currentIdx, thumbs.length);
+        showRange(thumbs, range2);
+        centerScroll();
+      }
+
+      function showRange(thumbs, range) {
+        for (var i = 0; i < thumbs.length; i++) {
+          if (i >= range.start && i <= range.end) {
+            thumbs[i].classList.remove('series-thumb--hidden');
+          } else {
+            thumbs[i].classList.add('series-thumb--hidden');
+          }
+        }
+        updateArrows();
+      }
+
+      function centerScroll() {
+        var active = gallery.querySelector('.series-thumb--active:not(.series-thumb--hidden)');
+        if (!active) return;
         var sliderRect = slider.getBoundingClientRect();
         var activeRect = active.getBoundingClientRect();
         var activeCenter = activeRect.left + activeRect.width / 2;
@@ -163,7 +179,90 @@
         updateArrows();
       }
 
-      window.addEventListener('load', centerActive);
+      function updateArrows() {
+        var atStart = slider.scrollLeft <= 1;
+        var atEnd = slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 1;
+        if (prevBtn) prevBtn.disabled = atStart;
+        if (nextBtn) nextBtn.disabled = atEnd;
+      }
+
+      function fetchPage(pageNum) {
+        if (!sectionId) return Promise.resolve(null);
+        var url = '/products/' + encodeURIComponent(currentHandle) + '?page=' + pageNum + '&section_id=' + encodeURIComponent(sectionId);
+        return fetch(url, { credentials: 'same-origin' }).then(function(resp) {
+          if (!resp.ok) return null;
+          return resp.text();
+        }).then(function(html) {
+          if (!html) return null;
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(html, 'text/html');
+          return doc.querySelector('[data-series-track]');
+        }).catch(function() { return null; });
+      }
+
+      function loadedPages() {
+        return (track.dataset.pageLoaded || '1').split(',').map(function(s) { return parseInt(s, 10); });
+      }
+
+      function markPageLoaded(pageNum) {
+        var pages = loadedPages();
+        if (pages.indexOf(pageNum) === -1) pages.push(pageNum);
+        track.dataset.pageLoaded = pages.join(',');
+      }
+
+      function mergePage(otherTrack, pageNum) {
+        if (!otherTrack) return;
+        var newThumbs = otherTrack.querySelectorAll('.series-thumb');
+        var existingIds = {};
+        getThumbs().forEach(function(t) { existingIds[t.dataset.productId] = true; });
+        var pageStartIndex = (pageNum - 1) * 50;
+        var frag = document.createDocumentFragment();
+        newThumbs.forEach(function(t) {
+          if (existingIds[t.dataset.productId]) return;
+          frag.appendChild(t);
+        });
+        if (pageNum > loadedPages()[0]) {
+          track.appendChild(frag);
+        } else {
+          track.insertBefore(frag, track.firstChild);
+        }
+        markPageLoaded(pageNum);
+      }
+
+      function ensureLoaded() {
+        var thumbs = getThumbs();
+        var currentIdx = findCurrentIndex(thumbs);
+
+        var needPage2 = false;
+        if (seriesTotal > 50) {
+          if (currentIdx === -1) {
+            needPage2 = true;
+          } else {
+            var range = computeWindow(currentIdx, seriesTotal);
+            if (range.end >= 50) needPage2 = true;
+          }
+        }
+
+        var pages = loadedPages();
+        if (needPage2 && pages.indexOf(2) === -1) {
+          return fetchPage(2).then(function(other) {
+            mergePage(other, 2);
+            applyWindow();
+          });
+        }
+        applyWindow();
+        return Promise.resolve();
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', function() {
+        slider.scrollTo({ left: slider.scrollLeft - slider.offsetWidth * 0.6, behavior: 'smooth' });
+      });
+      if (nextBtn) nextBtn.addEventListener('click', function() {
+        slider.scrollTo({ left: slider.scrollLeft + slider.offsetWidth * 0.6, behavior: 'smooth' });
+      });
+      slider.addEventListener('scroll', updateArrows);
+
+      ensureLoaded();
     });
   })();
 {% endjavascript %}

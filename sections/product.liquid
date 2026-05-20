@@ -394,7 +394,7 @@
             -%}
             {% if sc %}
               <div class="product-page__block" {{ block.shopify_attributes }}>
-                {% render 'series-gallery-inline', series_collection: sc, current_product: product %}
+                {% render 'series-gallery-inline', series_collection: sc, current_product: product, section_id: section.id %}
               </div>
             {% endif %}
 

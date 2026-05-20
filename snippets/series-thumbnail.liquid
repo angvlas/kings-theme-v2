@@ -19,6 +19,7 @@
 <a
   href="{{ series_product.url }}"
   class="series-thumb{% if is_current %} series-thumb--active{% endif %}{% unless series_product.available %} series-thumb--sold-out{% endunless %}"
+  data-product-id="{{ series_product.id }}"
   {% if is_current %}aria-current="page"{% endif %}
   title="{{ series_product.title | escape }}"
 >
@@ -53,6 +54,7 @@
     transition: border-color 0.15s ease, transform 0.15s ease;
     text-decoration: none;
   }
+  .series-thumb--hidden { display: none; }
   .series-thumb__image { aspect-ratio: 2 / 3; background: #f7f7f8; opacity: 0.85; transition: filter 0.2s ease, opacity 0.2s ease; overflow: hidden; }
   .series-thumb:hover { border-color: #e2e2e4; transform: translateY(-2px); }
   .series-thumb:hover .series-thumb__image { opacity: 1; }
