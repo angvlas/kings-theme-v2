@@ -85,6 +85,29 @@
           "storefront_layout_drawer_position": "left",
           "storefront_layout_as_section_page": ""
         }
+      },
+      "8837987693456358955": {
+        "type": "shopify://apps/google-reviews/blocks/sticky-compact-widget-block_embedded/8b378e9e-c56d-47ce-a754-feca5e0caf59",
+        "disabled": false,
+        "settings": {
+          "contentIndex": "1",
+          "variant": "rating",
+          "customContentIndex": 31,
+          "font": "default",
+          "themeId": "dark",
+          "ratingType": "stars",
+          "emojiType": "0",
+          "cardColor": "#F3F6F9",
+          "starsColor": "#FBB000",
+          "textColor": "#404040",
+          "transparent": 1,
+          "solidShadow": false,
+          "verticalPositionId": "bottom",
+          "horizontalPositionId": "left",
+          "minimize": true,
+          "delay": 5,
+          "trustText": "Our customers have rated us"
+        }
       }
     }
   }
