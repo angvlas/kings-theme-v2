@@ -60,9 +60,10 @@
       "field_collection_type_placeholder": "Select a type",
       "type_comics": "Comics",
       "type_graphic_novels": "Graphic novels",
-      "type_manga": "Manga",
-      "type_collectibles": "Collectibles",
-      "type_mixed": "Mixed",
+      "type_toys": "Toys",
+      "type_trading_cards": "Trading cards",
+      "type_deceased_estates": "Deceased estates",
+      "type_large_collections": "Large collections",
       "field_description": "Description",
       "field_description_placeholder": "Tell us about your collection — what titles, how many issues, approximate age and condition..."
     }
