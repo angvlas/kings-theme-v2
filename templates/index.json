@@ -33,11 +33,23 @@
             "text_color": "#222222",
             "border_color": "#e2e2e4"
           }
+        },
+        "button_BTWh6P": {
+          "type": "button",
+          "settings": {
+            "label": "Membership",
+            "url": "shopify://products/premier-club-2017-gold",
+            "icon": "fa-solid fa-crown",
+            "background_color": "#f0f0f2",
+            "text_color": "#222222",
+            "border_color": "#e2e2e4"
+          }
         }
       },
       "block_order": [
         "button_6enrVb",
-        "button_MhJC3U"
+        "button_MhJC3U",
+        "button_BTWh6P"
       ],
       "name": "t:sections.shortcut_buttons.name",
       "settings": {
