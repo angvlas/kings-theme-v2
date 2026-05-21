@@ -182,7 +182,12 @@
     "filter_brand": "Brand",
     "filter_decade": "Decade",
     "filter_loading": "Loading…",
-    "filter_clear": "Clear all"
+    "filter_clear": "Clear all",
+    "view": {
+      "label": "View",
+      "grid": "Grid view",
+      "list": "List view"
+    }
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",

@@ -19,11 +19,18 @@
   {% paginate collections by section.settings.per_page %}
     {%- liquid
       assign series_rendered = 0
-      capture series_rows
+      capture series_rows_list
         for c in collections
           if c.metafields.kings.is_this_a_series.value == true
             assign series_rendered = series_rendered | plus: 1
             render 'series-card-list', series_collection: c
+          endif
+        endfor
+      endcapture
+      capture series_rows_grid
+        for c in collections
+          if c.metafields.kings.is_this_a_series.value == true
+            render 'series-card-grid', series_collection: c
           endif
         endfor
       endcapture
@@ -44,6 +51,36 @@
             placeholder="{{ 'series.filter_search_placeholder' | t }}"
             aria-label="{{ 'series.filter_search_placeholder' | t }}"
           >
+        </div>
+
+        <div class="series-index__view-toggle" role="radiogroup" aria-label="{{ 'series.view.label' | t }}">
+          <button
+            type="button"
+            class="series-index__view-button series-index__view-button--active"
+            data-view="grid"
+            aria-label="{{ 'series.view.grid' | t }}"
+            aria-pressed="true"
+          >
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <rect x="1" y="1" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="10.5" y="1" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="1" y="10.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="10.5" y="10.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="series-index__view-button"
+            data-view="list"
+            aria-label="{{ 'series.view.list' | t }}"
+            aria-pressed="false"
+          >
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <rect x="1" y="1" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="1" y="7" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="1" y="13" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -105,8 +142,12 @@
             </span>
           </p>
 
-          <div class="series-index__list" data-series-list>
-            {{ series_rows }}
+          <div class="series-index__grid" data-series-grid data-view-target="grid">
+            {{ series_rows_grid }}
+          </div>
+
+          <div class="series-index__list" data-series-list data-view-target="list" hidden>
+            {{ series_rows_list }}
           </div>
 
           <p class="series-index__empty" data-series-no-matches hidden>{{ 'series.no_matches' | t }}</p>
@@ -164,11 +205,51 @@
   /* Search bar — full width across the top */
   .series-index__search-bar {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .series-index__search-wrap {
     position: relative;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* View toggle (grid/list) */
+  .series-index__view-toggle {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 44px;
+    background-color: #f7f7f8;
+    border-radius: 10px;
+    padding: 4px;
+    gap: 2px;
+  }
+
+  .series-index__view-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 100%;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #9b9ba0;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .series-index__view-button:hover {
+    color: var(--color-foreground, #333);
+  }
+
+  .series-index__view-button--active {
+    background-color: #fff;
+    color: var(--color-foreground, #333);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 
   .series-index__search-icon {
@@ -418,9 +499,58 @@
     gap: 12px;
   }
 
+  .series-index__list[hidden] {
+    display: none;
+  }
+
   @media (min-width: 750px) {
     .series-index__list {
       gap: 14px;
+    }
+  }
+
+  /* Grid view */
+  .series-index__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .series-index__grid[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 550px) {
+    .series-index__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+  }
+
+  @media (min-width: 750px) {
+    .series-index__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media (min-width: 990px) {
+    .series-index__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .series-index__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .series-index__grid {
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 
@@ -448,13 +578,15 @@
 
 {% javascript %}
   (function() {
-    var CACHE_KEY = 'kings-series-index-v2';
+    var CACHE_KEY = 'kings-series-index-v3';
+    var VIEW_KEY = 'kings-series-index-view';
     var CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
     var section = document.querySelector('[data-series-section]');
     if (!section) return;
 
     var list = section.querySelector('[data-series-list]');
+    var grid = section.querySelector('[data-series-grid]');
     var wrapper = section.querySelector('[data-load-more-wrapper]');
     var statusText = section.querySelector('[data-status-text]');
     var statusSpinner = section.querySelector('[data-status-spinner]');
@@ -464,7 +596,7 @@
     var brandEmpty = section.querySelector('[data-brand-empty]');
     var decadeList = section.querySelector('[data-decade-list]');
     var clearBtn = section.querySelector('[data-filter-clear]');
-    if (!list || !wrapper) return;
+    if (!list || !grid || !wrapper) return;
 
     var totalPages = parseInt(wrapper.getAttribute('data-total-pages'), 10) || 1;
     var currentPage = parseInt(wrapper.getAttribute('data-current-page'), 10) || 1;
@@ -485,7 +617,7 @@
         var raw = localStorage.getItem(CACHE_KEY);
         if (!raw) return null;
         var data = JSON.parse(raw);
-        if (!data || !data.html || data.v !== 2) return null;
+        if (!data || !data.listHtml || !data.gridHtml || data.v !== 3) return null;
         if (Date.now() - data.timestamp > CACHE_TTL_MS) return null;
         return data;
       } catch (e) { return null; }
@@ -493,17 +625,21 @@
 
     function writeCache() {
       try {
-        var items = list.querySelectorAll('.scl');
-        var html = '';
+        var listHtml = '';
+        var gridHtml = '';
         var ids = [];
-        items.forEach(function(el) {
-          html += el.outerHTML;
+        list.querySelectorAll('.scl').forEach(function(el) {
+          listHtml += el.outerHTML;
           ids.push(getHandle(el));
         });
+        grid.querySelectorAll('.scg').forEach(function(el) {
+          gridHtml += el.outerHTML;
+        });
         localStorage.setItem(CACHE_KEY, JSON.stringify({
-          v: 2,
+          v: 3,
           timestamp: Date.now(),
-          html: html,
+          listHtml: listHtml,
+          gridHtml: gridHtml,
           ids: ids
         }));
       } catch (e) { /* localStorage full or disabled */ }
@@ -513,7 +649,8 @@
     var cache = readCache();
     var hasServerFirstPage = true;
     if (cache) {
-      list.innerHTML = cache.html;
+      list.innerHTML = cache.listHtml;
+      grid.innerHTML = cache.gridHtml;
       hasServerFirstPage = false;
     }
 
@@ -605,6 +742,22 @@
       return String(v).replace(/(["\\])/g, '\\$1');
     }
 
+    function matchesByHandle(handle, q, brands, decades, item) {
+      var title = item.getAttribute('data-series-title') || '';
+      var brand = item.getAttribute('data-series-brand') || '';
+      var startStr = item.getAttribute('data-series-start') || '';
+      var start = parseInt(startStr, 10);
+
+      if (q && title.indexOf(q) === -1) return false;
+      if (brands.length && brands.indexOf(brand) === -1) return false;
+      if (decades.length) {
+        if (isNaN(start)) return false;
+        var seriesDecade = Math.floor(start / 10) * 10;
+        if (decades.indexOf(seriesDecade) === -1) return false;
+      }
+      return true;
+    }
+
     function applyFilters() {
       var q = searchInput ? searchInput.value.trim().toLowerCase() : '';
       var brands = getCheckedValues(brandList, 'input[data-filter-brand]');
@@ -613,29 +766,17 @@
       });
       var hasFilter = !!(q || brands.length || decades.length);
 
-      var items = list.querySelectorAll('.scl');
       var visible = 0;
 
-      items.forEach(function(el) {
-        var title = el.getAttribute('data-series-title') || '';
-        var brand = el.getAttribute('data-series-brand') || '';
-        var startStr = el.getAttribute('data-series-start') || '';
-        var start = parseInt(startStr, 10);
-
-        var match = true;
-        if (q && title.indexOf(q) === -1) match = false;
-        if (brands.length && brands.indexOf(brand) === -1) match = false;
-        if (decades.length) {
-          if (isNaN(start)) {
-            match = false;
-          } else {
-            var seriesDecade = Math.floor(start / 10) * 10;
-            if (decades.indexOf(seriesDecade) === -1) match = false;
-          }
-        }
-
+      list.querySelectorAll('.scl').forEach(function(el) {
+        var match = matchesByHandle(getHandle(el), q, brands, decades, el);
         el.hidden = !match;
         if (match) visible++;
+      });
+
+      grid.querySelectorAll('.scg').forEach(function(el) {
+        var match = matchesByHandle(getHandle(el), q, brands, decades, el);
+        el.hidden = !match;
       });
 
       if (clearBtn) clearBtn.hidden = !hasFilter;
@@ -659,16 +800,19 @@
         .then(function(html) {
           var doc = new DOMParser().parseFromString(html, 'text/html');
           var fetchedList = doc.querySelector('[data-series-list]');
-          var items = [];
+          var fetchedGrid = doc.querySelector('[data-series-grid]');
+          var listItems = [];
+          var gridItems = [];
           if (fetchedList) {
-            fetchedList.querySelectorAll('.scl').forEach(function(el) {
-              items.push(el);
-            });
+            fetchedList.querySelectorAll('.scl').forEach(function(el) { listItems.push(el); });
           }
-          return { page: pageNum, items: items };
+          if (fetchedGrid) {
+            fetchedGrid.querySelectorAll('.scg').forEach(function(el) { gridItems.push(el); });
+          }
+          return { page: pageNum, listItems: listItems, gridItems: gridItems };
         })
         .catch(function() {
-          return { page: pageNum, items: [], error: true };
+          return { page: pageNum, listItems: [], gridItems: [], error: true };
         });
     }
 
@@ -697,24 +841,31 @@
         if (hasServerFirstPage) {
           /* Cache miss path — append fetched pages after server's page 1 */
           results.forEach(function(r) {
-            r.items.forEach(function(el) {
+            r.listItems.forEach(function(el) {
               list.appendChild(el);
               totalLoaded++;
             });
+            r.gridItems.forEach(function(el) {
+              grid.appendChild(el);
+            });
           });
         } else {
-          /* Cache hit path — build canonical fresh list, swap only if different */
-          var freshItems = [];
+          /* Cache hit path — build canonical fresh lists, swap only if different */
+          var freshListItems = [];
+          var freshGridItems = [];
           results.forEach(function(r) {
-            r.items.forEach(function(el) { freshItems.push(el); });
+            r.listItems.forEach(function(el) { freshListItems.push(el); });
+            r.gridItems.forEach(function(el) { freshGridItems.push(el); });
           });
-          var freshIds = freshItems.map(getHandle);
+          var freshIds = freshListItems.map(getHandle);
           var currentIds = getCurrentHandles();
 
           if (freshIds.join('|') !== currentIds.join('|')) {
             list.innerHTML = '';
-            freshItems.forEach(function(el) { list.appendChild(el); });
-            totalLoaded = freshItems.length;
+            grid.innerHTML = '';
+            freshListItems.forEach(function(el) { list.appendChild(el); });
+            freshGridItems.forEach(function(el) { grid.appendChild(el); });
+            totalLoaded = freshListItems.length;
           }
         }
 
@@ -728,6 +879,28 @@
         applyFilters();
       });
     }
+
+    function setView(view) {
+      var isList = view === 'list';
+      grid.hidden = isList;
+      list.hidden = !isList;
+      section.querySelectorAll('[data-view]').forEach(function(btn) {
+        var active = btn.getAttribute('data-view') === view;
+        btn.classList.toggle('series-index__view-button--active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      try { localStorage.setItem(VIEW_KEY, view); } catch (e) {}
+    }
+
+    var savedView = 'grid';
+    try { savedView = localStorage.getItem(VIEW_KEY) || 'grid'; } catch (e) {}
+    if (savedView === 'list') setView('list');
+
+    section.querySelectorAll('[data-view]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        setView(this.getAttribute('data-view'));
+      });
+    });
 
     if (searchInput) searchInput.addEventListener('input', applyFilters);
     if (decadeList) {
