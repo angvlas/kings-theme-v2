@@ -67,7 +67,7 @@
           "settings": {
             "image": "shopify://shop_images/Doomquest__1.png",
             "mobile_image": "shopify://shop_images/m_Doomquest__1.png",
-            "link": "https://kingscomics.com/search?type=product&q=Absolute+Green+Arrow+%282026%29+%231",
+            "link": "https://kingscomics.com/search?q=Doomquest+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -78,7 +78,7 @@
           "settings": {
             "image": "shopify://shop_images/JLA_Avengers_Facsimile_Ed.png",
             "mobile_image": "shopify://shop_images/m_JLA_Avengers_Facsimile_Ed.png",
-            "link": "https://kingscomics.com/search?type=product&q=Ultimate+Impact+Reborn+%282026%29+%231",
+            "link": "https://kingscomics.com/search?q=JLA+AVENGERS+%282003%29+%231+FACSIMILE+EDITION+%282026%29&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -89,7 +89,7 @@
           "settings": {
             "image": "shopify://shop_images/Green_Arrow_by_Jeff_Lemire.png",
             "mobile_image": "shopify://shop_images/m_Green_Arrow_by_Jeff_Lemire.png",
-            "link": "https://kingscomics.com/search?type=product&q=Odin+%282026%29+%231",
+            "link": "https://kingscomics.com/products/green-arrow-by-jeff-lemire-and-andrea-sorrentino-the-deluxe-edition-hc-2026-edition?_pos=1&_psq=GREEN+ARROW+BY+JEFF&_ss=e&_v=1.0",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -100,7 +100,7 @@
           "settings": {
             "image": "shopify://shop_images/Star_Trek_Celebrations_2026tif.png",
             "mobile_image": "shopify://shop_images/m_Star_Trek_Celebrations_2026tif.png",
-            "link": "",
+            "link": "https://kingscomics.com/search?q=STAR+TREK+CELEBRATIONS+%282026%29&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -111,7 +111,7 @@
           "settings": {
             "image": "shopify://shop_images/BRZRKR_Light_Draws_Breath__1.png",
             "mobile_image": "shopify://shop_images/m_BRZRKR_Light_Draws_Breath__1.png",
-            "link": "https://kingscomics.com/search?type=product&q=Zorro+%282026%29+%231",
+            "link": "https://kingscomics.com/search?q=BRZRKR+LIGHT+DRAWS+BREATH+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -122,7 +122,7 @@
           "settings": {
             "image": "shopify://shop_images/Superman_Father_of_Tomorrow.png",
             "mobile_image": "shopify://shop_images/m_Superman_Father_of_Tomorrow.png",
-            "link": "https://kingscomics.com/products/gotham-central-tp-dc-compact-comics-edition?_pos=2&_psq=Gotham+Central&_ss=e&_v=1.0",
+            "link": "https://kingscomics.com/search?q=SUPERMAN+FATHER+OF+TOMORROW+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
