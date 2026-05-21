@@ -65,8 +65,8 @@
         "slide_nRXwzd": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Absolute_Green_Arrow_1.png",
-            "mobile_image": "shopify://shop_images/m_Absolute_Green_Arrow_1.png",
+            "image": "shopify://shop_images/Doomquest__1.png",
+            "mobile_image": "shopify://shop_images/m_Doomquest__1.png",
             "link": "https://kingscomics.com/search?type=product&q=Absolute+Green+Arrow+%282026%29+%231",
             "heading": "",
             "subheading": "",
@@ -76,8 +76,8 @@
         "slide_N3dXqN": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Ultimate_Impact_Reborn__1.png",
-            "mobile_image": "shopify://shop_images/m_Ultimate_Impact_Reborn__1.png",
+            "image": "shopify://shop_images/JLA_Avengers_Facsimile_Ed.png",
+            "mobile_image": "shopify://shop_images/m_JLA_Avengers_Facsimile_Ed.png",
             "link": "https://kingscomics.com/search?type=product&q=Ultimate+Impact+Reborn+%282026%29+%231",
             "heading": "",
             "subheading": "",
@@ -87,9 +87,20 @@
         "slide_FjNJet": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Odin__1.png",
-            "mobile_image": "shopify://shop_images/m_Odin__1.png",
+            "image": "shopify://shop_images/Green_Arrow_by_Jeff_Lemire.png",
+            "mobile_image": "shopify://shop_images/m_Green_Arrow_by_Jeff_Lemire.png",
             "link": "https://kingscomics.com/search?type=product&q=Odin+%282026%29+%231",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
+        "slide_eiGAej": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Star_Trek_Celebrations_2026tif.png",
+            "mobile_image": "shopify://shop_images/m_Star_Trek_Celebrations_2026tif.png",
+            "link": "",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -98,8 +109,8 @@
         "slide_DWjCc8": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Zorro__1.png",
-            "mobile_image": "shopify://shop_images/m_Zorro__1.png",
+            "image": "shopify://shop_images/BRZRKR_Light_Draws_Breath__1.png",
+            "mobile_image": "shopify://shop_images/m_BRZRKR_Light_Draws_Breath__1.png",
             "link": "https://kingscomics.com/search?type=product&q=Zorro+%282026%29+%231",
             "heading": "",
             "subheading": "",
@@ -109,8 +120,8 @@
         "slide_enLH7L": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Gotham_Central_Compact_b32b765a-b87f-484d-92d9-0959bfb99bb4.png",
-            "mobile_image": "shopify://shop_images/m_Gotham_Central_Compact_682fd7fe-a774-487f-948a-af6b7a0a58b7.png",
+            "image": "shopify://shop_images/Superman_Father_of_Tomorrow.png",
+            "mobile_image": "shopify://shop_images/m_Superman_Father_of_Tomorrow.png",
             "link": "https://kingscomics.com/products/gotham-central-tp-dc-compact-comics-edition?_pos=2&_psq=Gotham+Central&_ss=e&_v=1.0",
             "heading": "",
             "subheading": "",
@@ -119,6 +130,7 @@
         },
         "slide_1": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/Of_the_Earth__1.png",
             "mobile_image": "shopify://shop_images/m_Of_the_Earth__1.png",
@@ -133,6 +145,7 @@
         "slide_nRXwzd",
         "slide_N3dXqN",
         "slide_FjNJet",
+        "slide_eiGAej",
         "slide_DWjCc8",
         "slide_enLH7L",
         "slide_1"
