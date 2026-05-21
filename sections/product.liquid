@@ -86,18 +86,44 @@
   <div class="product-page__grid">
     <div class="product-page__media">
       {% if product.images.size > 1 %}
-        <div class="product-page__thumbs" data-thumbs>
-          {% for image in product.images %}
-            <button
-              type="button"
-              class="product-page__thumb{% if image == current_variant.featured_image or image == product.featured_image and forloop.first %} product-page__thumb--active{% endif %}"
-              data-thumb
-              data-thumb-src="{{ image | image_url: width: 800 }}"
-              aria-label="{{ 'product.image' | t }} {{ forloop.index }}"
-            >
-              {{ image | image_url: width: 100 | image_tag: alt: product.title, loading: 'lazy' }}
-            </button>
-          {% endfor %}
+        <div class="product-page__thumbs-carousel" data-thumbs-carousel>
+          <button
+            type="button"
+            class="product-page__thumbs-arrow product-page__thumbs-arrow--prev"
+            data-thumbs-prev
+            aria-label="{{ 'product.previous_image' | t }}"
+            hidden
+          >
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12.5 4L6.5 10L12.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="product-page__thumbs" data-thumbs>
+            {% for image in product.images %}
+              <button
+                type="button"
+                class="product-page__thumb{% if image == current_variant.featured_image or image == product.featured_image and forloop.first %} product-page__thumb--active{% endif %}"
+                data-thumb
+                data-thumb-src="{{ image | image_url: width: 800 }}"
+                aria-label="{{ 'product.image' | t }} {{ forloop.index }}"
+              >
+                {{ image | image_url: width: 100 | image_tag: alt: product.title, loading: 'lazy' }}
+              </button>
+            {% endfor %}
+          </div>
+
+          <button
+            type="button"
+            class="product-page__thumbs-arrow product-page__thumbs-arrow--next"
+            data-thumbs-next
+            aria-label="{{ 'product.next_image' | t }}"
+            hidden
+          >
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
       {% endif %}
 
@@ -812,12 +838,32 @@
     opacity: 0.3;
   }
 
+  /* Thumb carousel wrapper */
+  .product-page__thumbs-carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  @media (min-width: 750px) {
+    .product-page__thumbs-carousel {
+      flex-direction: column;
+      align-self: stretch;
+      max-height: var(--hero-h, 500px);
+    }
+  }
+
   .product-page__thumbs {
     display: flex;
     gap: 8px;
     overflow-x: auto;
     scrollbar-width: none;
-    flex-shrink: 0;
+    flex: 1;
+    min-width: 0;
+    scroll-behavior: smooth;
   }
 
   .product-page__thumbs::-webkit-scrollbar {
@@ -829,7 +875,69 @@
       flex-direction: column;
       overflow-x: visible;
       overflow-y: auto;
+      min-height: 0;
       max-height: 100%;
+    }
+  }
+
+  /* Thumb carousel arrows */
+  .product-page__thumbs-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #333;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+    padding: 0;
+  }
+
+  .product-page__thumbs-arrow[hidden] {
+    display: none;
+  }
+
+  .product-page__thumbs-arrow:hover {
+    background-color: #fff;
+  }
+
+  .product-page__thumbs-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .product-page__thumbs-arrow--prev svg {
+    transform: rotate(0deg);
+  }
+
+  .product-page__thumbs-arrow--next svg {
+    transform: rotate(0deg);
+  }
+
+  @media (min-width: 750px) {
+    .product-page__thumbs-arrow {
+      width: 100%;
+      height: 22px;
+      border-radius: 6px;
+      background-color: #f7f7f8;
+      box-shadow: none;
+    }
+
+    .product-page__thumbs-arrow:hover {
+      background-color: #ededef;
+    }
+
+    .product-page__thumbs-arrow--prev svg {
+      transform: rotate(90deg);
+    }
+
+    .product-page__thumbs-arrow--next svg {
+      transform: rotate(90deg);
     }
   }
 
@@ -1696,6 +1804,9 @@
       }
       thumbs.forEach(function(t) { t.classList.remove('product-page__thumb--active'); });
       thumb.classList.add('product-page__thumb--active');
+      if (typeof thumb.scrollIntoView === 'function') {
+        thumb.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+      }
     }
 
     if (heroPrev) {
@@ -1717,6 +1828,83 @@
         this.classList.add('product-page__thumb--active');
       });
     });
+
+    /* Thumb carousel — sync max-height to hero, scroll buttons, overflow detection */
+    var thumbsStrip = page.querySelector('[data-thumbs]');
+    var thumbsCarousel = page.querySelector('[data-thumbs-carousel]');
+    var thumbsPrev = page.querySelector('[data-thumbs-prev]');
+    var thumbsNext = page.querySelector('[data-thumbs-next]');
+    var hero = page.querySelector('[data-product-hero]');
+
+    if (thumbsStrip && thumbsCarousel && hero) {
+      function isVertical() {
+        return window.matchMedia('(min-width: 750px)').matches;
+      }
+
+      function syncHeroHeight() {
+        var h = hero.getBoundingClientRect().height;
+        if (h > 0) thumbsCarousel.style.setProperty('--hero-h', h + 'px');
+      }
+
+      function thumbStep() {
+        var first = thumbsStrip.querySelector('[data-thumb]');
+        if (!first) return 80;
+        var rect = first.getBoundingClientRect();
+        var gap = 8;
+        return (isVertical() ? rect.height : rect.width) + gap;
+      }
+
+      function updateArrowState() {
+        if (!thumbsPrev || !thumbsNext) return;
+        var vertical = isVertical();
+        var scrollPos = vertical ? thumbsStrip.scrollTop : thumbsStrip.scrollLeft;
+        var maxScroll = vertical
+          ? thumbsStrip.scrollHeight - thumbsStrip.clientHeight
+          : thumbsStrip.scrollWidth - thumbsStrip.clientWidth;
+        var hasOverflow = maxScroll > 1;
+
+        thumbsPrev.hidden = !hasOverflow;
+        thumbsNext.hidden = !hasOverflow;
+
+        if (hasOverflow) {
+          thumbsPrev.disabled = scrollPos <= 1;
+          thumbsNext.disabled = scrollPos >= maxScroll - 1;
+        }
+      }
+
+      function scrollThumbs(dir) {
+        var step = thumbStep() * 2;
+        var opts = isVertical() ? { top: dir * step, behavior: 'smooth' } : { left: dir * step, behavior: 'smooth' };
+        thumbsStrip.scrollBy(opts);
+      }
+
+      if (thumbsPrev) thumbsPrev.addEventListener('click', function() { scrollThumbs(-1); });
+      if (thumbsNext) thumbsNext.addEventListener('click', function() { scrollThumbs(1); });
+
+      thumbsStrip.addEventListener('scroll', updateArrowState, { passive: true });
+
+      if (window.ResizeObserver) {
+        var ro = new ResizeObserver(function() {
+          syncHeroHeight();
+          updateArrowState();
+        });
+        ro.observe(hero);
+        ro.observe(thumbsStrip);
+      } else {
+        window.addEventListener('resize', function() {
+          syncHeroHeight();
+          updateArrowState();
+        });
+      }
+
+      window.addEventListener('load', function() {
+        syncHeroHeight();
+        updateArrowState();
+      });
+
+      syncHeroHeight();
+      updateArrowState();
+    }
 
     /* Variant selection */
     page.querySelectorAll('.product-page__variant-btn').forEach(function(btn) {
