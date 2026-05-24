@@ -62,6 +62,17 @@
     "slideshow": {
       "type": "slideshow",
       "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Absolute_Catwoman__1KC.png",
+            "mobile_image": "shopify://shop_images/m_Absolute_Catwoman__1KC.png",
+            "link": "https://kingscomics.com/search?q=ABSOLUTE+CATWOMAN+%282026%29+%231+KINGS+COMICS&type=product",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
         "slide_nRXwzd": {
           "type": "slide",
           "settings": {
@@ -127,28 +138,16 @@
             "subheading": "",
             "button_text": ""
           }
-        },
-        "slide_1": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "image": "shopify://shop_images/Of_the_Earth__1.png",
-            "mobile_image": "shopify://shop_images/m_Of_the_Earth__1.png",
-            "link": "https://kingscomics.com/search?type=product&q=%22Of+The+Earth+%282026%29+%231%22",
-            "heading": "",
-            "subheading": "",
-            "button_text": ""
-          }
         }
       },
       "block_order": [
+        "slide_1",
         "slide_nRXwzd",
         "slide_N3dXqN",
         "slide_FjNJet",
         "slide_eiGAej",
         "slide_DWjCc8",
-        "slide_enLH7L",
-        "slide_1"
+        "slide_enLH7L"
       ],
       "settings": {}
     },
