@@ -24,6 +24,8 @@
     endif
   endif
 
+  assign is_last_one = false
+
   unless is_preorder
     if current_variant.available
       if current_variant.inventory_management == 'shopify'
@@ -31,6 +33,9 @@
           if current_variant.inventory_quantity <= 0
             assign is_backorder = true
           endif
+        endif
+        if current_variant.inventory_quantity == 1
+          assign is_last_one = true
         endif
       endif
     endif
@@ -338,6 +343,15 @@
                 <span class="product-page__status-dot"></span>
                 {{ 'collection.back_order' | t }} – {{ 'collection.back_order_shipping' | t }}
               </p>
+            {% elsif is_last_one %}
+              <p class="product-page__status product-page__status--last" data-product-status>
+                <svg class="product-page__status-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="7" fill="currentColor"/>
+                  <path d="M8 4v5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                  <circle cx="8" cy="11.5" r="0.9" fill="#fff"/>
+                </svg>
+                {{ 'collection.last_one' | t }}
+              </p>
             {% elsif current_variant.available %}
               <p class="product-page__status product-page__status--in" data-product-status>
                 <span class="product-page__status-dot"></span>
@@ -367,6 +381,9 @@
                         data-variant-image="{{ variant.featured_image | image_url: width: 800 }}"
                         data-variant-sku="{{ variant.sku }}"
                         data-variant-barcode="{{ variant.barcode }}"
+                        data-variant-inventory-management="{{ variant.inventory_management }}"
+                        data-variant-inventory-policy="{{ variant.inventory_policy }}"
+                        data-variant-inventory-quantity="{{ variant.inventory_quantity }}"
                         {% unless variant.available %}disabled{% endunless %}
                       >
                         {{ variant.title }}
@@ -375,6 +392,19 @@
                   </div>
                 </div>
               {% endif %}
+
+              <script type="application/json" data-product-status-config>
+                {
+                  "isPreorder": {{ is_preorder | json }},
+                  "labels": {
+                    "in_stock": {{ 'collection.in_stock' | t | json }},
+                    "out_of_stock": {{ 'collection.out_of_stock' | t | json }},
+                    "back_order": {{ 'collection.back_order' | t | json }},
+                    "back_order_shipping": {{ 'collection.back_order_shipping' | t | json }},
+                    "last_one": {{ 'collection.last_one' | t | json }}
+                  }
+                }
+              </script>
 
               <div class="product-page__actions">
                 <div class="product-page__quantity">
@@ -1115,12 +1145,31 @@
     flex-shrink: 0;
   }
 
+  .product-page__status-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    animation: product-page-last-pulse 1.4s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes product-page-last-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.75; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-page__status-icon { animation: none; }
+  }
+
   .product-page__status--in { color: #38a169; }
   .product-page__status--in .product-page__status-dot { background-color: #38a169; }
   .product-page__status--out { color: #e53e3e; }
   .product-page__status--out .product-page__status-dot { background-color: #e53e3e; }
   .product-page__status--backorder { color: #d97706; }
   .product-page__status--backorder .product-page__status-dot { background-color: #d97706; }
+  .product-page__status--last { color: #d97706; }
   .product-page__status--preorder { color: #5b21b6; }
   .product-page__status--preorder .product-page__status-dot { background-color: #5b21b6; }
 
@@ -1724,6 +1773,45 @@
     var minusBtn = page.querySelector('[data-qty-minus]');
     var plusBtn = page.querySelector('[data-qty-plus]');
 
+    var statusEl = page.querySelector('[data-product-status]');
+    var statusConfig = { isPreorder: false, labels: {} };
+    var statusConfigEl = page.querySelector('[data-product-status-config]');
+    if (statusConfigEl) {
+      try { statusConfig = JSON.parse(statusConfigEl.textContent); } catch (e) {}
+    }
+
+    var STATUS_ICON_LAST = '<svg class="product-page__status-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
+      '<circle cx="8" cy="8" r="7" fill="currentColor"/>' +
+      '<path d="M8 4v5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<circle cx="8" cy="11.5" r="0.9" fill="#fff"/>' +
+      '</svg>';
+    var STATUS_DOT = '<span class="product-page__status-dot"></span>';
+
+    function updateStatus(btn) {
+      if (!statusEl || statusConfig.isPreorder) return;
+      var labels = statusConfig.labels || {};
+      var available = btn.getAttribute('data-variant-available') === 'true';
+      var management = btn.getAttribute('data-variant-inventory-management');
+      var policy = btn.getAttribute('data-variant-inventory-policy');
+      var qty = parseInt(btn.getAttribute('data-variant-inventory-quantity'), 10);
+      var modifier = 'out';
+      var html = STATUS_DOT + ' ' + (labels.out_of_stock || '');
+      if (available) {
+        if (management === 'shopify' && policy === 'continue' && qty <= 0) {
+          modifier = 'backorder';
+          html = STATUS_DOT + ' ' + (labels.back_order || '') + ' – ' + (labels.back_order_shipping || '');
+        } else if (management === 'shopify' && qty === 1) {
+          modifier = 'last';
+          html = STATUS_ICON_LAST + ' ' + (labels.last_one || '');
+        } else {
+          modifier = 'in';
+          html = STATUS_DOT + ' ' + (labels.in_stock || '');
+        }
+      }
+      statusEl.className = 'product-page__status product-page__status--' + modifier;
+      statusEl.innerHTML = html;
+    }
+
     /* Lightbox */
     var lightbox = document.querySelector('[data-lightbox]');
     var lightboxImg = document.querySelector('[data-lightbox-img]');
@@ -1934,6 +2022,9 @@
           b.classList.remove('product-page__variant-btn--active');
         });
         this.classList.add('product-page__variant-btn--active');
+
+        /* Stock status */
+        updateStatus(this);
 
         /* Price */
         if (priceEl) priceEl.textContent = price;

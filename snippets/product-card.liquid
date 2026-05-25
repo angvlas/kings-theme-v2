@@ -494,6 +494,17 @@
     flex-shrink: 0;
     width: 12px;
     height: 12px;
+    animation: product-card-last-pulse 1.4s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes product-card-last-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.75; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-card__availability-icon { animation: none; }
   }
 
   .product-card__availability--out {

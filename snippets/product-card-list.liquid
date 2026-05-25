@@ -413,6 +413,17 @@
     width: 12px;
     height: 12px;
     flex-shrink: 0;
+    animation: pcl-last-pulse 1.4s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes pcl-last-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.75; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pcl__status-icon { animation: none; }
   }
 
   .pcl__status--in { color: #38a169; }
