@@ -31,6 +31,8 @@
     endif
   endif
 
+  assign is_last_one = false
+
   unless is_preorder
     if product.available
       if variant.inventory_management == 'shopify'
@@ -38,6 +40,9 @@
           if variant.inventory_quantity <= 0
             assign is_backorder = true
           endif
+        endif
+        if variant.inventory_quantity == 1
+          assign is_last_one = true
         endif
       endif
     else
@@ -95,6 +100,15 @@
       <p class="pcl__status pcl__status--out">
         <span class="pcl__status-dot"></span>
         {{ 'collection.out_of_stock' | t }}
+      </p>
+    {% elsif is_last_one %}
+      <p class="pcl__status pcl__status--last">
+        <svg class="pcl__status-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" fill="currentColor"/>
+          <path d="M8 4v5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="8" cy="11.5" r="0.9" fill="#fff"/>
+        </svg>
+        {{ 'collection.last_one' | t }}
       </p>
     {% else %}
       <p class="pcl__status pcl__status--in">
@@ -394,6 +408,13 @@
     flex-shrink: 0;
   }
 
+  .pcl__status-icon {
+    display: block;
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+
   .pcl__status--in { color: #38a169; }
   .pcl__status--in .pcl__status-dot { background-color: #38a169; }
   .pcl__status--out { color: #e53e3e; }
@@ -402,6 +423,8 @@
   .pcl__status--preorder .pcl__status-dot { background-color: #5b21b6; }
   .pcl__status--backorder { color: #d97706; }
   .pcl__status--backorder .pcl__status-dot { background-color: #d97706; }
+  .pcl__status--last { color: #d97706; }
+  .pcl__status--last .pcl__status-dot { background-color: #d97706; }
 
   /* Variants */
   .pcl__variants {

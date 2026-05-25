@@ -178,5 +178,30 @@
         "label": "t:labels.placeholder_image"
       }
     ]
+  },
+  {
+    "name": "t:general.inventory",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:general.low_stock"
+      },
+      {
+        "type": "checkbox",
+        "id": "low_stock_enabled",
+        "label": "t:labels.low_stock_enabled",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "low_stock_threshold",
+        "label": "t:labels.low_stock_threshold",
+        "info": "t:labels.low_stock_threshold_info",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "default": 5
+      }
+    ]
   }
 ]
