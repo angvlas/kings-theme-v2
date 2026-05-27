@@ -273,51 +273,27 @@
               <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </button>
-          <h2 class="condition-modal__title">{{ 'product.condition.modal_title' | t }}</h2>
-          <p class="condition-modal__intro">{{ 'product.condition.modal_intro' | t }}</p>
+          <h2 class="condition-modal__title">{{ settings.condition_modal_title }}</h2>
+          <p class="condition-modal__intro">{{ settings.condition_modal_intro | newline_to_br }}</p>
           <div class="condition-modal__grades">
-            <div class="condition-modal__grade">
-              <div class="condition-modal__grade-header">
-                <span class="condition-modal__grade-badge condition-modal__grade-badge--nm">{{ 'product.condition.nm' | t }}</span>
-                <span class="condition-modal__grade-name">{{ 'product.condition.nm_name' | t }}</span>
+            {%- assign grade_color_keys = 'nm,vf,fn,vg,gd,fr' | split: ',' -%}
+            {%- for n in (1..6) -%}
+              {%- capture grade_code_key -%}condition_grade_{{ n }}_code{%- endcapture -%}
+              {%- capture grade_name_key -%}condition_grade_{{ n }}_name{%- endcapture -%}
+              {%- capture grade_desc_key -%}condition_grade_{{ n }}_desc{%- endcapture -%}
+              {%- assign grade_code = settings[grade_code_key] -%}
+              {%- assign grade_name = settings[grade_name_key] -%}
+              {%- assign grade_desc = settings[grade_desc_key] -%}
+              {%- if grade_code == blank and grade_name == blank and grade_desc == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign grade_color = grade_color_keys[forloop.index0] -%}
+              <div class="condition-modal__grade">
+                <div class="condition-modal__grade-header">
+                  <span class="condition-modal__grade-badge condition-modal__grade-badge--{{ grade_color }}">{{ grade_code }}</span>
+                  <span class="condition-modal__grade-name">{{ grade_name }}</span>
+                </div>
+                <p class="condition-modal__grade-desc">{{ grade_desc | newline_to_br }}</p>
               </div>
-              <p class="condition-modal__grade-desc">{{ 'product.condition.nm_desc' | t }}</p>
-            </div>
-            <div class="condition-modal__grade">
-              <div class="condition-modal__grade-header">
-                <span class="condition-modal__grade-badge condition-modal__grade-badge--vf">{{ 'product.condition.vf' | t }}</span>
-                <span class="condition-modal__grade-name">{{ 'product.condition.vf_name' | t }}</span>
-              </div>
-              <p class="condition-modal__grade-desc">{{ 'product.condition.vf_desc' | t }}</p>
-            </div>
-            <div class="condition-modal__grade">
-              <div class="condition-modal__grade-header">
-                <span class="condition-modal__grade-badge condition-modal__grade-badge--fn">{{ 'product.condition.fn' | t }}</span>
-                <span class="condition-modal__grade-name">{{ 'product.condition.fn_name' | t }}</span>
-              </div>
-              <p class="condition-modal__grade-desc">{{ 'product.condition.fn_desc' | t }}</p>
-            </div>
-            <div class="condition-modal__grade">
-              <div class="condition-modal__grade-header">
-                <span class="condition-modal__grade-badge condition-modal__grade-badge--vg">{{ 'product.condition.vg' | t }}</span>
-                <span class="condition-modal__grade-name">{{ 'product.condition.vg_name' | t }}</span>
-              </div>
-              <p class="condition-modal__grade-desc">{{ 'product.condition.vg_desc' | t }}</p>
-            </div>
-            <div class="condition-modal__grade">
-              <div class="condition-modal__grade-header">
-                <span class="condition-modal__grade-badge condition-modal__grade-badge--gd">{{ 'product.condition.gd' | t }}</span>
-                <span class="condition-modal__grade-name">{{ 'product.condition.gd_name' | t }}</span>
-              </div>
-              <p class="condition-modal__grade-desc">{{ 'product.condition.gd_desc' | t }}</p>
-            </div>
-            <div class="condition-modal__grade">
-              <div class="condition-modal__grade-header">
-                <span class="condition-modal__grade-badge condition-modal__grade-badge--fr">{{ 'product.condition.fr' | t }}</span>
-                <span class="condition-modal__grade-name">{{ 'product.condition.fr_name' | t }}</span>
-              </div>
-              <p class="condition-modal__grade-desc">{{ 'product.condition.fr_desc' | t }}</p>
-            </div>
+            {%- endfor -%}
           </div>
         </div>
       </div>

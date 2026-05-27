@@ -203,5 +203,131 @@
         "default": 5
       }
     ]
+  },
+  {
+    "name": "t:general.condition_guide",
+    "settings": [
+      {
+        "type": "text",
+        "id": "condition_modal_title",
+        "label": "t:labels.condition_modal_title",
+        "default": "Condition grading guide"
+      },
+      {
+        "type": "textarea",
+        "id": "condition_modal_intro",
+        "label": "t:labels.condition_modal_intro",
+        "default": "We grade our products using the following industry-standard scale. Each grade reflects the overall condition including cover, spine, and pages."
+      },
+      { "type": "header", "content": "t:general.condition_grades" },
+      {
+        "type": "text",
+        "id": "condition_grade_1_code",
+        "label": "t:labels.condition_grade_code",
+        "default": "NM"
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_1_name",
+        "label": "t:labels.condition_grade_name",
+        "default": "Near mint"
+      },
+      {
+        "type": "textarea",
+        "id": "condition_grade_1_desc",
+        "label": "t:labels.condition_grade_desc",
+        "default": "Nearly perfect. Minor imperfections such as a tiny spine stress or very light corner wear. Cover is flat with high gloss. Pages are off-white to white."
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_2_code",
+        "label": "t:labels.condition_grade_code",
+        "default": "VF"
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_2_name",
+        "label": "t:labels.condition_grade_name",
+        "default": "Very fine"
+      },
+      {
+        "type": "textarea",
+        "id": "condition_grade_2_desc",
+        "label": "t:labels.condition_grade_desc",
+        "default": "An above-average copy with minor wear. Small creases, light spine stress, or minor corner blunting may be present. Cover retains most of its gloss."
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_3_code",
+        "label": "t:labels.condition_grade_code",
+        "default": "FN"
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_3_name",
+        "label": "t:labels.condition_grade_name",
+        "default": "Fine"
+      },
+      {
+        "type": "textarea",
+        "id": "condition_grade_3_desc",
+        "label": "t:labels.condition_grade_desc",
+        "default": "An average, readable copy with moderate wear. Creases, minor spine roll, and some loss of gloss may be present. Pages may be slightly tanned."
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_4_code",
+        "label": "t:labels.condition_grade_code",
+        "default": "VG"
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_4_name",
+        "label": "t:labels.condition_grade_name",
+        "default": "Very good"
+      },
+      {
+        "type": "textarea",
+        "id": "condition_grade_4_desc",
+        "label": "t:labels.condition_grade_desc",
+        "default": "A below-average copy showing significant wear. Noticeable creasing, spine wear, and corner wear. Cover may have small tears or chips. Pages are tanned."
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_5_code",
+        "label": "t:labels.condition_grade_code",
+        "default": "GD"
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_5_name",
+        "label": "t:labels.condition_grade_name",
+        "default": "Good"
+      },
+      {
+        "type": "textarea",
+        "id": "condition_grade_5_desc",
+        "label": "t:labels.condition_grade_desc",
+        "default": "A well-read copy with heavy wear. Significant creasing, rolling, and possible small pieces missing from the cover. Cover may be loose. Pages are browned."
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_6_code",
+        "label": "t:labels.condition_grade_code",
+        "default": "FR"
+      },
+      {
+        "type": "text",
+        "id": "condition_grade_6_name",
+        "label": "t:labels.condition_grade_name",
+        "default": "Fair"
+      },
+      {
+        "type": "textarea",
+        "id": "condition_grade_6_desc",
+        "label": "t:labels.condition_grade_desc",
+        "default": "A heavily worn copy. Large tears, chunks missing, heavy creasing, soiling, or water damage. Covers may be detached. Suitable for reading copies only."
+      }
+    ]
   }
 ]
