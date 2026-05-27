@@ -15,6 +15,8 @@
     "social_facebook": "https://facebook.com/kingscomics",
     "social_instagram": "https://instagram.com/kingscomics",
     "placeholder_image": "shopify://shop_images/IMAGE-COMING-SOON.png",
+    "condition_grade_2_desc": "An above-average copy with minor wear. Small creases, tears, light spine stress, or minor corner blunting may be present. Cover retains most of its gloss.",
+    "condition_grade_3_desc": "An average, readable copy with moderate wear. Creases, tears, minor spine roll, and some loss of gloss may be present. Pages may be slightly tanned.",
     "content_for_index": [],
     "blocks": {
       "855628211100114053": {
