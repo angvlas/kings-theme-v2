@@ -132,10 +132,14 @@
           </span>
         </div>
       {% elsif is_backorder %}
+        {%- assign back_order_tooltip = 'collection.back_order_tooltip' | t -%}
         <div class="product-card__availability product-card__availability--backorder">
           <span class="product-card__availability-dot"></span>
           <span class="product-card__availability-text">
-            <span>{{ 'collection.back_order' | t }}</span>
+            <span>
+              {{ 'collection.back_order' | t }}
+              {% render 'info-tooltip', text: back_order_tooltip %}
+            </span>
             <span>{{ 'collection.back_order_shipping' | t }}</span>
           </span>
         </div>

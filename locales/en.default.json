@@ -137,6 +137,7 @@
     "pre_order": "Pre-order",
     "back_order": "Back order",
     "back_order_shipping": "Usually ships within 2-3 weeks",
+    "back_order_tooltip": "Availability is dependent on supplier stock levels. Estimated shipping times may vary if the item is temporarily unavailable from our distributor.",
     "out_of_stock": "Out of stock",
     "in_stock": "In stock",
     "last_one": "Last one",

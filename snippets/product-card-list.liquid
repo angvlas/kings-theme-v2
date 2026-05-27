@@ -92,9 +92,11 @@
         {{ 'collection.pre_order' | t }} {{ release_date | date: "%b %d, %Y" }}
       </p>
     {% elsif is_backorder %}
+      {%- assign back_order_tooltip = 'collection.back_order_tooltip' | t -%}
       <p class="pcl__status pcl__status--backorder">
         <span class="pcl__status-dot"></span>
         {{ 'collection.back_order' | t }}
+        {% render 'info-tooltip', text: back_order_tooltip %}
       </p>
     {% elsif sold_out %}
       <p class="pcl__status pcl__status--out">

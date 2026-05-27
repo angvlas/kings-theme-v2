@@ -339,9 +339,11 @@
                 {{ 'collection.pre_order' | t }} {{ release_date | date: "%b %d, %Y" }}
               </p>
             {% elsif is_backorder %}
+              {%- assign back_order_tooltip = 'collection.back_order_tooltip' | t -%}
               <p class="product-page__status product-page__status--backorder" data-product-status>
                 <span class="product-page__status-dot"></span>
                 {{ 'collection.back_order' | t }} – {{ 'collection.back_order_shipping' | t }}
+                {% render 'info-tooltip', text: back_order_tooltip %}
               </p>
             {% elsif is_last_one %}
               <p class="product-page__status product-page__status--last" data-product-status>
@@ -401,6 +403,7 @@
                     "out_of_stock": {{ 'collection.out_of_stock' | t | json }},
                     "back_order": {{ 'collection.back_order' | t | json }},
                     "back_order_shipping": {{ 'collection.back_order_shipping' | t | json }},
+                    "back_order_tooltip": {{ 'collection.back_order_tooltip' | t | json }},
                     "last_one": {{ 'collection.last_one' | t | json }}
                   }
                 }
@@ -1788,6 +1791,24 @@
       '</svg>';
     var STATUS_DOT = '<span class="product-page__status-dot"></span>';
 
+    function escapeHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function infoTooltipHtml(text) {
+      var t = escapeHtml(text);
+      return '<span class="info-tooltip" tabindex="0" role="img" aria-label="' + t + '" data-info-tooltip>' +
+        '<svg class="info-tooltip__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
+          '<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/>' +
+          '<circle cx="8" cy="4.6" r="0.95" fill="currentColor"/>' +
+          '<path d="M8 7.2v4.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+        '</svg>' +
+        '<span class="info-tooltip__bubble" role="tooltip">' + t + '</span>' +
+      '</span>';
+    }
+
     function updateStatus(btn) {
       if (!statusEl || statusConfig.isPreorder) return;
       var labels = statusConfig.labels || {};
@@ -1796,17 +1817,18 @@
       var policy = btn.getAttribute('data-variant-inventory-policy');
       var qty = parseInt(btn.getAttribute('data-variant-inventory-quantity'), 10);
       var modifier = 'out';
-      var html = STATUS_DOT + ' ' + (labels.out_of_stock || '');
+      var html = STATUS_DOT + ' ' + escapeHtml(labels.out_of_stock || '');
       if (available) {
         if (management === 'shopify' && policy === 'continue' && qty <= 0) {
           modifier = 'backorder';
-          html = STATUS_DOT + ' ' + (labels.back_order || '') + ' – ' + (labels.back_order_shipping || '');
+          html = STATUS_DOT + ' ' + escapeHtml(labels.back_order || '') + ' – ' + escapeHtml(labels.back_order_shipping || '') +
+            ' ' + infoTooltipHtml(labels.back_order_tooltip || '');
         } else if (management === 'shopify' && qty === 1) {
           modifier = 'last';
-          html = STATUS_ICON_LAST + ' ' + (labels.last_one || '');
+          html = STATUS_ICON_LAST + ' ' + escapeHtml(labels.last_one || '');
         } else {
           modifier = 'in';
-          html = STATUS_DOT + ' ' + (labels.in_stock || '');
+          html = STATUS_DOT + ' ' + escapeHtml(labels.in_stock || '');
         }
       }
       statusEl.className = 'product-page__status product-page__status--' + modifier;

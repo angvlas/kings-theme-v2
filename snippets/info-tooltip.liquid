@@ -1,0 +1,130 @@
+{% doc %}
+  Renders an inline info icon with a hover/focus tooltip.
+
+  @param {string} text - The tooltip body text
+  @param {string} [label] - Optional accessible label, defaults to `text`
+
+  @example
+  {% render 'info-tooltip', text: 'collection.back_order_tooltip' | t %}
+{% enddoc %}
+
+<span
+  class="info-tooltip"
+  tabindex="0"
+  role="img"
+  aria-label="{{ label | default: text | escape }}"
+  data-info-tooltip
+>
+  <svg class="info-tooltip__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/>
+    <circle cx="8" cy="4.6" r="0.95" fill="currentColor"/>
+    <path d="M8 7.2v4.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <span class="info-tooltip__bubble" role="tooltip">{{ text }}</span>
+</span>
+
+{% stylesheet %}
+  .info-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    margin-left: 6px;
+    color: inherit;
+    cursor: help;
+    line-height: 1;
+    outline: none;
+  }
+
+  .info-tooltip__icon {
+    width: 14px;
+    height: 14px;
+    display: block;
+    opacity: 0.75;
+    transition: opacity 0.15s ease;
+  }
+
+  .info-tooltip:hover .info-tooltip__icon,
+  .info-tooltip:focus-visible .info-tooltip__icon {
+    opacity: 1;
+  }
+
+  .info-tooltip__bubble {
+    --arrow-offset: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    width: 220px;
+    max-width: min(90vw, 240px);
+    padding: 8px 10px;
+    background-color: #1f2937;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.4;
+    border-radius: 6px;
+    text-align: left;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  .info-tooltip__bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: var(--arrow-offset);
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1f2937;
+  }
+
+  .info-tooltip:hover .info-tooltip__bubble,
+  .info-tooltip:focus-within .info-tooltip__bubble {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.15s ease;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  function positionInfoTooltip(tooltip) {
+    var bubble = tooltip.querySelector('.info-tooltip__bubble');
+    if (!bubble) return;
+    var rect = tooltip.getBoundingClientRect();
+    var iconCenter = rect.left + rect.width / 2;
+    var bubbleWidth = bubble.offsetWidth || 220;
+    var margin = 8;
+    var preferredLeft = iconCenter - bubbleWidth / 2;
+    var maxLeft = window.innerWidth - bubbleWidth - margin;
+    var bubbleLeft = Math.max(margin, Math.min(preferredLeft, maxLeft));
+    bubble.style.top = (rect.top - 8) + 'px';
+    bubble.style.left = bubbleLeft + 'px';
+    bubble.style.setProperty('--arrow-offset', (iconCenter - bubbleLeft) + 'px');
+  }
+
+  document.addEventListener('mouseover', function(event) {
+    var t = event.target.closest && event.target.closest('[data-info-tooltip]');
+    if (t) positionInfoTooltip(t);
+  });
+
+  document.addEventListener('focusin', function(event) {
+    var t = event.target.closest && event.target.closest('[data-info-tooltip]');
+    if (t) positionInfoTooltip(t);
+  });
+
+  document.addEventListener('click', function(event) {
+    var t = event.target.closest('[data-info-tooltip]');
+    if (!t) return;
+    event.preventDefault();
+    event.stopPropagation();
+    positionInfoTooltip(t);
+    t.focus();
+  });
+{% endjavascript %}
+
