@@ -203,6 +203,18 @@
         "google_reviews_carousel_dual_carousel_DLEN8J"
       ],
       "settings": {}
+    },
+    "email_signup_ri3C3N": {
+      "type": "email-signup",
+      "name": "t:sections.email_signup.name",
+      "settings": {
+        "heading": "Stay in the loop",
+        "intro": "Subscribe to hear about new releases, exclusive drops and store news.",
+        "submit_label": "Subscribe",
+        "success_message": "Thanks for subscribing!",
+        "fine_print": "",
+        "form_tag": "newsletter"
+      }
     }
   },
   "order": [
@@ -211,6 +223,7 @@
     "collection_row_1",
     "collection_row_2",
     "collection_row_E3zT3g",
+    "email_signup_ri3C3N",
     "17790769850479b40e"
   ]
 }
