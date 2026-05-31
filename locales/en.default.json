@@ -247,6 +247,10 @@
       "field_phone": "Phone number",
       "field_message": "Message"
     },
+    "email_signup": {
+      "field_email": "Email address",
+      "field_email_placeholder": "you@example.com"
+    },
     "recommended": {
       "name": "Recommended for you",
       "title": "Recommended for you"

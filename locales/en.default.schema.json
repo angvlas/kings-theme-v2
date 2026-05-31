@@ -98,6 +98,8 @@
     "form_subject": "Form subject",
     "form_tag": "Form tag",
     "form_tag_info": "Tag added to the customer/enquiry to help filter submissions",
+    "fine_print": "Fine print",
+    "fine_print_info": "Optional small text shown beneath the form (e.g. privacy note)",
     "contact_form_meta": "Form metadata",
     "cta_link": "Button URL",
     "cta_link_info": "Paste a file URL from Settings → Files, or any URL.",
@@ -268,6 +270,9 @@
     },
     "contact_form": {
       "name": "Contact form"
+    },
+    "email_signup": {
+      "name": "Email signup"
     },
     "subscription_info": {
       "name": "Subscription FAQ + form",
