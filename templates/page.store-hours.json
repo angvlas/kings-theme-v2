@@ -14,7 +14,8 @@
       "settings": {
         "heading": "Store hours",
         "subheading": "Come visit us — here's when we're open.",
-        "intro": ""
+        "intro": "",
+        "accent_line": false
       }
     },
     "hours": {
@@ -70,12 +71,21 @@
             "hours": "",
             "closed": true
           }
+        },
+        "exception_fcxPpE": {
+          "type": "exception",
+          "settings": {
+            "date_label": "King's Birthday — 8 June",
+            "hours": "9:00 AM - 5:00 PM",
+            "closed": false
+          }
         }
       },
       "block_order": [
         "kings_sydney",
         "location_6nAcPt",
-        "anzac_day"
+        "anzac_day",
+        "exception_fcxPpE"
       ],
       "settings": {
         "exceptions_heading": "Special hours",
