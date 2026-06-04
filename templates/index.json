@@ -76,9 +76,9 @@
         "slide_nRXwzd": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Supergirl_The_World-1.png",
-            "mobile_image": "shopify://shop_images/m_Supergirl_The_World-1.png",
-            "link": "https://kingscomics.com/products/supergirl-the-world-hc?_pos=1&_psq=Supergirl+The+World&_ss=e&_v=1.0",
+            "image": "shopify://shop_images/Absolute_Catwoman__1.png",
+            "mobile_image": "shopify://shop_images/m_Absolute_Catwoman__1.png",
+            "link": "https://kingscomics.com/search?q=Absolute+Catwoman+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -87,9 +87,9 @@
         "slide_N3dXqN": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Spider-man_Brand_New_Day.png",
-            "mobile_image": "shopify://shop_images/m_Spider-man_Brand_New_Day.png",
-            "link": "https://kingscomics.com/products/spider-man-tp-brand-new-day-compact-edition?_pos=1&_psq=Spider-man+Brand+New+Day+Compact&_ss=e&_v=1.0",
+            "image": "shopify://shop_images/Avengers_Armageddon__1.png",
+            "mobile_image": "shopify://shop_images/m_Avengers_Armageddon__1.png",
+            "link": "https://kingscomics.com/search?q=Avengers+Armageddon+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -98,9 +98,9 @@
         "slide_FjNJet": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Deadman__1.png",
-            "mobile_image": "shopify://shop_images/m_Deadman__1.png",
-            "link": "https://kingscomics.com/search?q=Deadman+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/MASK__1.png",
+            "mobile_image": "shopify://shop_images/m_MASK__1.png",
+            "link": "https://kingscomics.com/search?q=%22MASK+%282026%29+%231%22&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -109,9 +109,9 @@
         "slide_eiGAej": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Transformers_Movie_40th_Anniv.png",
-            "mobile_image": "shopify://shop_images/m_Transformers_Movie_40th_Anniv.png",
-            "link": "https://kingscomics.com/search?q=Tranformers+the+Movie+40th+Anniversary+Edition&type=product",
+            "image": "shopify://shop_images/Jay_and_Silent_Bob_Jays_of_Future_Past__1.png",
+            "mobile_image": "shopify://shop_images/m_Jay_and_Silent_Bob_Jays_of_Future_Past__1.png",
+            "link": "https://kingscomics.com/search?q=JAY+AND+SILENT+BOB+JAYS+OF+FUTURE+PAST+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -120,9 +120,9 @@
         "slide_DWjCc8": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Batman_Vol1_Daylight.png",
-            "mobile_image": "shopify://shop_images/m_Batman_Vol1_Daylight.png",
-            "link": "https://kingscomics.com/search?q=Batman+Daylight+Vol+01&type=product",
+            "image": "shopify://shop_images/Amazing_Spider-man_Facsimile.png",
+            "mobile_image": "shopify://shop_images/m_Amazing_Spider-man_Facsimile.png",
+            "link": "https://kingscomics.com/search?q=AMAZING+SPIDER-MAN+%23546+FACSIMILE+EDITION&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -131,9 +131,9 @@
         "slide_enLH7L": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Supergirl_Survive.png",
-            "mobile_image": "shopify://shop_images/m_Supergirl_Survive.png",
-            "link": "https://kingscomics.com/search?q=Supergirl+Survive+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/Tarzan_Beyond__1.png",
+            "mobile_image": "shopify://shop_images/m_Tarzan_Beyond__1.png",
+            "link": "https://kingscomics.com/search?q=TARZAN+BEYOND+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -173,24 +173,38 @@
         "products_to_show": 10
       }
     },
+    "email_signup_ri3C3N": {
+      "type": "email-signup",
+      "name": "t:sections.email_signup.name",
+      "settings": {
+        "heading": "Stay in the loop",
+        "intro": "Subscribe to hear about new releases, exclusive drops and store news.",
+        "submit_label": "Subscribe",
+        "success_message": "Thanks for subscribing!",
+        "fine_print": "",
+        "form_tag": "newsletter"
+      }
+    },
     "17790769850479b40e": {
       "type": "apps",
       "blocks": {
         "google_reviews_carousel_dual_carousel_DLEN8J": {
           "type": "shopify://apps/google-reviews/blocks/carousel-dual_carousel/8b378e9e-c56d-47ce-a754-feca5e0caf59",
           "settings": {
+            "variant": "standard",
             "contentIndex": "1",
             "customContentIndex": 31,
             "font": "default",
-            "themeId": "dark",
             "ratingType": "stars",
             "emojiType": "0",
+            "themeId": "dark",
             "cardColor": "#f3f6f9",
             "starsColor": "#fbb000",
             "textColor": "#404040",
             "transparent": 1,
             "solidShadow": false,
-            "reviewPhotosType": "small",
+            "reviewPhotosType_standard": "small",
+            "reviewPhotosType_compact": "small",
             "showHeader": false,
             "writeReview": false,
             "fixedReviewsHeight": true,
@@ -203,18 +217,6 @@
         "google_reviews_carousel_dual_carousel_DLEN8J"
       ],
       "settings": {}
-    },
-    "email_signup_ri3C3N": {
-      "type": "email-signup",
-      "name": "t:sections.email_signup.name",
-      "settings": {
-        "heading": "Stay in the loop",
-        "intro": "Subscribe to hear about new releases, exclusive drops and store news.",
-        "submit_label": "Subscribe",
-        "success_message": "Thanks for subscribing!",
-        "fine_print": "",
-        "form_tag": "newsletter"
-      }
     }
   },
   "order": [
