@@ -318,7 +318,7 @@
               {%- assign back_order_tooltip = 'collection.back_order_tooltip' | t -%}
               <p class="product-page__status product-page__status--backorder" data-product-status>
                 <span class="product-page__status-dot"></span>
-                {{ 'collection.back_order' | t }} – {{ 'collection.back_order_shipping' | t }}
+                {{ 'collection.back_order' | t }} - {{ 'collection.back_order_shipping' | t }}
                 {% render 'info-tooltip', text: back_order_tooltip %}
               </p>
             {% elsif is_last_one %}
@@ -684,7 +684,7 @@
     }
   }
 
-  /* Breadcrumbs — reuses collection breadcrumb styles */
+  /* Breadcrumbs - reuses collection breadcrumb styles */
   .product-page__breadcrumbs {
     margin-bottom: 20px;
   }
@@ -1351,6 +1351,14 @@
     max-height: 85vh;
     object-fit: contain;
     border-radius: 8px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease-out;
+  }
+
+  .product-lightbox--zoom .product-lightbox__image {
+    transform: scale(2);
+    transition: transform 0.05s linear;
+    cursor: zoom-out;
   }
 
   .product-lightbox__close {
@@ -1802,7 +1810,7 @@
       if (available) {
         if (management === 'shopify' && policy === 'continue' && qty <= 0) {
           modifier = 'backorder';
-          html = STATUS_DOT + ' ' + escapeHtml(labels.back_order || '') + ' – ' + escapeHtml(labels.back_order_shipping || '') +
+          html = STATUS_DOT + ' ' + escapeHtml(labels.back_order || '') + ' - ' + escapeHtml(labels.back_order_shipping || '') +
             ' ' + infoTooltipHtml(labels.back_order_tooltip || '');
         } else if (management === 'shopify' && qty === 1) {
           modifier = 'last';
@@ -1839,13 +1847,21 @@
       document.body.style.overflow = 'hidden';
     }
 
+    function resetLightboxZoom() {
+      if (!lightbox) return;
+      lightbox.classList.remove('product-lightbox--zoom');
+      if (lightboxImg) lightboxImg.style.transformOrigin = '';
+    }
+
     function closeLightbox() {
       if (!lightbox) return;
+      resetLightboxZoom();
       lightbox.hidden = true;
       document.body.style.overflow = '';
     }
 
     function lightboxGo(dir) {
+      resetLightboxZoom();
       lightboxIndex += dir;
       if (lightboxIndex < 0) lightboxIndex = thumbs.length - 1;
       if (lightboxIndex >= thumbs.length) lightboxIndex = 0;
@@ -1867,8 +1883,8 @@
 
       var lbPrev = lightbox.querySelector('[data-lightbox-prev]');
       var lbNext = lightbox.querySelector('[data-lightbox-next]');
-      if (lbPrev) lbPrev.addEventListener('click', function() { lightboxGo(-1); });
-      if (lbNext) lbNext.addEventListener('click', function() { lightboxGo(1); });
+      if (lbPrev) lbPrev.addEventListener('click', function(e) { e.stopPropagation(); lightboxGo(-1); });
+      if (lbNext) lbNext.addEventListener('click', function(e) { e.stopPropagation(); lightboxGo(1); });
 
       document.addEventListener('keydown', function(e) {
         if (lightbox.hidden) return;
@@ -1876,6 +1892,31 @@
         if (e.key === 'ArrowLeft') lightboxGo(-1);
         if (e.key === 'ArrowRight') lightboxGo(1);
       });
+
+      /* Click to zoom inside lightbox, cursor pans while zoomed */
+      if (lightboxImg) {
+        function setLightboxZoomOrigin(e) {
+          var rect = lightboxImg.getBoundingClientRect();
+          var x = ((e.clientX - rect.left) / rect.width) * 100;
+          var y = ((e.clientY - rect.top) / rect.height) * 100;
+          if (x < 0) x = 0; else if (x > 100) x = 100;
+          if (y < 0) y = 0; else if (y > 100) y = 100;
+          lightboxImg.style.transformOrigin = x + '% ' + y + '%';
+        }
+        lightboxImg.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (lightbox.classList.contains('product-lightbox--zoom')) {
+            resetLightboxZoom();
+          } else {
+            setLightboxZoomOrigin(e);
+            lightbox.classList.add('product-lightbox--zoom');
+          }
+        });
+        lightboxImg.addEventListener('mousemove', function(e) {
+          if (!lightbox.classList.contains('product-lightbox--zoom')) return;
+          setLightboxZoomOrigin(e);
+        });
+      }
     }
 
     /* Hero arrows */
@@ -1921,7 +1962,7 @@
       });
     });
 
-    /* Thumb carousel — sync max-height to hero, scroll buttons, overflow detection */
+    /* Thumb carousel - sync max-height to hero, scroll buttons, overflow detection */
     var thumbsStrip = page.querySelector('[data-thumbs]');
     var thumbsCarousel = page.querySelector('[data-thumbs-carousel]');
     var thumbsPrev = page.querySelector('[data-thumbs-prev]');
