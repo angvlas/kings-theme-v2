@@ -62,17 +62,6 @@
     "slideshow": {
       "type": "slideshow",
       "blocks": {
-        "slide_1": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Blokees.png",
-            "mobile_image": "shopify://shop_images/m_Blokees.png",
-            "link": "https://kingscomics.com/collections/blokees",
-            "heading": "",
-            "subheading": "",
-            "button_text": ""
-          }
-        },
         "slide_nRXwzd": {
           "type": "slide",
           "settings": {
@@ -138,16 +127,27 @@
             "subheading": "",
             "button_text": ""
           }
+        },
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Blokees.png",
+            "mobile_image": "shopify://shop_images/m_Blokees.png",
+            "link": "https://kingscomics.com/collections/blokees",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
         }
       },
       "block_order": [
-        "slide_1",
         "slide_nRXwzd",
         "slide_N3dXqN",
         "slide_FjNJet",
         "slide_eiGAej",
         "slide_DWjCc8",
-        "slide_enLH7L"
+        "slide_enLH7L",
+        "slide_1"
       ],
       "settings": {}
     },
