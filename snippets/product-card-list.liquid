@@ -33,6 +33,14 @@
 
   assign is_last_one = false
 
+  assign show_gold_card = false
+  if settings.show_gold_card_badge
+    assign gold_card_tag = settings.gold_card_discount_tag | default: 'GOLDCARDDISCOUNT10'
+    if product.tags contains gold_card_tag
+      assign show_gold_card = true
+    endif
+  endif
+
   unless is_preorder
     if product.available
       if variant.inventory_management == 'shopify'
@@ -126,6 +134,20 @@
           {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
           <span class="pcl__discount" data-pcl-discount>-{{ discount }}%</span>
         {% endif %}
+        {% if show_gold_card %}
+          <span
+            class="pcl__gold-icon"
+            tabindex="0"
+            role="img"
+            aria-label="{{ 'collection.gold_card_member_tooltip' | t | escape }}"
+            data-gold-tooltip
+          >
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 11.5L1 4l3.5 2.5L8 3l3.5 3.5L15 4l-1 7.5H2zm0 1.5h12v1.5H2V13z" fill="currentColor"/>
+            </svg>
+            <span class="pcl__gold-bubble" role="tooltip">{{ 'collection.gold_card_member_tooltip' | t }}</span>
+          </span>
+        {% endif %}
       </div>
       {% if on_sale %}
         <span class="pcl__compare" data-pcl-compare>{{ product.compare_at_price | money }}</span>
@@ -197,6 +219,20 @@
         {% if on_sale %}
           {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
           <span class="pcl__discount" data-pcl-discount>-{{ discount }}%</span>
+        {% endif %}
+        {% if show_gold_card %}
+          <span
+            class="pcl__gold-icon"
+            tabindex="0"
+            role="img"
+            aria-label="{{ 'collection.gold_card_member_tooltip' | t | escape }}"
+            data-gold-tooltip
+          >
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 11.5L1 4l3.5 2.5L8 3l3.5 3.5L15 4l-1 7.5H2zm0 1.5h12v1.5H2V13z" fill="currentColor"/>
+            </svg>
+            <span class="pcl__gold-bubble" role="tooltip">{{ 'collection.gold_card_member_tooltip' | t }}</span>
+          </span>
         {% endif %}
       </div>
       {% if on_sale %}
@@ -293,6 +329,63 @@
     letter-spacing: 0.04em;
     border-radius: 3px;
     line-height: 1.2;
+  }
+
+  .pcl__gold-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    color: #d4a017;
+    flex-shrink: 0;
+    cursor: help;
+    outline: none;
+  }
+
+  .pcl__gold-icon svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (min-width: 750px) {
+    .pcl__gold-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .pcl__gold-bubble {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    width: 200px;
+    max-width: min(90vw, 220px);
+    padding: 8px 10px;
+    background-color: #fff;
+    color: var(--color-foreground, #333);
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.4;
+    border: 1px solid #e2e2e4;
+    border-radius: 6px;
+    text-align: center;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .pcl__gold-icon:hover .pcl__gold-bubble,
+  .pcl__gold-icon:focus-visible .pcl__gold-bubble,
+  .pcl__gold-icon:focus-within .pcl__gold-bubble {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.15s ease;
   }
 
   @media (min-width: 750px) {
@@ -636,6 +729,30 @@
 
 {% javascript %}
   (function() {
+    function positionPclGoldTooltip(trigger) {
+      var tip = trigger.querySelector('.pcl__gold-bubble');
+      if (!tip) return;
+      var rect = trigger.getBoundingClientRect();
+      var center = rect.left + rect.width / 2;
+      var width = tip.offsetWidth || 200;
+      var margin = 8;
+      var pref = center - width / 2;
+      var max = window.innerWidth - width - margin;
+      var left = Math.max(margin, Math.min(pref, max));
+      tip.style.top = (rect.top - 8) + 'px';
+      tip.style.left = left + 'px';
+    }
+
+    document.addEventListener('mouseover', function(event) {
+      var t = event.target.closest && event.target.closest('.pcl__gold-icon[data-gold-tooltip]');
+      if (t) positionPclGoldTooltip(t);
+    });
+
+    document.addEventListener('focusin', function(event) {
+      var t = event.target.closest && event.target.closest('.pcl__gold-icon[data-gold-tooltip]');
+      if (t) positionPclGoldTooltip(t);
+    });
+
     function updateCartCount() {
       fetch('/cart.js')
         .then(function(r) { return r.json(); })

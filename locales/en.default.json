@@ -144,6 +144,8 @@
     "breadcrumbs": "Breadcrumbs",
     "home": "Home",
     "key_issue": "Key",
+    "gold_card_member": "Gold card",
+    "gold_card_member_tooltip": "Save 10% on this item as a Gold card member",
     "variant": "Variant",
     "series_start": "Series start",
     "series_end": "Series end",

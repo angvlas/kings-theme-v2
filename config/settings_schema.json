@@ -205,6 +205,29 @@
     ]
   },
   {
+    "name": "t:general.membership",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:general.gold_card"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_gold_card_badge",
+        "label": "t:labels.show_gold_card_badge",
+        "info": "t:labels.show_gold_card_badge_info",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "gold_card_discount_tag",
+        "label": "t:labels.gold_card_discount_tag",
+        "info": "t:labels.gold_card_discount_tag_info",
+        "default": "GOLDCARDDISCOUNT10"
+      }
+    ]
+  },
+  {
     "name": "t:general.condition_guide",
     "settings": [
       {
