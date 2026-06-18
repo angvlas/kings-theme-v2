@@ -65,9 +65,9 @@
         "slide_nRXwzd": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Batman_Under_the_Red_Hood_Compact_b6a35d7b-74aa-4129-8d92-b30a03d0a4de.png",
-            "mobile_image": "shopify://shop_images/m_Batman_Under_the_Red_Hood_Compact_2018d71f-4e6c-44f2-b65a-d74301559173.png",
-            "link": "https://kingscomics.com/products/batman-under-the-red-hood-tp-dc-compact-comics-edition?_pos=2&_psq=Batman+Under+the+Red+Hood&_ss=e&_v=1.0",
+            "image": "shopify://shop_images/Summer_of_Supergirl_1.png",
+            "mobile_image": "shopify://shop_images/m_Summer_of_Supergirl__1.png",
+            "link": "https://kingscomics.com/search?q=Summer+of+Supergirl+Special+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -76,9 +76,9 @@
         "slide_N3dXqN": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Spider-man_Long_Way_Home.png",
-            "mobile_image": "shopify://shop_images/m_Spider-man_Long_Way_Home.png",
-            "link": "https://kingscomics.com/search?q=Spider-Man+Long+Way+Home+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/Ultimate_Finale__1.png",
+            "mobile_image": "shopify://shop_images/m_Ultimate_Finale__1.png",
+            "link": "https://kingscomics.com/search?q=Summer+of+Supergirl+Special+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -87,9 +87,9 @@
         "slide_FjNJet": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/MAD__600.png",
-            "mobile_image": "shopify://shop_images/m_MAD__600.png",
-            "link": "https://kingscomics.com/products/mad-magazine-600?_pos=1&_psq=MAD+Magazine&_ss=e&_v=1.0",
+            "image": "shopify://shop_images/Universal_Monsters_Blood_of_the_Wolfman.png",
+            "mobile_image": "shopify://shop_images/m_Universal_Monsters_Blood_of_the_Wolfman.png",
+            "link": "https://kingscomics.com/search?q=Universal+Monsters+Blood+of+the+Wolf+Man&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -98,9 +98,9 @@
         "slide_eiGAej": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Gun_Honey_Doubles_Down__1.png",
-            "mobile_image": "shopify://shop_images/m_Gun_Honey_Doubles_Down__1.png",
-            "link": "https://kingscomics.com/search?q=Gun+Honey+Doubles+Down+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/X-Men_Outback__1.png",
+            "mobile_image": "shopify://shop_images/m_X-Men_Outback__1.png",
+            "link": "https://kingscomics.com/search?q=X-Men+Outback+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -109,9 +109,9 @@
         "slide_DWjCc8": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Phantom_vs_Red_Dragons__1.png",
-            "mobile_image": "shopify://shop_images/m_Phantom_vs_Red_Dragons__1.png",
-            "link": "https://kingscomics.com/search?q=The+Phantom+vs+The+Red+Dragons+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/Godzilla_Kai_Sei_Era.png",
+            "mobile_image": "shopify://shop_images/m_Godzilla_Kai_Sei_Era.png",
+            "link": "https://kingscomics.com/search?q=GODZILLA+KAI-SEI+ERA&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -120,9 +120,9 @@
         "slide_enLH7L": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Lobo_Facsimile__1.png",
-            "mobile_image": "shopify://shop_images/m_Lobo_Facsimile__1.png",
-            "link": "https://kingscomics.com/search?q=Lobo+%231+Facsimile+Edition&type=product",
+            "image": "shopify://shop_images/The_Eye_Collector.png",
+            "mobile_image": "shopify://shop_images/m_The_Eye_Collector.png",
+            "link": "https://kingscomics.com/search?q=Eye+Collector+%282026%29+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -130,6 +130,7 @@
         },
         "slide_1": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/Blokees.png",
             "mobile_image": "shopify://shop_images/m_Blokees.png",
