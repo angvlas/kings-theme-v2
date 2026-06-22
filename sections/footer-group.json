@@ -13,12 +13,25 @@
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "emblem_Hgbd8j": {
+          "type": "emblem",
+          "settings": {
+            "image": "shopify://shop_images/Topps24_badge.webp",
+            "label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "emblem_Hgbd8j"
+      ],
       "settings": {
         "menu_1": "kings-comics",
         "menu_2": "information",
         "menu_3": "customer-service",
         "menu_4": "",
-        "emblems_title": "Certified by",
+        "emblems_title": "Partners",
         "show_payment_icons": true
       }
     }
