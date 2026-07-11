@@ -14,7 +14,9 @@
   "parent": "header-group.json",
   "sections": {
     "announcement": {
-      "settings": {},
+      "settings": {
+        "bg_color": "#0665E9"
+      },
       "blocks": {
         "msg_releases": {
           "settings": {
