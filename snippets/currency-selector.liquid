@@ -1,0 +1,201 @@
+{% doc %}
+  Renders a currency selector limited to AUD, USD, EUR, GBP, NZD.
+
+  Uses the Shopify localization form so the merchant's Markets configuration
+  drives the actual switch. On first visit, auto-detects the customer's
+  currency from the browser timezone and submits the form once if the
+  detected currency differs from the current one.
+
+  @example
+  {% render 'currency-selector' %}
+{% enddoc %}
+
+{%- liquid
+  assign allowed_currencies = 'AUD,USD,EUR,GBP,NZD' | split: ','
+  assign current_currency = localization.country.currency.iso_code
+  assign current_country = localization.country.iso_code
+-%}
+
+<currency-selector
+  class="currency-selector"
+  data-current-currency="{{ current_currency }}"
+>
+  {%- form 'localization', id: 'currency-selector-form', class: 'currency-selector__form' -%}
+    <div class="currency-selector__wrapper">
+      <select
+        id="currency-selector-input"
+        name="country_code"
+        class="currency-selector__select"
+        aria-label="{{ 'general.currency.label' | t }}"
+        data-currency-selector-input
+      >
+        {%- assign seen_currencies = '' -%}
+        {%- for country in localization.available_countries -%}
+          {%- if allowed_currencies contains country.currency.iso_code -%}
+            {%- unless seen_currencies contains country.currency.iso_code -%}
+              {%- assign seen_currencies = seen_currencies | append: country.currency.iso_code | append: ',' -%}
+              <option
+                value="{{ country.iso_code }}"
+                data-currency="{{ country.currency.iso_code }}"
+                {% if country.iso_code == current_country %}selected{% endif %}
+              >
+                {{ country.currency.iso_code }} {{ country.currency.symbol }}
+              </option>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+      <svg
+        class="currency-selector__chevron"
+        width="10"
+        height="10"
+        viewBox="0 0 10 10"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M2.5 3.5L5 6.5L7.5 3.5"
+          stroke="currentColor"
+          stroke-width="1.25"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <noscript>
+      <button type="submit" class="currency-selector__submit">
+        {{ 'general.currency.update' | t }}
+      </button>
+    </noscript>
+  {%- endform -%}
+</currency-selector>
+
+{% stylesheet %}
+  .currency-selector {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .currency-selector__form {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  .currency-selector__wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .currency-selector__select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.72rem;
+    line-height: 1;
+    padding: 6px 22px 6px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+  }
+
+  .currency-selector__select:hover,
+  .currency-selector__select:focus-visible {
+    background-color: rgba(255, 255, 255, 0.08);
+    outline: none;
+  }
+
+  .currency-selector__select option {
+    color: #222;
+    background-color: #fff;
+  }
+
+  .currency-selector__chevron {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: currentColor;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .currency-selector__submit {
+    padding: 4px 10px;
+    margin-left: 6px;
+    font-size: 0.72rem;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class CurrencySelector extends HTMLElement {
+    connectedCallback() {
+      this.form = this.querySelector('form');
+      this.select = this.querySelector('[data-currency-selector-input]');
+      if (!this.form || !this.select) return;
+
+      this.select.addEventListener('change', () => this.form.submit());
+      this.autoDetect();
+    }
+
+    autoDetect() {
+      try {
+        const STORAGE_KEY = 'ks_currency_autodetected_v1';
+        if (localStorage.getItem(STORAGE_KEY)) return;
+        localStorage.setItem(STORAGE_KEY, '1');
+
+        const current = (this.dataset.currentCurrency || '').toUpperCase();
+        const target = this.detectCurrencyFromTimezone();
+
+        if (!target || target === current) return;
+
+        const option = this.select.querySelector('option[data-currency="' + target + '"]');
+        if (!option) return;
+
+        this.select.value = option.value;
+        this.form.submit();
+      } catch (err) {
+        /* fail silently: manual selection still works */
+      }
+    }
+
+    detectCurrencyFromTimezone() {
+      const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').trim();
+      if (!tz) return null;
+
+      if (tz.indexOf('Australia/') === 0) return 'AUD';
+      if (tz === 'Pacific/Auckland' || tz === 'Pacific/Chatham') return 'NZD';
+
+      const gbZones = [
+        'Europe/London',
+        'Europe/Belfast',
+        'Europe/Guernsey',
+        'Europe/Isle_of_Man',
+        'Europe/Jersey'
+      ];
+      if (gbZones.indexOf(tz) !== -1) return 'GBP';
+
+      if (tz.indexOf('Europe/') === 0 || tz === 'Atlantic/Canary' || tz === 'Atlantic/Madeira' || tz === 'Atlantic/Azores') {
+        return 'EUR';
+      }
+
+      if (tz.indexOf('America/') === 0) return 'USD';
+
+      return null;
+    }
+  }
+
+  if (!customElements.get('currency-selector')) {
+    customElements.define('currency-selector', CurrencySelector);
+  }
+{% endjavascript %}

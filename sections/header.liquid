@@ -1,8 +1,5 @@
 {% liquid
-  assign has_top_bar = false
-  if section.settings.top_menu.links.size > 0 or section.settings.contact_email != blank or section.settings.contact_phone != blank or settings.social_facebook != blank or settings.social_instagram != blank or settings.social_twitter != blank or settings.social_tiktok != blank or settings.social_youtube != blank
-    assign has_top_bar = true
-  endif
+  assign has_top_bar = true
 %}
 
 {% if has_top_bar %}
@@ -78,6 +75,8 @@
             </svg>
           </a>
         {% endif %}
+
+        {% render 'currency-selector' %}
       </div>
     </div>
   </div>

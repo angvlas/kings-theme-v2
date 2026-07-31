@@ -207,7 +207,11 @@
   },
   "general": {
     "back_to_top": "Back to top",
-    "skip_to_content": "Skip to content"
+    "skip_to_content": "Skip to content",
+    "currency": {
+      "label": "Currency",
+      "update": "Update currency"
+    }
   },
   "header": {
     "search_placeholder": "Search products...",
