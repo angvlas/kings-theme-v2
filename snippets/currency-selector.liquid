@@ -94,19 +94,20 @@
     -moz-appearance: none;
     border: none;
     background: transparent;
-    color: inherit;
-    font: inherit;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: inherit;
     font-size: 0.72rem;
+    font-weight: 400;
     line-height: 1;
     padding: 6px 22px 6px 10px;
     cursor: pointer;
     border-radius: 4px;
-    transition: background-color 0.15s ease;
+    transition: color 0.15s ease;
   }
 
   .currency-selector__select:hover,
   .currency-selector__select:focus-visible {
-    background-color: rgba(255, 255, 255, 0.08);
+    color: #fff;
     outline: none;
   }
 
@@ -120,8 +121,7 @@
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    color: currentColor;
-    opacity: 0.7;
+    color: rgba(255, 255, 255, 0.7);
     pointer-events: none;
   }
 
