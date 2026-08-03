@@ -65,8 +65,8 @@
         "slide_1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Website_MDC_banner.png",
-            "mobile_image": "shopify://shop_images/m_Website_MDC_banner.png",
+            "image": "shopify://shop_images/Website_banner.png",
+            "mobile_image": "shopify://shop_images/m_Website_banner.png",
             "link": "https://kingscomics.com/collections/kings-liquidation",
             "heading": "",
             "subheading": "",
