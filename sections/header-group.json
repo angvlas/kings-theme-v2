@@ -16,6 +16,7 @@
       "blocks": {
         "msg_releases": {
           "type": "message",
+          "disabled": true,
           "settings": {
             "text": "Due to distributor delays titles from Marvel, BOOM! Studios, and Dark Horse will be delayed by 1 week until further notice. We appreciate your patience and understanding.",
             "icon": "fa-solid fa-truck",
