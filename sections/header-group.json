@@ -14,6 +14,14 @@
     "announcement": {
       "type": "announcement-bar",
       "blocks": {
+        "message_krAiXm": {
+          "type": "message",
+          "settings": {
+            "text": "Due to the high volume of orders during our clearance sale, please expect some delays in order processing. Thank you for your patience and understanding!",
+            "icon": "fa-solid fa-tag",
+            "link": ""
+          }
+        },
         "msg_releases": {
           "type": "message",
           "disabled": true,
@@ -25,6 +33,7 @@
         }
       },
       "block_order": [
+        "message_krAiXm",
         "msg_releases"
       ],
       "settings": {
