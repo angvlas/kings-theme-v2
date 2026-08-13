@@ -62,6 +62,17 @@
     "slideshow": {
       "type": "slideshow",
       "blocks": {
+        "slide_NB8tWg": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Website_Banner_487c732e-c361-4e00-931d-b440823fea35.png",
+            "mobile_image": "shopify://shop_images/1080x1080_Neverlanders_Bk2.png",
+            "link": "https://kingscomics.com/search?q=%22TP+%28MARVEL+PREMIER+COLLECTION%29%22&type=product",
+            "heading": "",
+            "subheading": "",
+            "button_text": ""
+          }
+        },
         "slide_1": {
           "type": "slide",
           "settings": {
@@ -138,28 +149,17 @@
             "subheading": "",
             "button_text": ""
           }
-        },
-        "slide_NB8tWg": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Website_Banner_487c732e-c361-4e00-931d-b440823fea35.png",
-            "mobile_image": "shopify://shop_images/1080x1080_Neverlanders_Bk2.png",
-            "link": "https://kingscomics.com/search?q=%22TP+%28MARVEL+PREMIER+COLLECTION%29%22&type=product",
-            "heading": "",
-            "subheading": "",
-            "button_text": ""
-          }
         }
       },
       "block_order": [
+        "slide_NB8tWg",
         "slide_1",
         "slide_nRXwzd",
         "slide_N3dXqN",
         "slide_FjNJet",
         "slide_eiGAej",
         "slide_DWjCc8",
-        "slide_enLH7L",
-        "slide_NB8tWg"
+        "slide_enLH7L"
       ],
       "settings": {}
     },
