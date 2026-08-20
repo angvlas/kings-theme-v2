@@ -76,9 +76,9 @@
         "slide_1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Website_banner_3b7cf1ff-ba07-40f5-bf2d-0759a43f934b.png",
-            "mobile_image": "shopify://shop_images/m_Website_banner_b99cc381-0ab4-4e56-9e06-6981b11000f4.png",
-            "link": "https://kingscomics.com/collections/kings-liquidation",
+            "image": "shopify://shop_images/Absolute_Batman__23.png",
+            "mobile_image": "shopify://shop_images/m_Absolute_Batman__23.png",
+            "link": "https://kingscomics.com/search?q=%22ABSOLUTE+BATMAN+%282024%29+%2323+KINGS+COMICS+%26+WALTS+COMIC+SHOP+EXCLUSIVE%22&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -87,9 +87,9 @@
         "slide_nRXwzd": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Spider-Man_Hulk_Fire_and_Brimstone__1.png",
-            "mobile_image": "shopify://shop_images/m_Spider-Man_Hulk_Fire_and_Brimstone__1.png",
-            "link": "https://kingscomics.com/search?q=Spider-Man+Hulk+Fire+and+Brimstone+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/Batman_Bad_Seeds_Sunset__1.png",
+            "mobile_image": "shopify://shop_images/m_Batman_Bad_Seeds_Sunset__1.png",
+            "link": "https://kingscomics.com/products/batman-bad-seeds-sunset-2026-1-one-shot-cvr-a-giuseppe-camuncoli-cliff-rathburn?_pos=1&_sid=0c0bc20b9&_ss=r",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -98,9 +98,9 @@
         "slide_N3dXqN": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Batman_Son_TP.png",
-            "mobile_image": "shopify://shop_images/m_Batman_Son_TP.png",
-            "link": "https://kingscomics.com/search?q=9781799508793&type=product",
+            "image": "shopify://shop_images/Hammerfist__1.png",
+            "mobile_image": "shopify://shop_images/m_Hammerfist__1.png",
+            "link": "https://kingscomics.com/search?q=HAMMERFIST+%231&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -109,9 +109,9 @@
         "slide_FjNJet": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Last_Driver__1.png",
-            "mobile_image": "shopify://shop_images/m_Last_Driver__1.png",
-            "link": "https://kingscomics.com/search?q=LAST+DRIVER+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/TMNT_Facsimile_Ed__1.png",
+            "mobile_image": "shopify://shop_images/m_TMNT_Facsimile_Ed__1.png",
+            "link": "https://kingscomics.com/search?q=%22TEENAGE+MUTANT+NINJA+TURTLES+MIRAGE+%281984%29+%231+FACSIMILE%22&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -120,9 +120,9 @@
         "slide_eiGAej": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Thor__800.png",
-            "mobile_image": "shopify://shop_images/m_Thor__800.png",
-            "link": "https://kingscomics.com/search?q=%22THOR+%23800%22&type=product",
+            "image": "shopify://shop_images/Next_Level_One_Shot__1.png",
+            "mobile_image": "shopify://shop_images/m_Next_Level_One_Shot__1.png",
+            "link": "https://kingscomics.com/products/next-level-one-shot-2026-1-one-shot-cvr-a-fernando-blanco?_pos=1&_sid=68a3c9186&_ss=r",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -131,9 +131,9 @@
         "slide_DWjCc8": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Bug_Wars_Coming_of_the_Wardoom.png",
-            "mobile_image": "shopify://shop_images/m_Bug_Wars_Coming_of_the_Wardoom.png",
-            "link": "https://kingscomics.com/search?q=BUG+WARS%3A+THE+COMING+OF+THE+WARDOOM+%282026%29+%231&type=product",
+            "image": "shopify://shop_images/Stuff_of_Nightmares_Cat.png",
+            "mobile_image": "shopify://shop_images/m_Stuff_of_Nightmares_Cat.png",
+            "link": "https://kingscomics.com/search?q=%22STUFF+OF+NIGHTMARES+CAT+IN+THE+COFFIN+%282026%29+%231%22&type=product",
             "heading": "",
             "subheading": "",
             "button_text": ""
@@ -141,6 +141,7 @@
         },
         "slide_enLH7L": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/Avengers_CTPs.png",
             "mobile_image": "shopify://shop_images/m_Avengers_CTPs.png",
