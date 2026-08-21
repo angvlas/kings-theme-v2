@@ -1,15 +1,33 @@
 {% doc %}
-  Renders a filter sidebar for collection pages using Shopify's
-  storefront filtering API. Supports list filters (checkboxes),
+  Renders a filter sidebar for collection and search results pages using
+  Shopify's storefront filtering API. Supports list filters (checkboxes),
   price range, and displays active filters with clear options.
 
-  @param {collection} collection - The current collection object
+  On the search page the form carries the search terms as a hidden `q`
+  input and submits to the search URL, so filtering never drops the query.
+
+  @param {object} collection - The current collection object, or the search object on the search page
 
   @example
   {% render 'collection-filters', collection: collection %}
+  {% render 'collection-filters', collection: search %}
 {% enddoc %}
 
 {% liquid
+  assign is_search = false
+  if request.page_type == 'search'
+    assign is_search = true
+  endif
+
+  if is_search
+    assign form_action = routes.search_url
+    assign encoded_terms = collection.terms | url_encode
+    assign clear_url = routes.search_url | append: '?q=' | append: encoded_terms
+  else
+    assign form_action = collection.url
+    assign clear_url = collection.url
+  endif
+
   assign has_active_filters = false
   for filter in collection.filters
     if filter.active_values.size > 0
@@ -25,11 +43,18 @@
   endfor
 %}
 
-<form class="collection-filters" data-collection-filters>
+<form class="collection-filters" method="get" action="{{ form_action }}" data-collection-filters>
+  {% if is_search %}
+    <input type="hidden" name="q" value="{{ collection.terms | escape }}">
+  {% endif %}
+  {% if collection.sort_by != blank %}
+    <input type="hidden" name="sort_by" value="{{ collection.sort_by | escape }}">
+  {% endif %}
+
   <div class="collection-filters__header">
     <h2 class="collection-filters__title">{{ 'collection.filters.title' | t }}</h2>
     {% if has_active_filters %}
-      <a href="{{ collection.url }}" class="collection-filters__clear-all">
+      <a href="{{ clear_url }}" class="collection-filters__clear-all">
         {{ 'collection.filters.clear_all' | t }}
       </a>
     {% endif %}
@@ -550,17 +575,30 @@
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      var params = new URLSearchParams();
-      var inputs = form.querySelectorAll('input[type="checkbox"]:checked, input[type="number"]');
 
-      inputs.forEach(function(input) {
-        if (input.type === 'number' && !input.value) return;
+      var action = form.getAttribute('action') || window.location.pathname;
+      var params = new URLSearchParams(window.location.search);
+      var named = form.querySelectorAll('input[name]');
+      var owned = new Set();
+
+      named.forEach(function(input) {
+        owned.add(input.name);
+      });
+
+      Array.from(params.keys()).forEach(function(key) {
+        if (key === 'page' || key.indexOf('filter.') === 0 || owned.has(key)) {
+          params.delete(key);
+        }
+      });
+
+      named.forEach(function(input) {
+        if (input.type === 'checkbox' && !input.checked) return;
+        if (!input.value) return;
         params.append(input.name, input.value);
       });
 
-      var url = window.location.pathname;
       var query = params.toString();
-      window.location.href = query ? url + '?' + query : url;
+      window.location.href = query ? action + '?' + query : action;
     });
 
     form.querySelectorAll('[data-filter-search]').forEach(function(search) {
